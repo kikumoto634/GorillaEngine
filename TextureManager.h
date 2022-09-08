@@ -10,29 +10,28 @@
 /// <summary>
 /// テクスチャ
 /// </summary>
+struct Texture {
+	// テクスチャリソース
+	Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+	// シェーダリソースビューのハンドル(CPU)
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	// シェーダリソースビューのハンドル(CPU)
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	// 名前
+	std::string name;
+};
+
+/// <summary>
+/// テクスチャマネージャー
+/// </summary>
 class TextureManager
 {
 public:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-
+	using string = std::string;
 public:
 	//テクスチャ枚数(デスクリプタ数)
 	static const int maxTextureCount = 512;
-	using string = std::string;
-
-	/// <summary>
-	/// テクスチャ
-	/// </summary>
-	struct Texture {
-		// テクスチャリソース
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource;
-		// シェーダリソースビューのハンドル(CPU)
-		CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-		// シェーダリソースビューのハンドル(CPU)
-		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
-		// 名前
-		std::string name;
-	};
 
 public:
 
@@ -99,7 +98,12 @@ private:
 	//テクスチャ用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap;
 	//テクスチャバッファの配列
-	ComPtr<Texture> textureBuffer[maxTextureCount];
+	ComPtr<Texture> textures[maxTextureCount];
+	//デスクリプタサイズ
+	UINT descriptorHandleIncrementSize = 0u;
+	//次のデスクリプタヒープ番号
+	uint32_t indexNextDescriptorHeap = 0u;
+
 	//ディレクトリパス
 	string directoryPath;
 };
