@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-
+class Window;
 class GameSceneBase
 {
 public:
@@ -22,7 +22,7 @@ protected:
 	virtual void ShutDown() { isEnd = true; }
 	virtual void ShutDownAll() { isAllEnd = true; }
 	
-	//Window* pWindow;
+	Window* pWindow;
 	bool isEnd;
 	bool isAllEnd;
 	string nowScene;

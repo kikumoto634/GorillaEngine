@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "DirectXCommon.h"
+#include "C:\Users\GSMAnager\Desktop\GorillaEngine\scene\SceneManager.h"
 
 class Application
 {
@@ -27,4 +28,5 @@ private:
 private:
 	Window* window;
 	DirectXCommon* dxCommon;
+	SceneManager* sceneManager;
 };

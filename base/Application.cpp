@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "C:\Users\GSMAnager\Desktop\GorillaEngine\scene\GameScene01.h"
 
 Application* Application::app = nullptr;
 
@@ -23,12 +24,14 @@ Application::Application()
 {
 	window = new Window("ゴリラエンジン", 1280, 720);
 	dxCommon = new DirectXCommon();
+	sceneManager = new SceneManager();
 }
 
 Application::~Application()
 {
 	delete window;
 	delete dxCommon;
+	delete sceneManager;
 }
 
 void Application::Run()
@@ -43,6 +46,7 @@ void Application::Run()
 		if(msg.message == WM_QUIT) {
 			break;
 		}
+		if(sceneManager->GetIsAlive()) break;
 
 		Update();
 		Draw();
@@ -56,16 +60,24 @@ void Application::Initialize()
 
 	//DirectXCommon
 	dxCommon->Initialize(window);
+
+	//シーン追加
+	sceneManager->Add("Area01", new GameScene01(window));
+
+	//シーン指定
+	sceneManager->Change("Area01");
 }
 
 void Application::Update()
 {
-
+	sceneManager->Update();
 }
 
 void Application::Draw()
 {
 	dxCommon->BeginDraw();
+
+	sceneManager->Draw();
 
 	dxCommon->EndDraw();
 }
