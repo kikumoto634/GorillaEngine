@@ -25,6 +25,12 @@
     <Filter Include="ヘッダー ファイル\scene">
       <UniqueIdentifier>{736b665f-7e40-4116-af19-ddb72d73b321}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\2D">
+      <UniqueIdentifier>{2a25d259-8155-498f-88b8-c8dc85f84c5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\2D">
+      <UniqueIdentifier>{7e1097f4-663a-4761-bc33-0f01215a29a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,6 +54,9 @@
     <ClCompile Include="scene\SceneManager.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\Window.h">
@@ -67,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="scene\GameScene01.h">
       <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
