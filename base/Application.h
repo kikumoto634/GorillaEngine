@@ -1,7 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "DirectXCommon.h"
-#include "C:\Users\GSMAnager\Desktop\GorillaEngine\scene\SceneManager.h"
+#include "SceneManager.h"
 
 class Application
 {

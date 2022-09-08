@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "C:\Users\GSMAnager\Desktop\GorillaEngine\scene\GameScene01.h"
+#include "GameScene01.h"
 
 Application* Application::app = nullptr;
 

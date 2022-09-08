@@ -36,9 +36,6 @@
     <ClCompile Include="base\Window.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
-    <ClCompile Include="scene\SceneManager.cpp">
-      <Filter>ソース ファイル\scene</Filter>
-    </ClCompile>
     <ClCompile Include="scene\GameSceneBase.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
@@ -46,6 +43,9 @@
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
     <ClCompile Include="scene\GameScene01.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\SceneManager.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
   </ItemGroup>
