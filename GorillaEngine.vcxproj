@@ -148,6 +148,7 @@
     <ClCompile Include="base\Window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Vector2.cpp" />
+    <ClCompile Include="math\Vector3.cpp" />
     <ClCompile Include="scene\GameScene01.cpp" />
     <ClCompile Include="scene\GameSceneBase.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\Window.h" />
     <ClInclude Include="math\Vector2.h" />
+    <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="scene\GameScene01.h" />
     <ClInclude Include="scene\GameSceneBase.h" />
     <ClInclude Include="scene\SceneManager.h" />
