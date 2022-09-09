@@ -78,11 +78,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -147,6 +147,7 @@
     <ClCompile Include="base\TextureManager.cpp" />
     <ClCompile Include="base\Window.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="math\Vector2.cpp" />
     <ClCompile Include="scene\GameScene01.cpp" />
     <ClCompile Include="scene\GameSceneBase.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="base\DirectXCommon.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\Window.h" />
+    <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="scene\GameScene01.h" />
     <ClInclude Include="scene\GameSceneBase.h" />
     <ClInclude Include="scene\SceneManager.h" />
