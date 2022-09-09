@@ -31,6 +31,12 @@
     <Filter Include="ヘッダー ファイル\2D">
       <UniqueIdentifier>{7e1097f4-663a-4761-bc33-0f01215a29a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\math">
+      <UniqueIdentifier>{a249e385-bd10-49d9-acbc-3e9402d6505a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\math">
+      <UniqueIdentifier>{70446899-e34a-4634-8bad-dbeb53b3a492}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -54,7 +60,10 @@
     <ClCompile Include="scene\SceneManager.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
+    <ClCompile Include="2D\Sprite.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="base\TextureManager.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,7 +86,10 @@
     <ClInclude Include="scene\GameScene01.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
-    <ClInclude Include="TextureManager.h">
+    <ClInclude Include="2D\Sprite.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="base\TextureManager.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
   </ItemGroup>

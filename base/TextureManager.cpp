@@ -10,6 +10,11 @@ TextureManager *TextureManager::GetInstance()
 	return &instance;
 }
 
+void TextureManager::Load(uint32_t number, const string &fileName)
+{
+	TextureManager::GetInstance()->LoadTexture(number, fileName);
+}
+
 void TextureManager::Initialize(DirectXCommon *dxCommon, string directoryPath)
 {
 	assert(dxCommon);
@@ -76,7 +81,7 @@ void TextureManager::LoadTexture(uint32_t number, const string filename)
 		&textureResourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&textures[number]->resource)
+		IID_PPV_ARGS(&textures[number].resource)
 	);
 	assert(SUCCEEDED(result));
 
@@ -86,7 +91,7 @@ void TextureManager::LoadTexture(uint32_t number, const string filename)
 		//ミップマップレベルを指定してイメージを取得
 		const Image* img = scratchImage.GetImage(i,0,0);
 		//テクスチャバッファに転送
-		result = textures[number]->resource->WriteToSubresource(
+		result = textures[number].resource->WriteToSubresource(
 			(UINT)i,
 			nullptr,				//全領域コピー
 			img->pixels,			//データアドレス
@@ -97,16 +102,16 @@ void TextureManager::LoadTexture(uint32_t number, const string filename)
 	}
 
 	//シェーダリソースビュー生成
-	textures[number]->cpuDescHandleSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+	textures[number].cpuDescHandleSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
 		descriptorHeap->GetCPUDescriptorHandleForHeapStart(), number, descriptorHandleIncrementSize
 	);
-	textures[number]->gpuDescHandleSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
+	textures[number].gpuDescHandleSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
 		descriptorHeap->GetGPUDescriptorHandleForHeapStart(), number, descriptorHandleIncrementSize
 	);
 
 	//リソース設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	D3D12_RESOURCE_DESC resourceDesc = textures[number]->resource->GetDesc();
+	D3D12_RESOURCE_DESC resourceDesc = textures[number].resource->GetDesc();
 	srvDesc.Format = resourceDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
@@ -114,9 +119,9 @@ void TextureManager::LoadTexture(uint32_t number, const string filename)
 
 	//ハンドルの指す位置にシェーダリソースビュー作成
 	dxCommon->GetDevice()->CreateShaderResourceView(
-		textures[number]->resource.Get(),
+		textures[number].resource.Get(),
 		&srvDesc,
-		textures[number]->cpuDescHandleSRV
+		textures[number].cpuDescHandleSRV
 	);
 	indexNextDescriptorHeap++;
 }
@@ -138,9 +143,38 @@ void TextureManager::ResetAll()
 
 	//全テクスチャ初期化
 	for(size_t i = 0; i < maxTextureCount; i++){
-		textures[i]->resource.Reset();
-		textures[i]->cpuDescHandleSRV.ptr = 0;
-		textures[i]->gpuDescHandleSRV.ptr = 0;
-		textures[i]->name.clear();
+		textures[i].resource.Reset();
+		textures[i].cpuDescHandleSRV.ptr = 0;
+		textures[i].gpuDescHandleSRV.ptr = 0;
+		textures[i].name.clear();
 	}
+}
+
+ID3D12Resource *TextureManager::GetTextureBuffer(uint32_t number)
+{
+	assert(number < maxTextureCount);
+	return textures[number].resource.Get();
+}
+
+
+void TextureManager::SetDescriptorHeaps(ID3D12GraphicsCommandList *commandList)
+{
+	//テクスチャ用デスクリプタヒープの設定
+	ID3D12DescriptorHeap* ppHeaps[] = {descriptorHeap.Get()};
+	commandList->SetDescriptorHeaps(_countof(ppHeaps),ppHeaps);
+}
+
+void TextureManager::SetShaderResourceView(ID3D12GraphicsCommandList *commandList, UINT RootParameterIndex, uint32_t texnumber)
+{
+	//SRVのサイズを取得
+	UINT sizeSRV = dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	//デスクリプタテーブルの先頭を取得
+	D3D12_GPU_DESCRIPTOR_HANDLE start = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+
+	//SRVのGPUハンドル取得
+	CD3DX12_GPU_DESCRIPTOR_HANDLE handle = CD3DX12_GPU_DESCRIPTOR_HANDLE(start, texnumber,sizeSRV);
+
+	//シェーダーリソースビュー(SRV)をセット
+	commandList->SetGraphicsRootDescriptorTable(RootParameterIndex, handle);
 }

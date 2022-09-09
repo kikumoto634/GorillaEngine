@@ -141,23 +141,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="2D\Sprite.cpp" />
     <ClCompile Include="base\Application.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
+    <ClCompile Include="base\TextureManager.cpp" />
     <ClCompile Include="base\Window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scene\GameScene01.cpp" />
     <ClCompile Include="scene\GameSceneBase.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="2D\Sprite.h" />
     <ClInclude Include="base\Application.h" />
     <ClInclude Include="base\DirectXCommon.h" />
+    <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\Window.h" />
     <ClInclude Include="scene\GameScene01.h" />
     <ClInclude Include="scene\GameSceneBase.h" />
     <ClInclude Include="scene\SceneManager.h" />
-    <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
