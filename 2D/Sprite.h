@@ -25,6 +25,9 @@ public:
 		friend class Sprite;
 
 	private:
+		//頂点数
+		static const int VertNum = 4;
+		//コモン
 		DirectXCommon* dxCommon = nullptr;
 		//パイプラインステートオブジェクト
 		ComPtr<ID3D12PipelineState> pipelinestate;
@@ -32,6 +35,8 @@ public:
 		ComPtr<ID3D12RootSignature> rootsignature;
 		//射影行列
 		DirectX::XMMATRIX matProjection{};
+		// デスクリプタサイズ
+		UINT descriptorHandleIncrementSize;
 	public:
 		void InitializeGraphicsPipeline(const std::wstring &directoryPath);
 	};
@@ -70,12 +75,7 @@ public:
 	/// 描画前処理
 	/// </summary>
 	/// <param name="commandList">コマンドリスト</param>
-	static void PreDraw(ID3D12GraphicsCommandList* commandList);
-
-	/// <summary>
-	/// 描画後処理
-	/// </summary>
-	static void PostDraw();
+	static void PreDraw();
 
 	/// <summary>
 	/// 生成
@@ -91,17 +91,8 @@ public:
 		Vector2 anchorpoint = {0.f,0.f}, bool isFlipX = false, bool isFlipY = false);
 
 private:
-
-	//頂点数
-	static const int VertNum = 4;
-
 	//サブクラス(共通処理)
 	static Common* common;
-
-	// デスクリプタサイズ
-	static UINT descriptorHandleIncrementSize;
-	// コマンドリスト
-	static ID3D12GraphicsCommandList* commandList;
 
 public:
 	/// <summary>

@@ -66,6 +66,13 @@ void Application::Initialize()
 
 	//シーン指定
 	sceneManager->Change("Area01");
+
+	//テクスチャマネージャー
+	TextureManager::GetInstance()->Initialize(dxCommon);
+	TextureManager::Load(0,"white1x1.png");
+
+	//スプライト
+	Sprite::StaticInitialize(dxCommon, window->GetWindowWifth(), window->GetWindowHeight());
 }
 
 void Application::Update()
@@ -76,6 +83,7 @@ void Application::Update()
 void Application::Draw()
 {
 	dxCommon->BeginDraw();
+	Sprite::PreDraw();
 
 	sceneManager->Draw();
 

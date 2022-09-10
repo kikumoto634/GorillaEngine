@@ -1,9 +1,9 @@
 #include "Sprite.hlsli"
 
-VSOutput main( float4 pos : POSITION , float2 uv : TEXCOORD)
+Texture2D<float4> tex : register(t0);
+SamplerState smp : register(s0);
+
+float4 main(VSOutput input) : SV_TARGET
 {
-	VSOutput output;
-	output.svpos = mul(mat, pos);
-	output.uv = uv;
-	return output;
+	return tex.Sample(smp, input.uv) * color;
 }

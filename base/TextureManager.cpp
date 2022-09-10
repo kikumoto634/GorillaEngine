@@ -54,7 +54,10 @@ void TextureManager::LoadTexture(uint32_t number, const string filename)
 	ScratchImage mipChain{};
 	result = GenerateMipMaps(scratchImage.GetImages(), scratchImage.GetImageCount(), 
 		scratchImage.GetMetadata(), TEX_FILTER_DEFAULT, 0, mipChain);
-	assert(SUCCEEDED(result));
+	if(SUCCEEDED(result)){
+		scratchImage = move(mipChain);
+		metadata = scratchImage.GetMetadata();
+	}
 
 	//読み込んどディヒューズテクスチャをSRGBとして扱う
 	metadata.format = MakeSRGB(metadata.format);

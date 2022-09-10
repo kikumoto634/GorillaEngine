@@ -1,4 +1,3 @@
-
 //3D•ÏŠ·s—ñ
 cbuffer ConstBufferData : register(b0)
 {

@@ -22,4 +22,5 @@ void GameScene01::Update()
 
 void GameScene01::Draw()
 {
+
 }

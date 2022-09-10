@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "DirectXCommon.h"
 #include "SceneManager.h"
+#include "TextureManager.h"
 
 class Application
 {

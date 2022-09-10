@@ -1,5 +1,6 @@
 #pragma once
 #include "GameSceneBase.h"
+#include "Sprite.h"
 
 class Window;
 class GameScene01 : public GameSceneBase

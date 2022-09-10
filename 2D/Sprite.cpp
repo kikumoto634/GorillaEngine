@@ -1,6 +1,8 @@
 #include "Sprite.h"
+#include "TextureManager.h"
 #include <d3dcompiler.h>
 #include <cassert>
+#include <d3dx12.h>
 
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -9,8 +11,6 @@ using namespace std;
 using namespace Microsoft::WRL;
 
 Sprite::Common* Sprite::common = nullptr;
-UINT Sprite::descriptorHandleIncrementSize;
-ID3D12GraphicsCommandList* Sprite::commandList = nullptr;
 
 void Sprite::Common::InitializeGraphicsPipeline(const std::wstring &directoryPath)
 {
@@ -22,7 +22,7 @@ void Sprite::Common::InitializeGraphicsPipeline(const std::wstring &directoryPat
 	ComPtr<ID3DBlob> errorBlob;
 
 	//頂点シェーダー
-	wstring vsFile = directoryPath + L"/shader/SpriteVS.hlsl";
+	wstring vsFile = directoryPath + L"shader/SpriteVS.hlsl";
 	result = D3DCompileFromFile(
 		vsFile.c_str(),
 		nullptr,
@@ -31,6 +31,7 @@ void Sprite::Common::InitializeGraphicsPipeline(const std::wstring &directoryPat
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	//デバック用設定
 		0, &vsBlob, &errorBlob
 	);
+
 	if(FAILED(result)){
 		string error;
 		error.resize(errorBlob->GetBufferSize());
@@ -38,19 +39,20 @@ void Sprite::Common::InitializeGraphicsPipeline(const std::wstring &directoryPat
 		error += "\n";
 		//エラー内容を出力に表示
 		OutputDebugStringA(error.c_str());
-		assert(0);
+		exit(1);
 	}
 
 	//頂点シェーダー
-	wstring psFile = directoryPath + L"/shader/SpritePS.hlsl";
+	wstring psFile = directoryPath + L"shader/SpritePS.hlsl";
 	result = D3DCompileFromFile(
-		psFile.c_str(),
+		psFile.c_str(), // シェーダファイル名
 		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能
-		"main", "ps_5_0",	//エントリーポイント、シェーダーモデル
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	//デバック用設定
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "ps_5_0", // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
 		0, &psBlob, &errorBlob
 	);
+
 	if(FAILED(result)){
 		string error;
 		error.resize(errorBlob->GetBufferSize());
@@ -58,7 +60,7 @@ void Sprite::Common::InitializeGraphicsPipeline(const std::wstring &directoryPat
 		error += "\n";
 		//エラー内容を出力に表示
 		OutputDebugStringA(error.c_str());
-		assert(0);
+		exit(1);
 	}
 
 	//頂点レイアウト
@@ -162,7 +164,7 @@ void Sprite::StaticInitialize(DirectXCommon* dxCommon, int window_width, int win
 	assert(dxCommon);
 
 	common->dxCommon = dxCommon;
-	descriptorHandleIncrementSize = dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	common->descriptorHandleIncrementSize = dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	//パイプライン生成
 	common->InitializeGraphicsPipeline(directoryPath);
@@ -183,25 +185,16 @@ void Sprite::StaticFinalize()
 	}
 }
 
-void Sprite::PreDraw(ID3D12GraphicsCommandList *commandList)
+void Sprite::PreDraw()
 {
-	assert(Sprite::commandList = nullptr);
-	assert(commandList);
-
-	Sprite::commandList = commandList;
-
 	//パイプラインステート設定
-	Sprite::commandList->SetPipelineState(common->pipelinestate.Get());
+	common->dxCommon->GetCommandList()->SetPipelineState(common->pipelinestate.Get());
 	//ルートシグネチャ設定
-	Sprite::commandList->SetGraphicsRootSignature(common->rootsignature.Get());
+	common->dxCommon->GetCommandList()->SetGraphicsRootSignature(common->rootsignature.Get());
 	//プリミティブ形状設定
-	Sprite::commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	common->dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
-void Sprite::PostDraw()
-{
-	Sprite::commandList = nullptr;
-}
 
 Sprite *Sprite::Create(uint32_t textureNumber, Vector2 pos, DirectX::XMFLOAT4 color, Vector2 anchorpoint, bool isFlipX, bool isFlipY)
 {
@@ -255,7 +248,7 @@ bool Sprite::Initialize()
 		//ヒーププロパティ
 		CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 		//リソース設定
-		CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(VertexPosUv)*VertNum);
+		CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(VertexPosUv)*common->VertNum);
 		//生成
 		result = common->dxCommon->GetDevice()->CreateCommittedResource(
 			&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
@@ -268,7 +261,7 @@ bool Sprite::Initialize()
 	
 	//頂点バッファビュー生成
 	vbView.BufferLocation = vertBuffer->GetGPUVirtualAddress();
-	vbView.SizeInBytes = sizeof(VertexPosUv)*VertNum;
+	vbView.SizeInBytes = sizeof(VertexPosUv)*common->VertNum;
 	vbView.StrideInBytes = sizeof(VertexPosUv);
 
 	//定数バッファ
@@ -316,15 +309,15 @@ void Sprite::Draw()
 	}
 
 	//頂点バッファ
-	commandList->IASetVertexBuffers(0,1,&vbView);
+	common->dxCommon->GetCommandList()->IASetVertexBuffers(0,1,&vbView);
 	//定数バッファ
-	commandList->SetGraphicsRootConstantBufferView(0, constBuffer->GetGPUVirtualAddress());
+	common->dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuffer->GetGPUVirtualAddress());
 	//テクスチャ用デスクリプタヒープ
-	TextureManager::GetInstance()->SetDescriptorHeaps(commandList);
+	TextureManager::GetInstance()->SetDescriptorHeaps(common->dxCommon->GetCommandList());
 	//シェーダーリソースビュー
-	TextureManager::GetInstance()->SetShaderResourceView(commandList, 1, textureHandle);
+	TextureManager::GetInstance()->SetShaderResourceView(common->dxCommon->GetCommandList(), 1, textureHandle);
 	//描画
-	commandList->DrawInstanced(4,1,0,0);
+	common->dxCommon->GetCommandList()->DrawInstanced(4,1,0,0);
 }
 
 void Sprite::SetPosition(Vector2 pos)
@@ -407,7 +400,7 @@ void Sprite::TransferVertices()
 	}
 
 	//頂点データ
-	VertexPosUv vertices[VertNum];
+	VertexPosUv vertices[common->VertNum];
 	vertices[LB].pos = {left, bottom, 0.f};
 	vertices[LT].pos = {left, top, 0.f};
 	vertices[RB].pos = {right, bottom, 0.f};
