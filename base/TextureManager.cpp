@@ -156,6 +156,13 @@ ID3D12Resource *TextureManager::GetTextureBuffer(uint32_t number)
 	return textures[number].resource.Get();
 }
 
+const D3D12_RESOURCE_DESC TextureManager::GetResoureDesc(uint32_t number)
+{
+	assert(number < textures.size());
+	Texture& texture = textures.at(number);
+	return texture.resource->GetDesc();
+}
+
 
 void TextureManager::SetDescriptorHeaps(ID3D12GraphicsCommandList *commandList)
 {

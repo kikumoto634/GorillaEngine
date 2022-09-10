@@ -65,6 +65,12 @@ public:
 	/// <returns></returns>
 	ID3D12Resource* GetTextureBuffer(uint32_t number);
 
+	/// <summary>
+	/// リソース情報取得
+	/// </summary>
+	/// <param name="textureHandle">テクスチャハンドル</param>
+	/// <returns>リソース情報</returns>
+	const D3D12_RESOURCE_DESC GetResoureDesc(uint32_t number);
 
 	///Setter
 
