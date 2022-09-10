@@ -1,4 +1,9 @@
-float4 main() : SV_TARGET
+#include "Sprite.hlsli"
+
+VSOutput main( float4 pos : POSITION , float2 uv : TEXCOORD)
 {
-	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+	VSOutput output;
+	output.svpos = mul(mat, pos);
+	output.uv = uv;
+	return output;
 }
