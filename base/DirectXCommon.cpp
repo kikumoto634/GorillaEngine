@@ -59,9 +59,9 @@ void DirectXCommon::BeginDraw()
 	commandList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH,1.f,0,0,nullptr);
 
 	//ビューポート
-	commandList->RSSetViewports(1, &CD3DX12_VIEWPORT(0.0f, 0.0f, (float)window->GetWindowWifth(), (float)window->GetWindowHeight()));
+	commandList->RSSetViewports(1, &CD3DX12_VIEWPORT(0.0f, 0.0f, (float)window->GetWindowWidth(), (float)window->GetWindowHeight()));
 	//シザー矩形
-	commandList->RSSetScissorRects(1, &CD3DX12_RECT(0, 0, (LONG)window->GetWindowWifth(), (LONG)window->GetWindowHeight()));
+	commandList->RSSetScissorRects(1, &CD3DX12_RECT(0, 0, (LONG)window->GetWindowWidth(), (LONG)window->GetWindowHeight()));
 }
 
 void DirectXCommon::EndDraw()
@@ -207,7 +207,7 @@ HRESULT DirectXCommon::CreateSwapChain()
 
 	///スワップチェーン(フロントバッファ、バックバッファを入れ替えてパラパラ漫画を作る)
 	//設定
-	swapChainDesc.Width = window->GetWindowWifth();
+	swapChainDesc.Width = window->GetWindowWidth();
 	swapChainDesc.Height = window->GetWindowHeight();
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;				//色情報書式
 	swapChainDesc.SampleDesc.Count = 1;								//マルチサンプルしない
@@ -296,7 +296,7 @@ HRESULT DirectXCommon::CreateDSV()
 	CD3DX12_RESOURCE_DESC depthReourceDesc = CD3DX12_RESOURCE_DESC::Tex2D
 		(
 			DXGI_FORMAT_D32_FLOAT,
-			window->GetWindowWifth(),
+			window->GetWindowWidth(),
 			window->GetWindowHeight(),
 			1,0,
 			1,0,

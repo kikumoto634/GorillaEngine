@@ -3,6 +3,7 @@
 #include "DirectXCommon.h"
 #include "SceneManager.h"
 #include "TextureManager.h"
+#include "Sprite.h"
 
 class Application
 {
@@ -29,5 +30,7 @@ private:
 private:
 	Window* window;
 	DirectXCommon* dxCommon;
-	SceneManager* sceneManager;
+
+	std::unique_ptr<TextureManager> textureManager;
+	std::unique_ptr<Sprite> sprite;
 };

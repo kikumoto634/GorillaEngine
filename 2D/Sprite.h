@@ -1,13 +1,10 @@
 #pragma once
-#include <DirectXMath.h>
 #include <d3d12.h>
 #include <d3dx12.h>
-#include<wrl.h>
-#include <string>
+#include <wrl.h>
+#include <DirectXMath.h>
 
-#include "Window.h"
-#include "DirectXCommon.h"
-#include "TextureManager.h"
+#include"TextureManager.h"
 #include "Vector2.h"
 #include "Vector3.h"
 
@@ -16,208 +13,155 @@
 /// </summary>
 class Sprite
 {
-public:
+public://エイリアス
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	using XMMATRIX = DirectX::XMMATRIX;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
 
-public:
-
+public://サブクラス
 	class Common{
 		friend class Sprite;
 
 	private:
-		//頂点数
-		static const int VertNum = 4;
-		//コモン
 		DirectXCommon* dxCommon = nullptr;
 		//パイプラインステートオブジェクト
 		ComPtr<ID3D12PipelineState> pipelinestate;
 		//ルートシグネチャ
 		ComPtr<ID3D12RootSignature> rootsignature;
 		//射影行列
-		DirectX::XMMATRIX matProjection{};
-		// デスクリプタサイズ
-		UINT descriptorHandleIncrementSize;
+		XMMATRIX matProjection{};
+		//テクスチャマネージャー
+		TextureManager* textureManager = nullptr;
+
 	public:
-		void InitializeGraphicsPipeline(const std::wstring &directoryPath);
+		void InitializeGraphicsPipeline();
 	};
 
-	//頂点データ
-	struct VertexPosUv{
+	//スプライトデータ構造
+	struct VertexPosUv
+	{
 		Vector3 pos;
 		Vector2 uv;
 	};
 
-	//定数バッファ用
+	//定数バッファ用データ構造体(3D変換行列
 	struct ConstBufferData{
-		DirectX::XMFLOAT4 color;
-		DirectX::XMMATRIX mat;
+		XMMATRIX mat;	//3D変換行列
+		XMFLOAT4 color;	//色(RGBA)
 	};
 
-public:
-
+public://静的メンバ関数
 	/// <summary>
-	/// 静的初期化
+	/// 静的メンバの初期化
 	/// </summary>
-	/// <param name="device">デバイス</param>
-	/// <param name="window_width">画面幅</param>
-	/// <param name="window_height">画面高さ</param>
-	/// <param name="directoryPath">シェーダーパス</param>
-	static void StaticInitialize(DirectXCommon* dxCommon,
-		int window_width, int window_height,
-		const std::wstring& directoryPath = L"Resources/");
+	static void StaticInitialize(DirectXCommon* dxCommon, TextureManager* texManager, int window_width, int window_height);
 
 	/// <summary>
-	/// 静的解法
+	/// 静的メンバの解放
 	/// </summary>
 	static void StaticFinalize();
 
 	/// <summary>
-	/// 描画前処理
+	/// グラフィックスパイプラインのセット
 	/// </summary>
 	/// <param name="commandList">コマンドリスト</param>
-	static void PreDraw();
+	static void SetPipelineState(ID3D12GraphicsCommandList* commandList);
 
-	/// <summary>
-	/// 生成
-	/// </summary>
-	/// <param name="textureNumber">番号</param>
-	/// <param name="pos">座標</param>
-	/// <param name="color">色</param>
-	/// <param name="anchorpoint">アンカーポイント</param>
-	/// <param name="isFlipX">左右反転</param>
-	/// <param name="isFlipY">上下反転</param>
-	/// <returns>スプライト</returns>
-	static Sprite* Create(uint32_t textureNumber, Vector2 pos, DirectX::XMFLOAT4 color = {1,1,1,1},
-		Vector2 anchorpoint = {0.f,0.f}, bool isFlipX = false, bool isFlipY = false);
 
-private:
-	//サブクラス(共通処理)
+
+private://静的メンバ変数
 	static Common* common;
 
-public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	Sprite();
 
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	/// <param name="textureNumber">番号</param>
-	/// <param name="pos">座標</param>
-	/// <param name="size">サイズ</param>
-	/// <param name="color">色</param>
-	/// <param name="anchorpoint">アンカーポイント</param>
-	/// <param name="isFlipX">左右反転</param>
-	/// <param name="isFlipY">上下反転</param>
-	Sprite(uint32_t textureNumber, Vector2 pos, Vector2 size, DirectX::XMFLOAT4 color,
-		Vector2 anchorpoint, bool isFlipX, bool isFlipY);
+public://メンバ関数
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <returns>bool</returns>
-	bool Initialize();
+	void Initialize(UINT texNumber);
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw(ID3D12GraphicsCommandList* commandList);
+
+	//スプライト単体頂点バッファの転送
+	void SpriteTransferVertexBuffer();
+
+
+	/// <summary>
+	/// 座標取得
+	/// </summary>
+	Vector2 GetPosition();
 
 	/// <summary>
 	/// 座標設定
 	/// </summary>
 	void SetPosition(Vector2 pos);
-	Vector2 GetPosition()	{return position;}
 
 	/// <summary>
-	/// 角度の設定
+	/// サイズ取得
 	/// </summary>
-	/// <param name="rotation">角度</param>
-	void SetRotation(float rotation);
-	float GetRotation() { return rotation; }
+	Vector2 GetSize();
 
 	/// <summary>
 	/// サイズ設定
 	/// </summary>
 	void SetSize(Vector2 size);
-	Vector2 GetSize()	{return size;}
 
 	/// <summary>
 	/// アンカーポイント設定
 	/// </summary>
 	void SetAnchorpoint(Vector2 pos);
-	Vector2 GetAnchorpoint()	{return anchorPoint;}
 
-	/// <summary>
-	/// テクスチャトリミング
-	/// </summary>
-	/// <param name="tex_x">左上X</param>
-	/// <param name="tex_y">左上Y</param>
-	/// <param name="tex_width">幅</param>
-	/// <param name="tex_height">高さ</param>
+
 	void SetTextureRect(float tex_x, float tex_y, float tex_width, float tex_height);
 
 	/// <summary>
 	/// 左右反転設定
 	/// </summary>
 	void SetIsFlipX(bool IsFlipX);
-	bool GetIsFlipX()	{return isFlipX;}
 
 	/// <summary>
 	/// 上下反転設定
 	/// </summary>
 	void SetIsFlipY(bool IsFlipY);
-	bool GetIsFlipY()	{return isFlipY;}
 
 	/// <summary>
 	/// 色設定
 	/// </summary>
-	void SetColor(DirectX::XMFLOAT4 color);
-	DirectX::XMFLOAT4 GetColor()	{return color;}
+	void SetColor(XMFLOAT4 color);
 
-private:
-	//頂点バッファ
-	ComPtr<ID3D12Resource> vertBuffer;
-	//定数バッファ
-	ComPtr<ID3D12Resource> constBuffer;
-	//頂点バッファマップ
-	VertexPosUv* vertexMap = nullptr;
-	//定数バッファマップ
-	ConstBufferData* constMap = nullptr;
-
-	//頂点バッファビュー
+private://メンバ変数
+	///頂点バッファ
+	ComPtr<ID3D12Resource> vertBuff;
+	///頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
-	
-	//テクスチャハンドル
-	uint32_t textureHandle;
-	//回転角
-	float rotation = 0;
+	//定数バッファ
+	ComPtr<ID3D12Resource> constBuffData;
+	//Z軸周りの回転角
+	float rotation = 0.f;
 	//座標
-	Vector2 position{};
-	//サイズ
-	Vector2 size = {100.f,100.f};
-	//アンカーポイント
-	Vector2 anchorPoint = {0.f,0.f};
-	//ワールド座標
-	DirectX::XMMATRIX matWorld{};
+	Vector3 position = {0, 0, 0};
+	//ワールド行列
+	XMMATRIX matWorld;
 	//色
-	DirectX::XMFLOAT4 color = {1,1,1,1};
+	XMFLOAT4 color = {1, 1, 1, 1};
+	//テクスチャ番号
+	UINT texNumber = 0;
+	//大きさ
+	Vector2 size = {100, 100};
+	//アンカーポイント
+	Vector2 anchorpoint = {0.0f, 0.0f};
 	//左右反転
-	bool isFlipX = false;
+	bool IsFlipX = false;
 	//上下反転
-	bool isFlipY = false;
-	//切り抜き左上座標
-	Vector2 texBase = {0.f,0.f};
-	//切り抜きサイズ
-	Vector2 texSize = {100.f,100.f};
+	bool IsFlipY = false;
+	//テクスチャ左上座標
+	Vector2 texLeftTop = {0,0};
+	//テクスチャ切り出しサイズ
+	Vector2 texSize = {100, 100};
 	//非表示
 	bool IsInvisible = false;
-	//リソース設定
-	//D3D12_RESOURCE_DESC resourceDesc;
-
-private:
-	//頂点情報転送
-	void TransferVertices();
 };
 

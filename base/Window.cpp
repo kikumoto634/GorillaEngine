@@ -1,7 +1,9 @@
 #include "Window.h"
 
-Window::Window(const std::string &name, const int width, const int height):
-	window_name(name),
+wchar_t Window::kWindowClassName[] = L"DirectXGame";
+
+
+Window::Window(const int width, const int height):
 	window_width(width),
 	window_height(height)
 {
@@ -11,13 +13,13 @@ Window::~Window()
 {
 }
 
-void Window::Create()
+void Window::Create(const wchar_t* name)
 {
 	//ウィンドウクラス設定
 	//WNDCLASSEX w{};
 	w.cbSize = sizeof(WNDCLASSEX);
 	w.lpfnWndProc = (WNDPROC)WindowProc;		//ウィンドウプロシージャ設定
-	w.lpszClassName = (LPCWSTR)window_name.c_str();			//ウィンドウクラス名
+	w.lpszClassName = kWindowClassName;			//ウィンドウクラス名
 	w.hInstance = GetModuleHandle(nullptr);		//ウィンドウハンドル
 	w.hCursor = LoadCursor(NULL, IDC_ARROW);	//カーソル指定
 
@@ -32,7 +34,7 @@ void Window::Create()
 	//HWND hwnd = nullptr;
 	hwnd = CreateWindow(
 		w.lpszClassName,			//クラス名
-		L"DirectXGame",				//タイトルバー文字
+		name,				//タイトルバー文字
 		WS_OVERLAPPEDWINDOW,		//標準的なウィンドウスタイル
 		CW_USEDEFAULT,				//表示X座標(OSに任せる)
 		CW_USEDEFAULT,				//表示Y座標(OSに任せる)
