@@ -19,6 +19,22 @@ public:	//定数
 	//テクスチャの最大枚数
 	static const int maxTextureCount = 512;
 
+	//ディレクトリパス
+	const std::string directoryPath = "Resources/";
+
+public:
+	/// <summary>
+	/// テクスチャ
+	/// </summary>
+	struct Texture {
+		// テクスチャリソース
+		ComPtr<ID3D12Resource> resource;
+		// シェーダリソースビューのハンドル(CPU)
+		CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+		// シェーダリソースビューのハンドル(CPU)
+		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	};
+
 public:	//メンバ関数
 	/// <summary>
 	/// 初期化
@@ -27,11 +43,16 @@ public:	//メンバ関数
 	void Initialize(DirectXCommon* dxCommon);
 
 	/// <summary>
+	/// クリア
+	/// </summary>
+	void ResetAll();
+
+	/// <summary>
 	/// テクスチャ読み込み
 	/// </summary>
 	/// <param name="texnumber">テクスチャ番号</param>
 	/// <param name="filename">テクスチャファイル名</param>
-	void LoadTexture(UINT texnumber, const wchar_t* filename);
+	void LoadTexture(UINT texnumber, const std::string& filename);
 
 	/// <summary>
 	/// テクスチャバッファ取得
@@ -63,9 +84,11 @@ public:	//メンバ関数
 private:	//メンバ変数
 	//テクスチャ用デスクリプタヒープの生成
 	ComPtr<ID3D12DescriptorHeap> descHeap;
-	//テクスチャリソース(テクスチャバッファ)の配列
-	ComPtr<ID3D12Resource> textureBuffer[maxTextureCount];
-
+	//テクスチャ情報配列
+	Texture textures[maxTextureCount];
+	//デスクリプタサイズ
+	UINT descriptorhandleIncrementSize = 0u;
+	//DirectXCommon
 	DirectXCommon* dxCommon = nullptr;
 };
 

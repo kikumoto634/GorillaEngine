@@ -114,7 +114,13 @@ public://メンバ関数
 	/// </summary>
 	void SetAnchorpoint(Vector2 pos);
 
-
+	/// <summary>
+	/// 切り抜きサイズ設定
+	/// </summary>
+	/// <param name="tex_x">左上X</param>
+	/// <param name="tex_y">左上Y</param>
+	/// <param name="tex_width">幅</param>
+	/// <param name="tex_height">高さ</param>
 	void SetTextureRect(float tex_x, float tex_y, float tex_width, float tex_height);
 
 	/// <summary>

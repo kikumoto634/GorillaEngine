@@ -3,10 +3,18 @@
 
 void TextureManager::Initialize(DirectXCommon* dxCommon)
 {
-	HRESULT result;
-
 	//メンバ関数に記録
 	this->dxCommon = dxCommon;
+
+	descriptorhandleIncrementSize = dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	//テクスチャリセット
+	ResetAll();
+}
+
+void TextureManager::ResetAll()
+{
+	HRESULT result;
 
 	//デスクリプタヒープの生成
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc= {};
@@ -14,31 +22,38 @@ void TextureManager::Initialize(DirectXCommon* dxCommon)
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	descHeapDesc.NumDescriptors= maxTextureCount;
 	result = this->dxCommon->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));
-	if(FAILED(result))
-	{
-		assert(0);
+	assert(SUCCEEDED(result));
+
+	//全テクスチャ初期化
+	for(size_t i = 0; i < maxTextureCount; i++){
+		textures[i].resource.Reset();
+		textures[i].cpuDescHandleSRV.ptr = 0;
+		textures[i].gpuDescHandleSRV.ptr = 0;
 	}
 }
 
-void TextureManager::LoadTexture(UINT texnumber, const wchar_t *filename)
+void TextureManager::LoadTexture(UINT texnumber, const std::string& filename)
 {
 	//異常な番号の指定を検出
 	assert(texnumber <= maxTextureCount - 1);
 
 	HRESULT result;
 
+	//フルパス
+	std::string fullPath = directoryPath + filename;
+	//ユニコード文字列に変換
+	wchar_t wfilePath[256];
+	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath, _countof(wfilePath));
+
 	///画像ファイルの用意
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
 	//WICテクスチャデータのロード
 	result = LoadFromWICFile(
-		filename,
+		wfilePath,
 		WIC_FLAGS_NONE,
 		&metadata, scratchImg);
-	if(FAILED(result))
-	{
-		assert(0);
-	}
+	assert(SUCCEEDED(result));
 
 
 	//ミップマップの生成
@@ -62,7 +77,6 @@ void TextureManager::LoadTexture(UINT texnumber, const wchar_t *filename)
 	//読み込んだディフューズテクスチャをSRGBとして扱う
 	metadata.format = MakeSRGB(metadata.format);
 
-
 	///テクスチャバッファ設定
 	//ヒープ設定
 	D3D12_HEAP_PROPERTIES textureHandleProp{};
@@ -70,7 +84,7 @@ void TextureManager::LoadTexture(UINT texnumber, const wchar_t *filename)
 	textureHandleProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 	textureHandleProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 	//リソース設定
-	CD3DX12_RESOURCE_DESC textureResourceDesc01 = CD3DX12_RESOURCE_DESC::Tex2D
+	CD3DX12_RESOURCE_DESC textureResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D
 		(
 			metadata.format,
 			metadata.width,
@@ -84,15 +98,12 @@ void TextureManager::LoadTexture(UINT texnumber, const wchar_t *filename)
 		(
 			&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
 			D3D12_HEAP_FLAG_NONE,
-			&textureResourceDesc01,
+			&textureResourceDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
-			IID_PPV_ARGS(&textureBuffer[texnumber])
+			IID_PPV_ARGS(&textures[texnumber].resource)
 		);
-	if(FAILED(result))
-	{
-		assert(0);
-	}
+	assert(SUCCEEDED(result));
 
 
 	//テクスチャバッファへのデータ転送
@@ -102,38 +113,37 @@ void TextureManager::LoadTexture(UINT texnumber, const wchar_t *filename)
 		//ミップマップレベルを指定してイメージを取得
 		const Image* img = scratchImg.GetImage(i, 0, 0);
 		//テクスチャバッファにデータ転送
-		result = textureBuffer[texnumber]->WriteToSubresource(
+		result = textures[texnumber].resource->WriteToSubresource(
 			(UINT)i,				
 			nullptr,				//全領域へコピー
 			img->pixels,			//元データアドレス
 			(UINT)img->rowPitch,	//一ラインサイズ
 			(UINT)img->slicePitch	//一枚サイズ
 		);
-		if(FAILED(result))
-		{
-			assert(0);
-		}
+		assert(SUCCEEDED(result));
 	}
 
 	///シェーダリソースビューの作成
 	//設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};	//設定構造体
-	srvDesc.Format = textureResourceDesc01.Format;
+	srvDesc.Format = textureResourceDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	//2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = textureResourceDesc01.MipLevels;
+	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
 
 	//ハンドルの指す位置にシェーダーリソースビューの作成
+	textures[texnumber].cpuDescHandleSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+		descHeap->GetCPUDescriptorHandleForHeapStart(), texnumber, 
+		descriptorhandleIncrementSize);
+	textures[texnumber].gpuDescHandleSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
+		descHeap->GetGPUDescriptorHandleForHeapStart(), texnumber, 
+		descriptorhandleIncrementSize);
+
 	dxCommon->GetDevice()->CreateShaderResourceView
 	(
-		textureBuffer[texnumber].Get(),
+		textures[texnumber].resource.Get(),
 		&srvDesc,
-		CD3DX12_CPU_DESCRIPTOR_HANDLE//SRVヒープの先頭ハンドルを取得
-			(
-				descHeap->GetCPUDescriptorHandleForHeapStart(),
-				texnumber,
-				dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
-			)
+		textures[texnumber].cpuDescHandleSRV
 	);
 }
 
@@ -142,7 +152,7 @@ ID3D12Resource *TextureManager::GetSpriteTexBuffer(UINT texnumber)
 	//配列オーバーフロー防止
 	assert(texnumber < maxTextureCount);
 
-	return textureBuffer[texnumber].Get();
+	return textures[texnumber].resource.Get();
 }
 
 void TextureManager::SetDescriptorHeaps(ID3D12GraphicsCommandList *commandList)
@@ -154,15 +164,6 @@ void TextureManager::SetDescriptorHeaps(ID3D12GraphicsCommandList *commandList)
 
 void TextureManager::SetShaderResourceView(ID3D12GraphicsCommandList *commandList, UINT RootParameterIndex, UINT texnumber)
 {
-	//SRVのサイズを取得
-	UINT sizeSRV = dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-	//デスクリプタテーブルの先頭を取得
-	D3D12_GPU_DESCRIPTOR_HANDLE start = descHeap->GetGPUDescriptorHandleForHeapStart();
-
-	//SRVのGPUハンドル取得
-	CD3DX12_GPU_DESCRIPTOR_HANDLE handle = CD3DX12_GPU_DESCRIPTOR_HANDLE(start, texnumber,sizeSRV);
-
 	//シェーダーリソースビュー(SRV)をセット
-	commandList->SetGraphicsRootDescriptorTable(RootParameterIndex, handle);
+	commandList->SetGraphicsRootDescriptorTable(RootParameterIndex, textures[texnumber].gpuDescHandleSRV);
 }

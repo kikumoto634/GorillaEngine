@@ -65,7 +65,7 @@ void Application::Initialize()
 	//スプライト
 	Sprite::StaticInitialize(dxCommon, textureManager.get(), window->GetWindowWidth(), window->GetWindowHeight());
 
-	textureManager->LoadTexture(0, L"Resources/Texture.jpg");
+	textureManager->LoadTexture(0, "Texture.jpg");
 	sprite = std::make_unique<Sprite>();
 	sprite->Initialize(0);
 }
