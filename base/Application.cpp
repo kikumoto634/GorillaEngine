@@ -30,6 +30,7 @@ Application::~Application()
 {
 	delete window;
 	delete dxCommon;
+	delete sprite;
 }
 
 void Application::Run()
@@ -66,8 +67,7 @@ void Application::Initialize()
 	Sprite::StaticInitialize(dxCommon, textureManager.get(), window->GetWindowWidth(), window->GetWindowHeight());
 
 	textureManager->LoadTexture(0, "Texture.jpg");
-	sprite = std::make_unique<Sprite>();
-	sprite->Initialize(0);
+	sprite = Sprite::Create(0, Vector3(100.f,100.f, 0.f));
 }
 
 void Application::Update()
@@ -78,8 +78,8 @@ void Application::Draw()
 {
 	dxCommon->BeginDraw();
 
-	Sprite::SetPipelineState(this->dxCommon->GetCommandList());
-	sprite->Draw(dxCommon->GetCommandList());
+	Sprite::SetPipelineState();
+	sprite->Draw();
 
 	dxCommon->EndDraw();
 }

@@ -32,5 +32,5 @@ private:
 	DirectXCommon* dxCommon;
 
 	std::unique_ptr<TextureManager> textureManager;
-	std::unique_ptr<Sprite> sprite;
+	Sprite* sprite = nullptr;
 };

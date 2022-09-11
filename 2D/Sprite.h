@@ -23,6 +23,9 @@ public://サブクラス
 		friend class Sprite;
 
 	private:
+		//頂点数
+		const int vertNum = 4;
+		//DirectXCommon
 		DirectXCommon* dxCommon = nullptr;
 		//パイプラインステートオブジェクト
 		ComPtr<ID3D12PipelineState> pipelinestate;
@@ -30,11 +33,13 @@ public://サブクラス
 		ComPtr<ID3D12RootSignature> rootsignature;
 		//射影行列
 		XMMATRIX matProjection{};
+
+
 		//テクスチャマネージャー
 		TextureManager* textureManager = nullptr;
 
 	public:
-		void InitializeGraphicsPipeline();
+		void InitializeGraphicsPipeline(const std::string& directoryPath);
 	};
 
 	//スプライトデータ構造
@@ -54,7 +59,8 @@ public://静的メンバ関数
 	/// <summary>
 	/// 静的メンバの初期化
 	/// </summary>
-	static void StaticInitialize(DirectXCommon* dxCommon, TextureManager* texManager, int window_width, int window_height);
+	static void StaticInitialize(DirectXCommon* dxCommon, TextureManager* texManager, 
+		int window_width, int window_height, const std::string& directoryPath = "Resources/shader");
 
 	/// <summary>
 	/// 静的メンバの解放
@@ -65,9 +71,11 @@ public://静的メンバ関数
 	/// グラフィックスパイプラインのセット
 	/// </summary>
 	/// <param name="commandList">コマンドリスト</param>
-	static void SetPipelineState(ID3D12GraphicsCommandList* commandList);
+	static void SetPipelineState();
 
 
+	static Sprite* Create(UINT texNumber, Vector3 pos, XMFLOAT4 color = {1,1,1,1},
+		Vector2 anchorpoint = {0.f,0.f}, bool isFlipX = false, bool isFlipY = false);
 
 private://静的メンバ変数
 	static Common* common;
@@ -75,15 +83,18 @@ private://静的メンバ変数
 
 public://メンバ関数
 
+	Sprite();
+	Sprite(UINT texnumber, Vector3 pos, Vector2 size, XMFLOAT4 color, Vector2 anchorpoint, bool isFlipX, bool isFlipY);
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(UINT texNumber);
+	bool Initialize(UINT texNumber);
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(ID3D12GraphicsCommandList* commandList);
+	void Draw();
 
 	//スプライト単体頂点バッファの転送
 	void SpriteTransferVertexBuffer();
@@ -92,7 +103,7 @@ public://メンバ関数
 	/// <summary>
 	/// 座標取得
 	/// </summary>
-	Vector2 GetPosition();
+	Vector3 GetPosition()	{return position;}
 
 	/// <summary>
 	/// 座標設定
@@ -102,7 +113,7 @@ public://メンバ関数
 	/// <summary>
 	/// サイズ取得
 	/// </summary>
-	Vector2 GetSize();
+	Vector2 GetSize()	{return size;}
 
 	/// <summary>
 	/// サイズ設定
@@ -141,22 +152,25 @@ public://メンバ関数
 private://メンバ変数
 	///頂点バッファ
 	ComPtr<ID3D12Resource> vertBuff;
-	///頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffData;
-	//Z軸周りの回転角
-	float rotation = 0.f;
-	//座標
-	Vector3 position = {0, 0, 0};
-	//ワールド行列
-	XMMATRIX matWorld;
-	//色
-	XMFLOAT4 color = {1, 1, 1, 1};
+	//頂点バッファマップ
+	VertexPosUv* vertMap = nullptr;
+	//定数バッファマップ
+	ConstBufferData* constMap = nullptr;
+	///頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView{};
+
 	//テクスチャ番号
 	UINT texNumber = 0;
+
+	//座標
+	Vector3 position = {0, 0, 0};
+	//Z軸周りの回転角
+	float rotation = 0.f;
 	//大きさ
 	Vector2 size = {100, 100};
+
 	//アンカーポイント
 	Vector2 anchorpoint = {0.0f, 0.0f};
 	//左右反転
@@ -169,5 +183,14 @@ private://メンバ変数
 	Vector2 texSize = {100, 100};
 	//非表示
 	bool IsInvisible = false;
+
+	//ワールド行列
+	XMMATRIX matWorld;
+
+	//色
+	XMFLOAT4 color = {1, 1, 1, 1};
+
+	//リソース情報
+	D3D12_RESOURCE_DESC resourceDesc;
 };
 
