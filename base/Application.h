@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "DirectXCommon.h"
+#include "Input.h"
 #include "SceneManager.h"
 #include "TextureManager.h"
 #include "Sprite.h"
@@ -30,7 +31,7 @@ private:
 private:
 	Window* window;
 	DirectXCommon* dxCommon;
-	//SceneManager* sceneManager;
+	Input* input;
 
 	Sprite* sprite = nullptr;
 };

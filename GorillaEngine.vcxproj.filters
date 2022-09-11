@@ -37,6 +37,15 @@
     <Filter Include="ヘッダー ファイル\math">
       <UniqueIdentifier>{70446899-e34a-4634-8bad-dbeb53b3a492}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Sprite">
+      <UniqueIdentifier>{626b5611-8691-4cca-9bac-0cba214f6893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\input">
+      <UniqueIdentifier>{1ba15469-4355-448e-9a04-9816bbf3b65b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\input">
+      <UniqueIdentifier>{fb4c1ad2-5415-4cc5-99a9-7e3fd0a71bd6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -72,6 +81,9 @@
     <ClCompile Include="math\Vector3.cpp">
       <Filter>ソース ファイル\math</Filter>
     </ClCompile>
+    <ClCompile Include="input\Input.cpp">
+      <Filter>ソース ファイル\input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\Window.h">
@@ -104,18 +116,21 @@
     <ClInclude Include="math\Vector3.h">
       <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\shader\Sprite.hlsli">
-      <Filter>リソース ファイル</Filter>
-    </None>
+    <ClInclude Include="input\Input.h">
+      <Filter>ヘッダー ファイル\input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\Sprite</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\SpriteVS.hlsl">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\Sprite</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shader\Sprite.hlsli">
+      <Filter>リソース ファイル\Sprite</Filter>
+    </None>
   </ItemGroup>
 </Project>

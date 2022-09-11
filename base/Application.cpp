@@ -24,14 +24,13 @@ Application::Application()
 {
 	window = new Window("GiliraEngine", 1280, 720);
 	dxCommon = new DirectXCommon();
-	//sceneManager = new SceneManager();
+	input = Input::GetInstance();
 }
 
 Application::~Application()
 {
 	delete window;
 	delete dxCommon;
-	//delete sceneManager;
 	delete sprite;
 }
 
@@ -47,7 +46,6 @@ void Application::Run()
 		if(msg.message == WM_QUIT) {
 			break;
 		}
-		//if(sceneManager->GetIsAlive()) break;
 
 		Update();
 		Draw();
@@ -62,35 +60,42 @@ void Application::Initialize()
 	//DirectXCommon
 	dxCommon->Initialize(window);
 
-	//シーン追加
-	//sceneManager->Add("Area01", new GameScene01(window));
-
-	//シーン指定
-	//sceneManager->Change("Area01");
+	//Input初期化
+	input->Initialize(window->GetHwnd());
 
 	////テクスチャ
 	TextureManager::GetInstance()->Initialize(dxCommon);
-	TextureManager::Load(0, "Texture.jpg");
+	TextureManager::Load(0, "white1x1.png");
 
 	////スプライト
 	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
 
 	sprite = Sprite::Create(0, Vector2(100.f,100.f));
+	sprite->SetSize(Vector2(100,100));
 }
 
 void Application::Update()
 {
-	//sceneManager->Update();
+	//入力情報更新
+	input->Update();
+
+	if(input->Push(DIK_SPACE)){
+		sprite->SetColor({1,0,0,1});
+	}
+	else{
+		sprite->SetColor({1,1,1,1});
+	}
 }
 
 void Application::Draw()
 {
+	//描画前処理
 	dxCommon->BeginDraw();
-
 	Sprite::SetPipelineState();
-	sprite->Draw();
-	//sceneManager->Draw();
 
+	sprite->Draw();
+
+	//描画後処理
 	dxCommon->EndDraw();
 }
 
