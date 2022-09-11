@@ -3,10 +3,7 @@
 wchar_t Window::kWindowClassName[] = L"DirectXGame";
 
 
-Window::Window(const std::string& name, const int width, const int height):
-	name(name),
-	window_width(width),
-	window_height(height)
+Window::Window()
 {
 }
 
@@ -14,8 +11,18 @@ Window::~Window()
 {
 }
 
-void Window::Create()
+Window *Window::GetInstance()
 {
+	static Window instance;
+	return &instance;
+}
+
+void Window::Create(const std::string& name, const int width, const int height)
+{
+	this->name = name;
+	this->window_width = width;
+	this->window_height = height;
+
 	//ウィンドウクラス設定
 	//WNDCLASSEX w{};
 	w.cbSize = sizeof(WNDCLASSEX);
@@ -34,7 +41,7 @@ void Window::Create()
 	///ウィンドウオブジェクトの生成
 	//HWND hwnd = nullptr;
 	wchar_t wName[256];
-	MultiByteToWideChar(CP_ACP, 0, name.c_str(), -1, wName, _countof(wName));
+	MultiByteToWideChar(CP_ACP, 0, this->name.c_str(), -1, wName, _countof(wName));
 
 	hwnd = CreateWindow(
 		w.lpszClassName,			//クラス名

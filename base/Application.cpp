@@ -22,15 +22,13 @@ void Application::Delete()
 
 Application::Application()
 {
-	window = new Window("GiliraEngine", 1280, 720);
-	dxCommon = new DirectXCommon();
+	window = Window::GetInstance();
+	dxCommon = DirectXCommon::GetInstance();
 	input = Input::GetInstance();
 }
 
 Application::~Application()
 {
-	delete window;
-	delete dxCommon;
 	delete sprite;
 }
 
@@ -55,7 +53,7 @@ void Application::Run()
 void Application::Initialize()
 {
 	//Window¶¬
-	window->Create();
+	window->Create("GiliraEngine", 1280, 720);
 
 	//DirectXCommon
 	dxCommon->Initialize(window);

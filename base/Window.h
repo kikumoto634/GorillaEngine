@@ -8,10 +8,12 @@
 class Window
 {
 public:
-	Window(const std::string& name = "DirectXGame", const int width = 1280, const int height = 720);
+	Window();
 	~Window();
 
-	void Create();
+	static Window* GetInstance();
+
+	void Create(const std::string& name = "DirectXGame", const int width = 1280, const int height = 720);
 	void Finalize();
 
 	const HWND& GetHwnd()	{return hwnd;}
