@@ -36,7 +36,7 @@ public://サブクラス
 
 
 		//テクスチャマネージャー
-		TextureManager* textureManager = nullptr;
+		//TextureManager* textureManager = nullptr;
 
 	public:
 		void InitializeGraphicsPipeline(const std::string& directoryPath);
@@ -59,7 +59,7 @@ public://静的メンバ関数
 	/// <summary>
 	/// 静的メンバの初期化
 	/// </summary>
-	static void StaticInitialize(DirectXCommon* dxCommon, TextureManager* texManager, 
+	static void StaticInitialize(DirectXCommon* dxCommon,
 		int window_width, int window_height, const std::string& directoryPath = "Resources/shader");
 
 	/// <summary>
@@ -74,7 +74,7 @@ public://静的メンバ関数
 	static void SetPipelineState();
 
 
-	static Sprite* Create(UINT texNumber, Vector3 pos, XMFLOAT4 color = {1,1,1,1},
+	static Sprite* Create(UINT texNumber, Vector2 pos, XMFLOAT4 color = {1,1,1,1},
 		Vector2 anchorpoint = {0.f,0.f}, bool isFlipX = false, bool isFlipY = false);
 
 private://静的メンバ変数

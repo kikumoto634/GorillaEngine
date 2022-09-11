@@ -35,6 +35,12 @@ public:
 		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
 	};
 
+public://Ã“I
+
+	static void Load(UINT texnumber, const std::string& filename);
+
+	static TextureManager* GetInstance();
+
 public:	//ƒƒ“ƒoŠÖ”
 	/// <summary>
 	/// ‰Šú‰»

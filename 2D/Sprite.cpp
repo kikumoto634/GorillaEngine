@@ -8,13 +8,12 @@ using namespace DirectX;
 
 Sprite::Common* Sprite::common = nullptr;
 
-void Sprite::StaticInitialize(DirectXCommon* dxCommon, TextureManager* texManager, 
+void Sprite::StaticInitialize(DirectXCommon* dxCommon,
 	int window_width, int window_height, const std::string& directoryPath)
 {
 	common = new Common();
 
 	common->dxCommon = dxCommon;
-	common->textureManager = texManager;
 
 	//グラフィックスパイプライン生成
 	common->InitializeGraphicsPipeline(directoryPath);
@@ -48,21 +47,22 @@ void Sprite::SetPipelineState()
 	common->dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
-Sprite *Sprite::Create(UINT texNumber, Vector3 pos, XMFLOAT4 color, Vector2 anchorpoint, bool isFlipX, bool isFlipY)
+Sprite *Sprite::Create(UINT texNumber, Vector2 pos, XMFLOAT4 color, Vector2 anchorpoint, bool isFlipX, bool isFlipY)
 {
 	// 仮サイズ
 	Vector2 size = {100.0f, 100.0f};
 
 	{
 		// テクスチャ情報取得
-		const D3D12_RESOURCE_DESC& resDesc = common->textureManager->GetSpriteTexBuffer(texNumber)->GetDesc();
+		//const D3D12_RESOURCE_DESC& resDesc = common->textureManager->GetSpriteTexBuffer(texNumber)->GetDesc();
+		const D3D12_RESOURCE_DESC& resDesc = TextureManager::GetInstance()->GetSpriteTexBuffer(texNumber)->GetDesc();
 		// スプライトのサイズをテクスチャのサイズに設定
 		size = {(float)resDesc.Width, (float)resDesc.Height};
 	}
 
 	// Spriteのインスタンスを生成
 	Sprite* sprite =
-	  new Sprite(texNumber, pos, size, color, anchorpoint, isFlipX, isFlipY);
+		new Sprite(texNumber, {pos.x,pos.y,0.f}, size, color, anchorpoint, isFlipX, isFlipY);
 	if (sprite == nullptr) {
 		return nullptr;
 	}
@@ -102,10 +102,10 @@ bool Sprite::Initialize(UINT texNumber)
 	this->texNumber = texNumber;
 
 	//指定番号の画像が読込落ちなら
-	if(common->textureManager->GetSpriteTexBuffer(this->texNumber))
+	if(TextureManager::GetInstance()->GetSpriteTexBuffer(texNumber))
 	{
 		//テクスチャ情報取得
-		resourceDesc = common->textureManager->GetSpriteTexBuffer(this->texNumber)->GetDesc();
+		resourceDesc = TextureManager::GetInstance()->GetSpriteTexBuffer(texNumber)->GetDesc();
 
 		//スプライトの大きさを画像の解像度に合わせる
 		this->size = {(float)resourceDesc.Width, (float)resourceDesc.Height};
@@ -201,7 +201,7 @@ void Sprite::SpriteTransferVertexBuffer()
 
 	//UV計算
 	//指定番号の画像が読込済みなら
-	if(common->textureManager->GetSpriteTexBuffer(this->texNumber))
+	if(TextureManager::GetInstance()->GetSpriteTexBuffer(texNumber))
 	{
 		float tex_left = this->texLeftTop.x / resourceDesc.Width;
 		float tex_right = (this->texLeftTop.x + this->texSize.x) / resourceDesc.Width;
@@ -247,9 +247,9 @@ void Sprite::Draw()
 	//定数バッファをセット
 	common->dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, this->constBuffData->GetGPUVirtualAddress());
 	//テスクチャ用デスクリプタヒープの設定
-	common->textureManager->SetDescriptorHeaps(common->dxCommon->GetCommandList());
+	TextureManager::GetInstance()->SetDescriptorHeaps(common->dxCommon->GetCommandList());
 	//シェーダーリソースビューをセット
-	common->textureManager->SetShaderResourceView(common->dxCommon->GetCommandList(), 1, this->texNumber);
+	TextureManager::GetInstance()->SetShaderResourceView(common->dxCommon->GetCommandList(), 1, this->texNumber);
 	//ポリゴンの描画
 	common->dxCommon->GetCommandList()->DrawInstanced(4, 1, 0, 0);
 }

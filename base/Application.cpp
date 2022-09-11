@@ -60,14 +60,14 @@ void Application::Initialize()
 	dxCommon->Initialize(window);
 
 	//テクスチャ
-	textureManager = std::make_unique<TextureManager>();
-	textureManager->Initialize(dxCommon);
+
+	TextureManager::GetInstance()->Initialize(dxCommon);
+	TextureManager::Load(0, "Texture.jpg");
 
 	//スプライト
-	Sprite::StaticInitialize(dxCommon, textureManager.get(), window->GetWindowWidth(), window->GetWindowHeight());
+	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
 
-	textureManager->LoadTexture(0, "Texture.jpg");
-	sprite = Sprite::Create(0, Vector3(100.f,100.f, 0.f));
+	sprite = Sprite::Create(0, Vector2(100.f,100.f));
 }
 
 void Application::Update()

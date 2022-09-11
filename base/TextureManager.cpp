@@ -1,6 +1,17 @@
 #include "TextureManager.h"
 #include <assert.h>
 
+void TextureManager::Load(UINT texnumber, const std::string &filename)
+{
+	TextureManager::GetInstance()->LoadTexture(texnumber, filename);
+}
+
+TextureManager *TextureManager::GetInstance()
+{
+	static TextureManager instance;
+	return &instance;
+}
+
 void TextureManager::Initialize(DirectXCommon* dxCommon)
 {
 	//ƒƒ“ƒoŠÖ”‚É‹L˜^

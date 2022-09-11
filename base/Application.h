@@ -31,6 +31,5 @@ private:
 	Window* window;
 	DirectXCommon* dxCommon;
 
-	std::unique_ptr<TextureManager> textureManager;
 	Sprite* sprite = nullptr;
 };
