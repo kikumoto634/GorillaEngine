@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 
+#include "TextureManager.h"
+#include "Sprite.h"
+
 class Window;
 class GameSceneBase
 {
@@ -8,10 +11,10 @@ public:
 	using string = std::string;
 
 public:
-	virtual ~GameSceneBase() = default;
-	virtual void Initialize()= 0;
+	virtual ~GameSceneBase();
+	virtual void Initialize();
 	virtual void Update() = 0;
-	virtual void Draw() = 0;
+	virtual void Draw();
 
 	bool GetIsEnd() { return isEnd; }
 	bool GetIsAllEnd() { return isAllEnd; }

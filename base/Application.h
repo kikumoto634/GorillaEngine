@@ -30,6 +30,7 @@ private:
 private:
 	Window* window;
 	DirectXCommon* dxCommon;
+	//SceneManager* sceneManager;
 
 	Sprite* sprite = nullptr;
 };

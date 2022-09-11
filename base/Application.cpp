@@ -22,14 +22,16 @@ void Application::Delete()
 
 Application::Application()
 {
-	window = new Window(1280, 720);
+	window = new Window("GiliraEngine", 1280, 720);
 	dxCommon = new DirectXCommon();
+	//sceneManager = new SceneManager();
 }
 
 Application::~Application()
 {
 	delete window;
 	delete dxCommon;
+	//delete sceneManager;
 	delete sprite;
 }
 
@@ -45,6 +47,7 @@ void Application::Run()
 		if(msg.message == WM_QUIT) {
 			break;
 		}
+		//if(sceneManager->GetIsAlive()) break;
 
 		Update();
 		Draw();
@@ -54,17 +57,22 @@ void Application::Run()
 void Application::Initialize()
 {
 	//Window生成
-	window->Create(L"GoliraEngine");
+	window->Create();
 
 	//DirectXCommon
 	dxCommon->Initialize(window);
 
-	//テクスチャ
+	//シーン追加
+	//sceneManager->Add("Area01", new GameScene01(window));
 
+	//シーン指定
+	//sceneManager->Change("Area01");
+
+	////テクスチャ
 	TextureManager::GetInstance()->Initialize(dxCommon);
 	TextureManager::Load(0, "Texture.jpg");
 
-	//スプライト
+	////スプライト
 	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
 
 	sprite = Sprite::Create(0, Vector2(100.f,100.f));
@@ -72,6 +80,7 @@ void Application::Initialize()
 
 void Application::Update()
 {
+	//sceneManager->Update();
 }
 
 void Application::Draw()
@@ -80,6 +89,7 @@ void Application::Draw()
 
 	Sprite::SetPipelineState();
 	sprite->Draw();
+	//sceneManager->Draw();
 
 	dxCommon->EndDraw();
 }

@@ -8,10 +8,10 @@
 class Window
 {
 public:
-	Window(const int width = 1280, const int height = 720);
+	Window(const std::string& name = "DirectXGame", const int width = 1280, const int height = 720);
 	~Window();
 
-	void Create(const wchar_t* name = L"DirectXGame");
+	void Create();
 	void Finalize();
 
 	const HWND& GetHwnd()	{return hwnd;}
@@ -28,6 +28,8 @@ private:
 	HWND hwnd = nullptr;	//ウィンドウハンドル
 	WNDCLASSEX w{};		//ウィンドウクラス
 	static wchar_t kWindowClassName[];
+
+	std::string name;
 	int window_width;
 	int window_height;
 };

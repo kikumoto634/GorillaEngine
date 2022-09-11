@@ -3,7 +3,8 @@
 wchar_t Window::kWindowClassName[] = L"DirectXGame";
 
 
-Window::Window(const int width, const int height):
+Window::Window(const std::string& name, const int width, const int height):
+	name(name),
 	window_width(width),
 	window_height(height)
 {
@@ -13,7 +14,7 @@ Window::~Window()
 {
 }
 
-void Window::Create(const wchar_t* name)
+void Window::Create()
 {
 	//ウィンドウクラス設定
 	//WNDCLASSEX w{};
@@ -32,9 +33,12 @@ void Window::Create(const wchar_t* name)
 
 	///ウィンドウオブジェクトの生成
 	//HWND hwnd = nullptr;
+	wchar_t wName[256];
+	MultiByteToWideChar(CP_ACP, 0, name.c_str(), -1, wName, _countof(wName));
+
 	hwnd = CreateWindow(
 		w.lpszClassName,			//クラス名
-		name,				//タイトルバー文字
+		wName,				//タイトルバー文字
 		WS_OVERLAPPEDWINDOW,		//標準的なウィンドウスタイル
 		CW_USEDEFAULT,				//表示X座標(OSに任せる)
 		CW_USEDEFAULT,				//表示Y座標(OSに任せる)
