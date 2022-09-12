@@ -5,6 +5,8 @@
 #include "SceneManager.h"
 #include "TextureManager.h"
 #include "Sprite.h"
+#include "ViewProjection.h"
+#include "WorldTransform.h"
 
 class Application
 {

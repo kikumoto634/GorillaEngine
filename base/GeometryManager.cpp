@@ -163,3 +163,19 @@ void GeometryManager::Initialize()
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
 }
+
+void GeometryManager::Draw(UINT texNumber)
+{
+	textureManager = TextureManager::GetInstance();
+
+	//デスクリプタヒープ配列
+	textureManager->SetDescriptorHeaps(dxCommon->GetCommandList());
+	//頂点バッファ
+	dxCommon->GetCommandList()->IASetVertexBuffers(0,1,&vbView);
+	//インデックスバッファ
+	dxCommon->GetCommandList()->IASetIndexBuffer(&ibView);
+	//シェーダーリソースビュー
+	textureManager->SetShaderResourceView(dxCommon->GetCommandList(),1,texNumber);
+	//描画コマンド
+	dxCommon->GetCommandList()->DrawIndexedInstanced(indices.size(),1,0,0,0);
+}

@@ -36,6 +36,15 @@ public:
 	/// </summary>
 	void Initialize();
 
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw(UINT texNumber);
+
+	//Get
+	const D3D12_VERTEX_BUFFER_VIEW& GetVbView()	{return vbView;}
+	const D3D12_INDEX_BUFFER_VIEW& GetIbView()	{return ibView;}
+
 private:
 	//頂点バッファ
 	ComPtr<ID3D12Resource> vertBuffer;
@@ -51,5 +60,6 @@ private:
 	vector<unsigned short> indices;
 
 	DirectXCommon* dxCommon = nullptr;
+	TextureManager* textureManager = nullptr;
 };
 

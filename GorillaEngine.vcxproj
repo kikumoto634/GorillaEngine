@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2D\Sprite.cpp" />
+    <ClCompile Include="3D\GeometryModel.cpp" />
     <ClCompile Include="3D\ViewProjection.cpp" />
     <ClCompile Include="3D\WorldTransform.cpp" />
     <ClCompile Include="base\Application.cpp" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2D\Sprite.h" />
+    <ClInclude Include="3D\GeometryModel.h" />
     <ClInclude Include="3D\ViewProjection.h" />
     <ClInclude Include="3D\WorldTransform.h" />
     <ClInclude Include="base\Application.h" />
