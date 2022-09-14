@@ -1,30 +1,179 @@
-#include "GeometryModel.h"
-#include <cassert>
-#include <string>
+#include "GeometryObject.h"
 #include <d3dcompiler.h>
-
 
 #pragma comment(lib, "d3dcompiler.lib")
 
 using namespace DirectX;
 
+GeometryObject::Common* GeometryObject::common = nullptr;
 
-//静的メンバ変数の実態
-GeometryModel::Common* GeometryModel::common = nullptr;
+void GeometryObject::StaticInitialize(DirectXCommon *dxCommon)
+{
+	common = new Common();
+	common->dxCommon = dxCommon;
 
+	common->InitializeGraphicsPipeline();
+	common->InitializeDescriptorHeap();
 
-void GeometryModel::Common::InitializeGraphicsPipeline()
+	common->geometryObjectManager = GeometryObjectManager::GetInstance();
+	common->textureManager = TextureManager::GetInstance();
+
+	common->viewProjevtion.Initialize();
+}
+
+void GeometryObject::StaticFinalize()
+{
+	if(common != nullptr) return ;
+	delete common;
+	common = nullptr;
+}
+
+GeometryObject *GeometryObject::Create(UINT texNumber, XMFLOAT4 color)
+{
+	GeometryObject* object = new GeometryObject(texNumber, color);
+	if(object == nullptr){
+		return nullptr;
+	}
+
+	//初期化
+	if(!object->Initialize(texNumber)){
+		delete object;
+		assert(0);
+		return nullptr;
+	}
+
+	return object;
+}
+
+GeometryObject::GeometryObject()
+{
+}
+
+GeometryObject::GeometryObject(UINT texNumber, XMFLOAT4 color)
+{
+	this->texNumber = texNumber;
+	this->color = color;
+	this->matWorld = XMMatrixIdentity();
+}
+
+bool GeometryObject::Initialize(UINT texNumber)
+{
+	HRESULT result;
+	this->texNumber = texNumber;
+
+	//定数バッファ生成
+	{
+		// ヒーププロパティ
+		CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+		// リソース設定
+		CD3DX12_RESOURCE_DESC resourceDesc =
+		  CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff);
+
+		//生成
+		result = common->dxCommon->GetDevice()->CreateCommittedResource(
+			&heapProps,
+			D3D12_HEAP_FLAG_NONE,
+			&resourceDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&constBuffer)
+		);
+		assert(SUCCEEDED(result));
+
+		//転送
+		result = constBuffer->Map(0, nullptr, (void**)&constMap);
+		if(SUCCEEDED(result)){
+			constMap->color = XMFLOAT4(1,1,1,1);
+			constMap->mat = common->viewProjevtion.matProjection;
+			constBuffer->Unmap(0, nullptr);
+		}
+	}
+
+	return true;
+}
+
+void GeometryObject::Update()
 {
 	HRESULT result = S_FALSE;
 
-	///頂点シェーダーfileの読み込みとコンパイル
-	ComPtr<ID3DBlob> vsBlob ;			//頂点シェーダーオブジェクト
-	ComPtr<ID3DBlob> psBlob ;			//ピクセルシェーダーオブジェクト
-	ComPtr<ID3DBlob> errorBlob ;		//エラーオブジェクト
+	XMMATRIX matScale, matRot, matTrans;
+
+	//スケール、回転、平行移動行列の計算
+	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+	matRot = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(rotation.z);
+	matRot *= XMMatrixRotationX(rotation.x);
+	matRot *= XMMatrixRotationY(rotation.y);
+	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+
+	//ワールド行列の合成
+	matWorld = XMMatrixIdentity();	//変形をリセット
+	matWorld *= matScale;			//ワールド行列にスケーリングを反映
+	matWorld *= matRot;				//ワールド行列に回転を反映
+	matWorld *= matTrans;			//ワールド行列に平行移動を反映
+
+	//親オブジェクトの存在
+	if(parent != nullptr)
+	{
+		//親オブジェクトのワールド行列を掛ける
+		matWorld *= parent->matWorld;
+	}
+
+	//定数バッファへのデータ転送
+	//値を書き込むと自動的に転送される
+
+	//カメラの行列取得
+	const XMMATRIX& matView = common->viewProjevtion.matView;
+	const XMMATRIX& matProjection = common->viewProjevtion.matProjection;
+
+	constMap->color = color;
+	constMap->mat = matWorld * matView * matProjection;
+}
+
+void GeometryObject::Draw()
+{
+#pragma region 共通描画コマンド
+	//パイプラインステートの設定
+	common->dxCommon->GetCommandList()->SetPipelineState(common->pipelineState.Get());
+	//ルートシグネチャの設定
+	common->dxCommon->GetCommandList()->SetGraphicsRootSignature(common->rootSignature.Get());
+	//プリミティブ形状を設定
+	common->dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+#pragma endregion
+
+#pragma region 個別描画コマンド
+	//デスクリプタヒープのセット
+	ID3D12DescriptorHeap* ppHeaps[] = {common->basicDescHeap.Get()};
+	common->dxCommon->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	//定数バッファビュー(CBVの設定コマンド)
+	common->dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuffer->GetGPUVirtualAddress());
+	//デスクリプタヒープの配列
+	common->textureManager->SetDescriptorHeaps(common->dxCommon->GetCommandList());
+	//頂点バッファの設定
+	common->dxCommon->GetCommandList()->IASetVertexBuffers(0, 1, &common->geometryObjectManager->GetvbView());
+	//インデックスバッファの設定
+	common->dxCommon->GetCommandList()->IASetIndexBuffer(&common->geometryObjectManager->GetibView());
+
+	//シェーダリソースビューをセット
+	common->textureManager->SetShaderResourceView(common->dxCommon->GetCommandList(), 1, texNumber);
+
+	//描画コマンド
+	common->dxCommon->GetCommandList()->DrawIndexedInstanced(common->geometryObjectManager->GetIndices(),1, 0, 0, 0);
+#pragma endregion
+}
+
+void GeometryObject::Common::InitializeGraphicsPipeline()
+{
+	HRESULT result;
+
+	//シェーダーオブジェクト
+	ComPtr<ID3DBlob> vsBlob;
+	ComPtr<ID3DBlob> psBlob;
+	ComPtr<ID3DBlob> errorBlob;
 
 	//頂点シェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
-		L"BasicVS.hlsl",		//シェーダーファイル名
+		L"Resources/shader/GeometryVS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "vs_5_0",					//エントリーポイント名、シェーダーモデル指定
@@ -48,7 +197,7 @@ void GeometryModel::Common::InitializeGraphicsPipeline()
 
 	//ピクセルシェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
-		L"BasicPS.hlsl",		//シェーダーファイル名
+		L"Resources/shader/GeometryPS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "ps_5_0",					//エントリーポイント名、シェーダーモデル指定
@@ -69,7 +218,6 @@ void GeometryModel::Common::InitializeGraphicsPipeline()
 		OutputDebugStringA(error.c_str());
 		assert(0);
 	}
-
 
 	///頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
@@ -171,138 +319,25 @@ void GeometryModel::Common::InitializeGraphicsPipeline()
 	ComPtr<ID3DBlob> rootSigBlob;
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob,&errorBlob);
 	assert(SUCCEEDED(result));
-	result = dxCommon->GetDevice()->CreateRootSignature(0,rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),IID_PPV_ARGS(&rootsignature));
+	result = dxCommon->GetDevice()->CreateRootSignature(0,rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),IID_PPV_ARGS(&common->rootSignature));
 	assert(SUCCEEDED(result));
 	//パイプラインにルートシグネチャをセット
-	pipelineDesc.pRootSignature = rootsignature.Get();
+	pipelineDesc.pRootSignature = common->rootSignature.Get();
 
 	//パイプラインステート (グラフィックスパイプラインの設定をまとめたのがパイプラインステートオブジェクト(PSO))
 	//パイプラインステートの生成
-	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelinestate));
+	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&common->pipelineState));
 	assert(SUCCEEDED(result));
 }
 
-void GeometryModel::Common::InitializeDescriptorHeap()
+void GeometryObject::Common::InitializeDescriptorHeap()
 {
-	HRESULT result = S_FALSE;
+	HRESULT result;
 
-	//デスクリプタヒープの生成
-	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc= {};
-	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	descHeapDesc.NumDescriptors= maxObjectCount;	//CBV
-	result = dxCommon->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&basicDescHeap));
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc = {};
+	descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	descriptorHeapDesc.NumDescriptors = common->geometryObjectManager->GetMaxObjectCount();
+	result = dxCommon->GetDevice()->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&basicDescHeap));
 	assert(SUCCEEDED(result));
-}
-
-void GeometryModel::StaticInitialize(GeometryManager* model)
-{
-	common = new Common();
-
-	common->dxCommon = DirectXCommon::GetInstance();
-
-	/// <summary>
-	/// グラフィックスパイプラインの初期化
-	/// </summary>
-	/// <param name="dxCommon">DirectX12ベース</param>
-	common->InitializeGraphicsPipeline();
-
-	/// <summary>
-	/// デスクリプタヒープの初期加生成
-	/// </summary>
-	/// <param name="dxCommon">DirectX12ベース</param>
-	common->InitializeDescriptorHeap();
-	common->model = model;
-}
-
-void GeometryModel::ResetDescriptorHeap()
-{
-	common->descHeapIndex = 0;
-}
-
-void GeometryModel::StaticFinalize()
-{
-	delete common;
-	common = nullptr;
-}
-
-void GeometryModel::Initialize()
-{
-	HRESULT result = S_FALSE;
-	//定数バッファ生成
-	result = common->dxCommon->GetDevice()->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff),
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&constBuff)
-		);
-	assert(SUCCEEDED(result));
-
-	//定数バッファのマッピング
-	result = constBuff->Map(0,nullptr, (void**)&constBuffer);
-	assert(SUCCEEDED(result));
-
-	constBuff->Unmap(0, nullptr);
-}
-
-void GeometryModel::Update(const WorldTransform& worldTransform, const ViewProjection& viewProjection)
-{
-	//HRESULT result = S_FALSE;
-
-	//XMMATRIX matScale, matRot, matTrans;
-
-	////スケール、回転、平行移動行列の計算
-	//matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	//matRot = XMMatrixIdentity();
-	//matRot *= XMMatrixRotationZ(rotation.z);
-	//matRot *= XMMatrixRotationX(rotation.x);
-	//matRot *= XMMatrixRotationY(rotation.y);
-	//matTrans = XMMatrixTranslation(position.x, position.y, position.z);
-
-	////ワールド行列の合成
-	//matWorld = XMMatrixIdentity();	//変形をリセット
-	//matWorld *= matScale;			//ワールド行列にスケーリングを反映
-	//matWorld *= matRot;				//ワールド行列に回転を反映
-	//matWorld *= matTrans;			//ワールド行列に平行移動を反映
-
-	////親オブジェクトの存在
-	//if(parent != nullptr)
-	//{
-	//	//親オブジェクトのワールド行列を掛ける
-	//	matWorld *= parent->matWorld;
-	//}
-
-	//定数バッファへのデータ転送
-	//値を書き込むと自動的に転送される
-
-	//カメラの行列取得
-	//const XMMATRIX& matView = common->camera->GetMatView();
-	//const XMMATRIX& matProjection = common->camera->GetMatProjection();
-
-	constBuffer->color = color;
-	constBuffer->mat = worldTransform.matWorld * viewProjection.matView * viewProjection.matProjection;
-}
-
-void GeometryModel::Draw(ID3D12GraphicsCommandList* commandList)
-{
-#pragma region 共通描画コマンド
-	//パイプラインステートの設定
-	commandList->SetPipelineState(common->pipelinestate.Get());
-	//ルートシグネチャの設定
-	commandList->SetGraphicsRootSignature(common->rootsignature.Get());
-	//プリミティブ形状を設定
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-#pragma endregion
-
-#pragma region 個別描画コマンド
-	//デスクリプタヒープのセット
-	ID3D12DescriptorHeap* ppHeaps[] = {common->basicDescHeap.Get()};
-	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-	//定数バッファビュー(CBVの設定コマンド)
-	commandList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
-	//モデル描画
-	common->model->Draw(texNumber);
-#pragma endregion
 }

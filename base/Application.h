@@ -7,6 +7,10 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "GeometryObjectManager.h"
+#include "GeometryObject.h"
+
+
 
 class Application
 {
@@ -36,4 +40,6 @@ private:
 	Input* input;
 
 	Sprite* sprite = nullptr;
+
+	GeometryObject* object = nullptr;
 };

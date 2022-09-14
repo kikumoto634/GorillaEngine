@@ -1,0 +1,118 @@
+#pragma once
+#include <d3d12.h>
+#include <wrl.h>
+
+#include "DirectXCommon.h"
+#include "GeometryObjectManager.h"
+#include "TextureManager.h"
+#include "ViewProjection.h"
+
+/// <summary>
+/// 幾何学オブジェクト
+/// </summary>
+class GeometryObject
+{
+/// <summary>
+/// エイリアス
+/// </summary>
+public:
+	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+/// <summary>
+/// インナークラス
+/// </summary>
+public:
+	class Common{
+		friend class GeometryObject;
+
+	public:
+		/// <summary>
+		/// グラフィックパイプライン初期化
+		/// </summary>
+		void InitializeGraphicsPipeline();
+
+		/// <summary>
+		/// デストラクタヒープ初期化
+		/// </summary>
+		void InitializeDescriptorHeap();
+
+	private:
+		//DirectXCommon
+		DirectXCommon* dxCommon = nullptr;
+
+		//パイプラインステートオブジェクト
+		ComPtr<ID3D12PipelineState> pipelineState;
+		//ルートシグネチャ
+		ComPtr<ID3D12RootSignature> rootSignature;
+		//デスクリプタヒープ(定数バッファビュー用)
+		ComPtr<ID3D12DescriptorHeap> basicDescHeap;
+
+		GeometryObjectManager* geometryObjectManager;
+		TextureManager* textureManager;
+
+		ViewProjection viewProjevtion;
+	};
+
+	//定数バッファ用データ構造体(3D変換行列
+	struct ConstBufferData{
+		DirectX::XMMATRIX mat;	//3D変換行列
+		DirectX::XMFLOAT4 color;	//色(RGBA)
+	};
+
+public:
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	static void StaticInitialize(DirectXCommon* dxCommon);
+
+	/// <summary>
+	/// 静的メンバ解法
+	/// </summary>
+	static void StaticFinalize();
+
+	static GeometryObject* Create(UINT texNumber, DirectX::XMFLOAT4 color = {1,1,1,1});
+
+private:
+	static Common* common;
+
+public:
+	GeometryObject();
+	GeometryObject(UINT texNumber, DirectX::XMFLOAT4 color = {1,1,1,1});
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	bool Initialize(UINT texNumber);
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
+
+private:
+	//テクスチャデータ
+	UINT texNumber = 0;
+
+	//定数バッファ(行列)
+	ComPtr<ID3D12Resource> constBuffer;
+	//マッピング用ポインタ
+	ConstBufferData* constMap = nullptr;
+
+	XMFLOAT4 color = {1,1,1,1};
+
+	//トランスフォーム
+	//アフィン変換
+	Vector3 scale = {1.0f, 1.0f, 1.0f};
+	Vector3 rotation = {0.0f, 0.0f, 0.0f};
+	Vector3 position = {0.0f, 0.0f, 0.0f};
+	//ワールド変換行列
+	DirectX::XMMATRIX matWorld;
+	//親オブジェクトへのポインタ
+	GeometryObject* parent = nullptr;
+};
+

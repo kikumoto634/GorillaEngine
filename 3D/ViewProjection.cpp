@@ -32,7 +32,7 @@ void ViewProjection::Map()
 {
 	//定数バッファとのデータリンク
 	HRESULT result;
-	result = constBuffer->Map(0, nullptr, (void**)&constBuffer);
+	result = constBuffer->Map(0, nullptr, (void**)&constMap);
 	assert(SUCCEEDED(result));
 }
 

@@ -1,16 +1,24 @@
-#include "GeometryManager.h"
+#include "GeometryObjectManager.h"
+#include <cassert>
+#include "DirectXCommon.h"
 
 using namespace std;
+using namespace DirectX;
 
-void GeometryManager::Initialize()
+GeometryObjectManager *GeometryObjectManager::GetInstance()
+{
+	static GeometryObjectManager instance;
+	return &instance;
+}
+
+void GeometryObjectManager::CreateBuffer()
 {
 	HRESULT result;
-	dxCommon = DirectXCommon::GetInstance();
+	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
-#pragma region 四角形データ
+#pragma region 四角形情報
 	//頂点データ
-	VertexPosNormal vertices[24] = 
-	{
+	VertexPosNormalUv vertices[] = {
 		//前
 		{{-5.0f, -5.0f, -5.0f}, {}, {0.0f, 1.0f}},
 		{{-5.0f, +5.0f, -5.0f}, {}, {0.0f, 0.0f}},
@@ -42,14 +50,12 @@ void GeometryManager::Initialize()
 		{{-5.0f, +5.0f, +5.0f}, {}, {1.0f, 1.0f}},
 		{{+5.0f, +5.0f, +5.0f}, {}, {1.0f, 0.0f}},
 	};
-	for(int i = 0; i < _countof(vertices); i++)
-	{
+	for(int i = 0; i < _countof(vertices); i++){
 		this->vertices[i] = vertices[i];
 	}
 
 	///インデックスデータ
-	unsigned short indices[] = 
-	{
+	uint16_t indices[] = {
 		//前
 		0, 1, 2,
 		2, 1, 3,
@@ -69,21 +75,23 @@ void GeometryManager::Initialize()
 		21, 20, 22,
 		21, 22, 23,
 	};
-	for(int i = 0; i < _countof(indices); i++)
-	{
+	for(int i = 0; i < _countof(indices); i++){
 		this->indices[i] = indices[i];
 	}
 
 	///法線計算
 	for(int i = 0; i < _countof(indices)/3; i++){
-		//三角形一つごとに計算していく
 		//三角形にインデックスを取り出して、一時的な変数を入れる
-		unsigned short index0 = indices[i*3+0];
-		unsigned short index1 = indices[i*3+1];
-		unsigned short index2 = indices[i*3+2];
+		uint16_t index0 = indices[i*3+0];
+		uint16_t index1 = indices[i*3+1];
+		uint16_t index2 = indices[i*3+2];
+		//三角形を構成する頂点座標をベクトルに代入
+		Vector3 p0 = vertices[index0].pos;
+		Vector3 p1 = vertices[index1].pos;
+		Vector3 p2 = vertices[index2].pos;
 		//p0->p1ベクトル、p0->p2ベクトルの計算	(ベクトル減算)
-		Vector3 v1 = vertices[index0].pos - vertices[index1].pos;
-		Vector3 v2 = vertices[index0].pos - vertices[index2].pos;
+		Vector3 v1 = p0 - p1;
+		Vector3 v2 = p0 - p2;
 		//外積は両方から垂直なベクトル
 		Vector3 normal = v1.cross(v2);
 		//正規化(長さを1にする)
@@ -96,10 +104,8 @@ void GeometryManager::Initialize()
 #pragma endregion
 
 	//頂点バッファ
-	//頂点サイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormal) * _countof(vertices));
-
-	//頂点バッファ
+	//サイズ
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv)*_countof(vertices));
 	{
 		//ヒーププロパティ
 		CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
@@ -117,24 +123,21 @@ void GeometryManager::Initialize()
 		assert(SUCCEEDED(result));
 
 		//転送
-		VertexPosNormal* vertMap = nullptr;
 		result = vertBuffer->Map(0, nullptr, (void**)&vertMap);
 		if(SUCCEEDED(result)){
-			copy(this->vertices.begin(), this->vertices.end(), vertMap);
-			vertBuffer->Unmap(0, nullptr);
+			memcpy(vertMap, vertices,sizeof(vertices));
+			vertBuffer->Unmap(0,nullptr);
 		}
 	}
 
-	//頂点バッファビュー
+	//頂点バッファビューの生成
 	vbView.BufferLocation = vertBuffer->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeVB;
-	vbView.StrideInBytes = sizeof(VertexPosNormal);
+	vbView.StrideInBytes = sizeof(VertexPosNormalUv);
 
 	//頂点インデックス
-	//インデックスデータサイズ
-	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * _countof(indices));
-
-	//頂点インデックス
+	//サイズ
+	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t)*_countof(indices));
 	{
 		//ヒーププロパティ
 		CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
@@ -149,33 +152,18 @@ void GeometryManager::Initialize()
 			nullptr,
 			IID_PPV_ARGS(&indexBuffer)
 		);
+		assert(SUCCEEDED(result));
+
 		//転送
-		unsigned short* indexMap = nullptr;
-		result = indexBuffer->Map(0, nullptr, (void**)&indexBuffer);
+		result = indexBuffer->Map(0, nullptr, (void**)&indexMap);
 		if(SUCCEEDED(result)){
-			copy(this->indices.begin(), this->indices.end(), indexMap);
-			indexBuffer->Unmap(0, nullptr);
+			memcpy(indexMap, indices,sizeof(indices));
+			indexBuffer->Unmap(0,nullptr);
 		}
 	}
 
-	//インデックスバッファビュー
+	//インデックスバッファビュー(IBV)の作成
 	ibView.BufferLocation = indexBuffer->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
-	ibView.SizeInBytes = sizeIB;
-}
-
-void GeometryManager::Draw(UINT texNumber)
-{
-	textureManager = TextureManager::GetInstance();
-
-	//デスクリプタヒープ配列
-	textureManager->SetDescriptorHeaps(dxCommon->GetCommandList());
-	//頂点バッファ
-	dxCommon->GetCommandList()->IASetVertexBuffers(0,1,&vbView);
-	//インデックスバッファ
-	dxCommon->GetCommandList()->IASetIndexBuffer(&ibView);
-	//シェーダーリソースビュー
-	textureManager->SetShaderResourceView(dxCommon->GetCommandList(),1,texNumber);
-	//描画コマンド
-	dxCommon->GetCommandList()->DrawIndexedInstanced(indices.size(),1,0,0,0);
+	ibView.SizeInBytes= sizeIB;
 }

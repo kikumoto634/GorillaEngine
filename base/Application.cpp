@@ -67,9 +67,15 @@ void Application::Initialize()
 
 	////スプライト
 	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
-
 	sprite = Sprite::Create(0, Vector2(100.f,100.f));
 	sprite->SetSize(Vector2(100,100));
+
+	//幾何学マネージャー
+	GeometryObjectManager::GetInstance()->CreateBuffer();
+
+	//幾何学オブジェクト
+	GeometryObject::StaticInitialize(dxCommon);
+	object = GeometryObject::Create(0);
 }
 
 void Application::Update()
@@ -83,6 +89,8 @@ void Application::Update()
 	else{
 		sprite->SetColor({1,1,1,1});
 	}
+
+	object->Update();
 }
 
 void Application::Draw()
@@ -92,6 +100,7 @@ void Application::Draw()
 	Sprite::SetPipelineState();
 
 	sprite->Draw();
+	object->Draw();
 
 	//描画後処理
 	dxCommon->EndDraw();
@@ -99,6 +108,7 @@ void Application::Draw()
 
 void Application::Finalize()
 {
+	GeometryObject::StaticFinalize();
 	Sprite::StaticFinalize();
 	window->Finalize();
 }

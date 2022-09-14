@@ -52,6 +52,9 @@
     <Filter Include="ヘッダー ファイル\3D">
       <UniqueIdentifier>{58f5526e-9fa5-4de1-b022-c60c30afcfb0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Geometry">
+      <UniqueIdentifier>{e1f1ce9c-eda9-4957-8ccd-a66780b038c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -96,10 +99,10 @@
     <ClCompile Include="3D\WorldTransform.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
-    <ClCompile Include="base\GeometryManager.cpp">
+    <ClCompile Include="base\GeometryObjectManager.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
-    <ClCompile Include="3D\GeometryModel.cpp">
+    <ClCompile Include="3D\GeometryObject.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
   </ItemGroup>
@@ -143,10 +146,10 @@
     <ClInclude Include="3D\WorldTransform.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
-    <ClInclude Include="base\GeometryManager.h">
+    <ClInclude Include="base\GeometryObjectManager.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
-    <ClInclude Include="3D\GeometryModel.h">
+    <ClInclude Include="3D\GeometryObject.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
   </ItemGroup>
@@ -157,10 +160,19 @@
     <FxCompile Include="Resources\shader\SpriteVS.hlsl">
       <Filter>リソース ファイル\Sprite</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\GeometryPS.hlsl">
+      <Filter>リソース ファイル\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GeometryVS.hlsl">
+      <Filter>リソース ファイル\Geometry</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Sprite.hlsli">
       <Filter>リソース ファイル\Sprite</Filter>
+    </None>
+    <None Include="Resources\shader\Geometry.hlsli">
+      <Filter>リソース ファイル\Geometry</Filter>
     </None>
   </ItemGroup>
 </Project>
