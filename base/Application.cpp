@@ -76,6 +76,8 @@ void Application::Initialize()
 	//幾何学オブジェクト
 	GeometryObject::StaticInitialize(dxCommon);
 	object = GeometryObject::Create(0);
+	worldTransform.Initialize();
+	viewProjection.Initialize();
 }
 
 void Application::Update()

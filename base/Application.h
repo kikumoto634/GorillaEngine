@@ -3,8 +3,10 @@
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "SceneManager.h"
+
 #include "TextureManager.h"
 #include "Sprite.h"
+
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "GeometryObjectManager.h"
@@ -42,4 +44,6 @@ private:
 	Sprite* sprite = nullptr;
 
 	GeometryObject* object = nullptr;
+	WorldTransform worldTransform;
+	ViewProjection viewProjection;
 };

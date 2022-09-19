@@ -6,6 +6,7 @@
 #include "GeometryObjectManager.h"
 #include "TextureManager.h"
 #include "ViewProjection.h"
+#include "WOrldTransform.h"
 
 /// <summary>
 /// 幾何学オブジェクト
@@ -49,8 +50,6 @@ public:
 
 		GeometryObjectManager* geometryObjectManager;
 		TextureManager* textureManager;
-
-		ViewProjection viewProjevtion;
 	};
 
 	//定数バッファ用データ構造体(3D変換行列
@@ -105,14 +104,17 @@ private:
 
 	XMFLOAT4 color = {1,1,1,1};
 
-	//トランスフォーム
-	//アフィン変換
-	Vector3 scale = {1.0f, 1.0f, 1.0f};
-	Vector3 rotation = {0.0f, 0.0f, 0.0f};
-	Vector3 position = {0.0f, 0.0f, 0.0f};
-	//ワールド変換行列
-	DirectX::XMMATRIX matWorld;
-	//親オブジェクトへのポインタ
-	GeometryObject* parent = nullptr;
+	ViewProjection viewProjevtion;
+	WorldTransform worldTransform;
+
+	////トランスフォーム
+	////アフィン変換
+	//Vector3 scale = {1.0f, 1.0f, 1.0f};
+	//Vector3 rotation = {0.0f, 0.0f, 0.0f};
+	//Vector3 position = {0.0f, 0.0f, 0.0f};
+	////ワールド変換行列
+	//DirectX::XMMATRIX matWorld;
+	////親オブジェクトへのポインタ
+	//GeometryObject* parent = nullptr;
 };
 

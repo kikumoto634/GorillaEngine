@@ -25,7 +25,10 @@ void WorldTransform::CreateConstBuffer()
 	// 定数バッファの生成
 	result = DirectXCommon::GetInstance()->GetDevice()->CreateCommittedResource(
 	  &heapProps, // アップロード可能
-	  D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+	  D3D12_HEAP_FLAG_NONE, 
+	  &resourceDesc,
+	  D3D12_RESOURCE_STATE_GENERIC_READ, 
+	  nullptr,
 	  IID_PPV_ARGS(&constBuffer));
 	assert(SUCCEEDED(result));
 }

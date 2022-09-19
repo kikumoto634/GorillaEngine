@@ -17,8 +17,6 @@ void GeometryObject::StaticInitialize(DirectXCommon *dxCommon)
 
 	common->geometryObjectManager = GeometryObjectManager::GetInstance();
 	common->textureManager = TextureManager::GetInstance();
-
-	common->viewProjevtion.Initialize();
 }
 
 void GeometryObject::StaticFinalize()
@@ -53,13 +51,15 @@ GeometryObject::GeometryObject(UINT texNumber, XMFLOAT4 color)
 {
 	this->texNumber = texNumber;
 	this->color = color;
-	this->matWorld = XMMatrixIdentity();
 }
 
 bool GeometryObject::Initialize(UINT texNumber)
 {
 	HRESULT result;
 	this->texNumber = texNumber;
+
+	worldTransform.Initialize();
+	viewProjevtion.Initialize();
 
 	//定数バッファ生成
 	{
@@ -79,52 +79,25 @@ bool GeometryObject::Initialize(UINT texNumber)
 			IID_PPV_ARGS(&constBuffer)
 		);
 		assert(SUCCEEDED(result));
-
-		//転送
-		result = constBuffer->Map(0, nullptr, (void**)&constMap);
-		if(SUCCEEDED(result)){
-			constMap->color = XMFLOAT4(1,1,1,1);
-			constMap->mat = common->viewProjevtion.matProjection;
-			constBuffer->Unmap(0, nullptr);
-		}
 	}
-
 	return true;
 }
 
 void GeometryObject::Update()
 {
-	HRESULT result = S_FALSE;
-
-	XMMATRIX matScale, matRot, matTrans;
-
-	//スケール、回転、平行移動行列の計算
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(rotation.z);
-	matRot *= XMMatrixRotationX(rotation.x);
-	matRot *= XMMatrixRotationY(rotation.y);
-	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
-
-	//ワールド行列の合成
-	matWorld = XMMatrixIdentity();	//変形をリセット
-	matWorld *= matScale;			//ワールド行列にスケーリングを反映
-	matWorld *= matRot;				//ワールド行列に回転を反映
-	matWorld *= matTrans;			//ワールド行列に平行移動を反映
-
-	//親オブジェクトの存在
-	if(parent != nullptr)
-	{
-		//親オブジェクトのワールド行列を掛ける
-		matWorld *= parent->matWorld;
-	}
-
-	//定数バッファへのデータ転送
-	//値を書き込むと自動的に転送される
 
 	//カメラの行列取得
-	const XMMATRIX& matView = common->viewProjevtion.matView;
-	const XMMATRIX& matProjection = common->viewProjevtion.matProjection;
+	const XMMATRIX& matWorld = worldTransform.matWorld;
+	const XMMATRIX& matView = viewProjevtion.matView;
+	const XMMATRIX& matProjection = viewProjevtion.matProjection;
+
+	//定数バッファの転送
+	HRESULT result = constBuffer->Map(0, nullptr, (void**)&constMap);
+	if(SUCCEEDED(result)){
+		constMap->color = XMFLOAT4(1,1,1,1);
+		constMap->mat = matProjection;
+		constBuffer->Unmap(0, nullptr);
+	}
 
 	constMap->color = color;
 	constMap->mat = matWorld * matView * matProjection;
