@@ -58,8 +58,7 @@ bool GeometryObject::Initialize(UINT texNumber)
 	HRESULT result;
 	this->texNumber = texNumber;
 
-	worldTransform.Initialize();
-	viewProjevtion.Initialize();
+	viewProjection.Initialize();
 
 	//定数バッファ生成
 	{
@@ -79,25 +78,24 @@ bool GeometryObject::Initialize(UINT texNumber)
 			IID_PPV_ARGS(&constBuffer)
 		);
 		assert(SUCCEEDED(result));
+
+		//定数バッファの転送
+		result = constBuffer->Map(0, nullptr, (void**)&constMap);
+		if(SUCCEEDED(result)){
+			constMap->color = XMFLOAT4(1,1,1,1);
+			constMap->mat = viewProjection.matProjection;
+			constBuffer->Unmap(0, nullptr);
+		}
 	}
 	return true;
 }
 
-void GeometryObject::Update()
+void GeometryObject::Update(WorldTransform worldTransform)
 {
-
 	//カメラの行列取得
 	const XMMATRIX& matWorld = worldTransform.matWorld;
-	const XMMATRIX& matView = viewProjevtion.matView;
-	const XMMATRIX& matProjection = viewProjevtion.matProjection;
-
-	//定数バッファの転送
-	HRESULT result = constBuffer->Map(0, nullptr, (void**)&constMap);
-	if(SUCCEEDED(result)){
-		constMap->color = XMFLOAT4(1,1,1,1);
-		constMap->mat = matProjection;
-		constBuffer->Unmap(0, nullptr);
-	}
+	const XMMATRIX& matView = viewProjection.matView;
+	const XMMATRIX& matProjection = viewProjection.matProjection;
 
 	constMap->color = color;
 	constMap->mat = matWorld * matView * matProjection;

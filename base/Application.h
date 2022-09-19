@@ -9,6 +9,7 @@
 
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+
 #include "GeometryObjectManager.h"
 #include "GeometryObject.h"
 
@@ -45,5 +46,4 @@ private:
 
 	GeometryObject* object = nullptr;
 	WorldTransform worldTransform;
-	ViewProjection viewProjection;
 };

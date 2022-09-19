@@ -74,10 +74,11 @@ void Application::Initialize()
 	GeometryObjectManager::GetInstance()->CreateBuffer();
 
 	//幾何学オブジェクト
+
+	worldTransform.Initialize();
+
 	GeometryObject::StaticInitialize(dxCommon);
 	object = GeometryObject::Create(0);
-	worldTransform.Initialize();
-	viewProjection.Initialize();
 }
 
 void Application::Update()
@@ -92,7 +93,7 @@ void Application::Update()
 		sprite->SetColor({1,1,1,1});
 	}
 
-	object->Update();
+	object->Update(worldTransform);
 }
 
 void Application::Draw()
