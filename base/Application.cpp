@@ -52,6 +52,7 @@ void Application::Run()
 
 void Application::Initialize()
 {
+#pragma region 汎用機能初期化
 	//Window生成
 	window->Create("GiliraEngine", 1280, 720);
 
@@ -65,35 +66,63 @@ void Application::Initialize()
 	TextureManager::GetInstance()->Initialize(dxCommon);
 	TextureManager::Load(0, "white1x1.png");
 
-	////スプライト
+	//カメラ
+	camera = Camera::GetInstance();
+	camera->Initialize();
+#pragma endregion
+
+	//スプライト静的初期化
 	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
+	//生成
 	sprite = Sprite::Create(0, Vector2(100.f,100.f));
 	sprite->SetSize(Vector2(100,100));
 
-	//幾何学マネージャー
+	//幾何学オブジェクト静的初期化
 	GeometryObjectManager::GetInstance()->CreateBuffer();
-
-	//幾何学オブジェクト
-
+	//生成
 	worldTransform.Initialize();
-
 	GeometryObject::StaticInitialize(dxCommon);
 	object = GeometryObject::Create(0);
 }
 
 void Application::Update()
 {
+#pragma region 汎用機能更新
 	//入力情報更新
 	input->Update();
+	//カメラ
+	camera->Update();
+#pragma endregion
 
-	if(input->Push(DIK_SPACE)){
-		sprite->SetColor({1,0,0,1});
+#pragma region 入力処理
+	{
+		if(input->Push(DIK_SPACE)){
+			sprite->SetColor({1,0,0,1});
+		}
+		else{
+			sprite->SetColor({1,1,1,1});
+		}
 	}
-	else{
-		sprite->SetColor({1,1,1,1});
+	{
+		if(input->Push(DIK_RIGHT)){
+			worldTransform.rotation.y += XMConvertToRadians(1.f);
+		}
+		else if(input->Push(DIK_LEFT)){
+			worldTransform.rotation.y += XMConvertToRadians(-1.f);
+		}
+		worldTransform.UpdateMatrix();
 	}
+#pragma endregion
 
-	object->Update(worldTransform);
+#pragma region スプライト更新
+
+
+#pragma endregion
+
+#pragma region オブジェクト更新
+	object->Update(worldTransform, camera);
+#pragma endregion
+
 }
 
 void Application::Draw()

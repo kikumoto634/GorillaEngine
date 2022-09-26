@@ -55,6 +55,12 @@
     <Filter Include="リソース ファイル\Geometry">
       <UniqueIdentifier>{e1f1ce9c-eda9-4957-8ccd-a66780b038c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\camera">
+      <UniqueIdentifier>{9bdd6785-2fba-430e-ae42-2cac5b9d4ae4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\camera">
+      <UniqueIdentifier>{488cb75a-813f-4766-a922-30ee4f0982af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -105,6 +111,9 @@
     <ClCompile Include="3D\GeometryObject.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
+    <ClCompile Include="camera\Camera.cpp">
+      <Filter>ソース ファイル\camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\Window.h">
@@ -151,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="3D\GeometryObject.h">
       <Filter>ヘッダー ファイル\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\Camera.h">
+      <Filter>ヘッダー ファイル\camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

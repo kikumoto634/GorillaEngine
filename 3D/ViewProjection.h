@@ -1,31 +1,16 @@
 #pragma once
 
 #include <DirectXMath.h>
-#include <d3d12.h>
-#include <wrl.h>
 
 #include "Window.h"
-#include "Vector2.h"
 #include "Vector3.h"
 
-//定数バッファ用データ構造
-struct ConstBufferDataViewProjection{
-	DirectX::XMMATRIX view;			//ワールド -> ビュー変換行列
-	DirectX::XMMATRIX projection;	//ビュー -> プロジェクション変換行列
-	Vector3 cameraPos;				//カメラ座標 (ワールド座標)
-};
 
 /// <summary>
 /// ビュープロジェクション変換データ
 /// </summary>
 struct ViewProjection{
 
-	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-
-	//定数バッファ
-	ComPtr<ID3D12Resource> constBuffer;
-	//マッピング済みアドレス
-	ConstBufferDataViewProjection* constMap = nullptr;
 
 	//アスペクト用
 	Window* window = Window::GetInstance();
@@ -60,16 +45,6 @@ struct ViewProjection{
 	/// 初期化
 	/// </summary>
 	void Initialize();
-
-	/// <summary>
-	/// 定数バッファ生成
-	/// </summary>
-	void CreateConstBuffer();
-
-	/// <summary>
-	/// マッピング
-	/// </summary>
-	void Map();
 
 	/// <summary>
 	/// 行列更新

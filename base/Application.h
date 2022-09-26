@@ -7,7 +7,7 @@
 #include "TextureManager.h"
 #include "Sprite.h"
 
-#include "ViewProjection.h"
+#include "Camera.h"
 #include "WorldTransform.h"
 
 #include "GeometryObjectManager.h"
@@ -41,6 +41,8 @@ private:
 	Window* window;
 	DirectXCommon* dxCommon;
 	Input* input;
+
+	Camera* camera = nullptr;
 
 	Sprite* sprite = nullptr;
 

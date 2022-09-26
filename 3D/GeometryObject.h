@@ -5,7 +5,7 @@
 #include "DirectXCommon.h"
 #include "GeometryObjectManager.h"
 #include "TextureManager.h"
-#include "ViewProjection.h"
+#include "Camera.h"
 #include "WorldTransform.h"
 
 /// <summary>
@@ -50,6 +50,7 @@ public:
 
 		GeometryObjectManager* geometryObjectManager;
 		TextureManager* textureManager;
+
 	};
 
 	//定数バッファ用データ構造体(3D変換行列
@@ -86,7 +87,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update(WorldTransform worldTransform);
+	void Update(WorldTransform worldTransform, Camera* camera);
 
 	/// <summary>
 	/// 描画
@@ -103,7 +104,5 @@ private:
 	ConstBufferData* constMap = nullptr;
 
 	XMFLOAT4 color = {1,1,1,1};
-
-	ViewProjection viewProjection;
 };
 

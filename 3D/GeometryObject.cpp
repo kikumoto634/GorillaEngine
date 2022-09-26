@@ -58,8 +58,6 @@ bool GeometryObject::Initialize(UINT texNumber)
 	HRESULT result;
 	this->texNumber = texNumber;
 
-	viewProjection.Initialize();
-
 	//定数バッファ生成
 	{
 		// ヒーププロパティ
@@ -81,21 +79,18 @@ bool GeometryObject::Initialize(UINT texNumber)
 
 		//定数バッファの転送
 		result = constBuffer->Map(0, nullptr, (void**)&constMap);
-		if(SUCCEEDED(result)){
-			constMap->color = XMFLOAT4(1,1,1,1);
-			constMap->mat = viewProjection.matProjection;
-			constBuffer->Unmap(0, nullptr);
-		}
+		assert(SUCCEEDED(result));
+		constBuffer->Unmap(0, nullptr);
 	}
 	return true;
 }
 
-void GeometryObject::Update(WorldTransform worldTransform)
+void GeometryObject::Update(WorldTransform worldTransform, Camera* camera)
 {
 	//カメラの行列取得
 	const XMMATRIX& matWorld = worldTransform.matWorld;
-	const XMMATRIX& matView = viewProjection.matView;
-	const XMMATRIX& matProjection = viewProjection.matProjection;
+	const XMMATRIX& matView = camera->GetMatView();
+	const XMMATRIX& matProjection = camera->GetMatProjection();
 
 	constMap->color = color;
 	constMap->mat = matWorld * matView * matProjection;
