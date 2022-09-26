@@ -67,6 +67,12 @@
     <Filter Include="ヘッダー ファイル\debug">
       <UniqueIdentifier>{d7a70089-2f9b-4244-bf65-80f046270bbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\loader">
+      <UniqueIdentifier>{54ab1b9e-db1d-4f1a-aac9-6cd15a7b005e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\loader">
+      <UniqueIdentifier>{ef9199b7-0899-4312-bb9b-9c80de6d7899}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -123,6 +129,15 @@
     <ClCompile Include="debug\SceneStopper.cpp">
       <Filter>ソース ファイル\debug</Filter>
     </ClCompile>
+    <ClCompile Include="loader\FbxLoader.cpp">
+      <Filter>ソース ファイル\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="base\FbxObjectManager.cpp">
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Fbx3DObject.cpp">
+      <Filter>ソース ファイル\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\Window.h">
@@ -175,6 +190,15 @@
     </ClInclude>
     <ClInclude Include="debug\SceneStopper.h">
       <Filter>ヘッダー ファイル\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="loader\FbxLoader.h">
+      <Filter>ヘッダー ファイル\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="base\FbxObjectManager.h">
+      <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Fbx3DObject.h">
+      <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

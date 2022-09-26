@@ -78,11 +78,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(SolutionDir)input;$(SolutionDir)3D;$(SolutionDir)camera;$(SolutionDir)debug;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(SolutionDir)input;$(SolutionDir)3D;$(SolutionDir)camera;$(SolutionDir)debug;$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)loader;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(SolutionDir)input;$(SolutionDir)3D;$(SolutionDir)camera;$(SolutionDir)debug;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(SolutionDir)input;$(SolutionDir)3D;$(SolutionDir)camera;$(SolutionDir)debug;$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)loader;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -118,10 +120,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -132,27 +138,35 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2D\Sprite.cpp" />
+    <ClCompile Include="3D\Fbx3DObject.cpp" />
     <ClCompile Include="3D\GeometryObject.cpp" />
     <ClCompile Include="3D\ViewProjection.cpp" />
     <ClCompile Include="3D\WorldTransform.cpp" />
     <ClCompile Include="base\Application.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
+    <ClCompile Include="base\FbxObjectManager.cpp" />
     <ClCompile Include="base\GeometryObjectManager.cpp" />
     <ClCompile Include="base\TextureManager.cpp" />
     <ClCompile Include="base\Window.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="debug\SceneStopper.cpp" />
     <ClCompile Include="input\Input.cpp" />
+    <ClCompile Include="loader\FbxLoader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Vector2.cpp" />
     <ClCompile Include="math\Vector3.cpp" />
@@ -162,17 +176,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2D\Sprite.h" />
+    <ClInclude Include="3D\Fbx3DObject.h" />
     <ClInclude Include="3D\GeometryObject.h" />
     <ClInclude Include="3D\ViewProjection.h" />
     <ClInclude Include="3D\WorldTransform.h" />
     <ClInclude Include="base\Application.h" />
     <ClInclude Include="base\DirectXCommon.h" />
+    <ClInclude Include="base\FbxObjectManager.h" />
     <ClInclude Include="base\GeometryObjectManager.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\Window.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="debug\SceneStopper.h" />
     <ClInclude Include="input\Input.h" />
+    <ClInclude Include="loader\FbxLoader.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="scene\GameScene01.h" />

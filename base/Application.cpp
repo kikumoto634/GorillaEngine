@@ -95,7 +95,6 @@ void Application::Initialize()
 	sceneStopper = SceneStopper::GetInstance();
 
 #endif // _DEBUG
-
 }
 
 void Application::Update()
@@ -106,7 +105,6 @@ void Application::Update()
 	//ƒJƒƒ‰
 	camera->Update();
 #pragma endregion
-
 
 #ifdef _DEBUG
 

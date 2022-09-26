@@ -29,6 +29,7 @@ public:
 	//getter
 	const XMMATRIX& GetMatProjection()	{return viewProjection.matProjection;}
 	const XMMATRIX& GetMatView()	{return viewProjection.matView;}
+	const XMMATRIX& GetViewProjectionMatrix()	{return matViewProjection;}
 
 	const Vector3& GetEye() {return viewProjection.eye; }
 	const Vector3& GetTarget() {return viewProjection.target; }
@@ -42,5 +43,7 @@ public:
 protected:
 
 	ViewProjection viewProjection;
+
+	XMMATRIX matViewProjection;
 };
 
