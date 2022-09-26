@@ -61,6 +61,12 @@
     <Filter Include="ヘッダー ファイル\camera">
       <UniqueIdentifier>{488cb75a-813f-4766-a922-30ee4f0982af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\debug">
+      <UniqueIdentifier>{90eb14de-ffc5-4381-b258-8c242ef40c57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\debug">
+      <UniqueIdentifier>{d7a70089-2f9b-4244-bf65-80f046270bbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -114,6 +120,9 @@
     <ClCompile Include="camera\Camera.cpp">
       <Filter>ソース ファイル\camera</Filter>
     </ClCompile>
+    <ClCompile Include="debug\SceneStopper.cpp">
+      <Filter>ソース ファイル\debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\Window.h">
@@ -163,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="camera\Camera.h">
       <Filter>ヘッダー ファイル\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="debug\SceneStopper.h">
+      <Filter>ヘッダー ファイル\debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

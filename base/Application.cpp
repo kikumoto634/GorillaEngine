@@ -71,11 +71,15 @@ void Application::Initialize()
 	camera->Initialize();
 #pragma endregion
 
+#pragma region スプライト初期化
 	//スプライト静的初期化
 	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
 	//生成
 	sprite = Sprite::Create(0, Vector2(100.f,100.f));
 	sprite->SetSize(Vector2(100,100));
+#pragma endregion
+
+#pragma region オブジェクト初期化
 
 	//幾何学オブジェクト静的初期化
 	GeometryObjectManager::GetInstance()->CreateBuffer();
@@ -83,6 +87,15 @@ void Application::Initialize()
 	worldTransform.Initialize();
 	GeometryObject::StaticInitialize(dxCommon);
 	object = GeometryObject::Create(0);
+
+#pragma endregion
+
+#ifdef _DEBUG
+	//一時停止
+	sceneStopper = SceneStopper::GetInstance();
+
+#endif // _DEBUG
+
 }
 
 void Application::Update()
@@ -93,6 +106,25 @@ void Application::Update()
 	//カメラ
 	camera->Update();
 #pragma endregion
+
+
+#ifdef _DEBUG
+
+#pragma region 一時停止
+	//入力
+	if(input->Trigger(DIK_F1)){
+		if(!sceneStopper->GetIsSceneStop()){
+			sceneStopper->SetIsSceneStop(true);
+		}
+		else if(sceneStopper->GetInstance()){
+			sceneStopper->SetIsSceneStop(false);
+		}
+	}
+	//停止
+	if(sceneStopper->GetIsSceneStop()) return;
+#pragma endregion
+
+#endif // _DEBUG
 
 #pragma region 入力処理
 	{

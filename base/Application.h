@@ -13,6 +13,11 @@
 #include "GeometryObjectManager.h"
 #include "GeometryObject.h"
 
+#ifdef _DEBUG
+#include "SceneStopper.h"
+#endif // _DEBUG
+
+
 
 
 class Application
@@ -38,14 +43,26 @@ private:
 	void Draw();
 
 private:
+#pragma region 汎用機能
 	Window* window;
 	DirectXCommon* dxCommon;
 	Input* input;
-
 	Camera* camera = nullptr;
+#pragma endregion
+
+#pragma region スプライト関連
 
 	Sprite* sprite = nullptr;
 
+#pragma endregion
+
+#pragma region オブジェクト関連
 	GeometryObject* object = nullptr;
 	WorldTransform worldTransform;
+#pragma endregion
+
+
+#ifdef _DEBUG
+	SceneStopper* sceneStopper;
+#endif // _DEBUG
 };

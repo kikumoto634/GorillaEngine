@@ -78,11 +78,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(SolutionDir)input;$(SolutionDir)3D;$(SolutionDir)camera;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(SolutionDir)input;$(SolutionDir)3D;$(SolutionDir)camera;$(SolutionDir)debug;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(SolutionDir)input;$(SolutionDir)3D;$(SolutionDir)camera;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(SolutionDir)input;$(SolutionDir)3D;$(SolutionDir)camera;$(SolutionDir)debug;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -151,6 +151,7 @@
     <ClCompile Include="base\TextureManager.cpp" />
     <ClCompile Include="base\Window.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
+    <ClCompile Include="debug\SceneStopper.cpp" />
     <ClCompile Include="input\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Vector2.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\Window.h" />
     <ClInclude Include="camera\Camera.h" />
+    <ClInclude Include="debug\SceneStopper.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
