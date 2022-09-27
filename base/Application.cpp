@@ -66,6 +66,9 @@ void Application::Initialize()
 	TextureManager::GetInstance()->Initialize(dxCommon);
 	TextureManager::Load(0, "white1x1.png");
 
+	//FBX
+	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
+
 	//ƒJƒƒ‰
 	camera = Camera::GetInstance();
 	camera->Initialize();
@@ -87,6 +90,9 @@ void Application::Initialize()
 	worldTransform.Initialize();
 	GeometryObject::StaticInitialize(dxCommon);
 	object = GeometryObject::Create(0);
+
+	//FBX
+
 
 #pragma endregion
 

@@ -13,6 +13,9 @@
 #include "GeometryObjectManager.h"
 #include "GeometryObject.h"
 
+#include "FbxLoader.h"
+
+
 #ifdef _DEBUG
 #include "SceneStopper.h"
 #endif // _DEBUG
@@ -59,6 +62,9 @@ private:
 #pragma region オブジェクト関連
 	GeometryObject* object = nullptr;
 	WorldTransform worldTransform;
+
+
+	WorldTransform worldTransform02;
 #pragma endregion
 
 

@@ -153,18 +153,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2D\Sprite.cpp" />
-    <ClCompile Include="3D\Fbx3DObject.cpp" />
     <ClCompile Include="3D\GeometryObject.cpp" />
     <ClCompile Include="3D\ViewProjection.cpp" />
     <ClCompile Include="3D\WorldTransform.cpp" />
     <ClCompile Include="base\Application.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
-    <ClCompile Include="base\FbxObjectManager.cpp" />
+    <ClCompile Include="base\FbxModelManager.cpp" />
     <ClCompile Include="base\GeometryObjectManager.cpp" />
     <ClCompile Include="base\TextureManager.cpp" />
     <ClCompile Include="base\Window.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="debug\SceneStopper.cpp" />
+    <ClCompile Include="FbxModelObject.cpp" />
     <ClCompile Include="input\Input.cpp" />
     <ClCompile Include="loader\FbxLoader.cpp" />
     <ClCompile Include="main.cpp" />
@@ -176,18 +176,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2D\Sprite.h" />
-    <ClInclude Include="3D\Fbx3DObject.h" />
     <ClInclude Include="3D\GeometryObject.h" />
     <ClInclude Include="3D\ViewProjection.h" />
     <ClInclude Include="3D\WorldTransform.h" />
     <ClInclude Include="base\Application.h" />
     <ClInclude Include="base\DirectXCommon.h" />
-    <ClInclude Include="base\FbxObjectManager.h" />
+    <ClInclude Include="base\FbxModelManager.h" />
     <ClInclude Include="base\GeometryObjectManager.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\Window.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="debug\SceneStopper.h" />
+    <ClInclude Include="FbxModelObject.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="loader\FbxLoader.h" />
     <ClInclude Include="math\Vector2.h" />
@@ -202,10 +202,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\shader\FBX.hlsli" />
     <None Include="Resources\shader\Geometry.hlsli" />
     <None Include="Resources\shader\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\shader\FBXPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\FBXVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Resources\shader\GeometryPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

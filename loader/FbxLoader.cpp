@@ -1,5 +1,6 @@
 #include "FbxLoader.h"
 #include <cassert>
+#include <DirectXMath.h>
 
 /// <summary>
 /// 静的メンバ変数の実態
@@ -48,7 +49,7 @@ void FbxLoader::Initialize(ID3D12Device *device)
     fbxImporter = FbxImporter::Create(fbxManager, "");
 }
 
-FbxObjectManager* FbxLoader::LoadModeFromFile(const string &modelName)
+FbxModelManager* FbxLoader::LoadModeFromFile(const string &modelName)
 {
     //モデルと同じ名前にファイルから読込
     const string directoryPath = baseDirectory + modelName + "/";
@@ -70,7 +71,7 @@ FbxObjectManager* FbxLoader::LoadModeFromFile(const string &modelName)
     fbxImporter->Import(fbxScene);
 
     //モデル生成
-    FbxObjectManager* model = new FbxObjectManager();
+    FbxModelManager* model = new FbxModelManager();
     model->name = modelName;
 
     //FBXノードの数を取得
@@ -89,7 +90,7 @@ FbxObjectManager* FbxLoader::LoadModeFromFile(const string &modelName)
     return model;
 }
 
-void FbxLoader::ParseNodeRecursive(FbxObjectManager *model, FbxNode *fbxNode, Node* parent)
+void FbxLoader::ParseNodeRecursive(FbxModelManager *model, FbxNode *fbxNode, Node* parent)
 {
     //モデルにノードを追加
     model->nodes.emplace_back();
@@ -156,7 +157,7 @@ void FbxLoader::ParseNodeRecursive(FbxObjectManager *model, FbxNode *fbxNode, No
     }
 }
 
-void FbxLoader::ParseMesh(FbxObjectManager *model, FbxNode *fbxNode)
+void FbxLoader::ParseMesh(FbxModelManager *model, FbxNode *fbxNode)
 {
     //ノードのメッシュを取得
     FbxMesh* fbxMesh = fbxNode->GetMesh();
@@ -174,14 +175,14 @@ void FbxLoader::ParseMesh(FbxObjectManager *model, FbxNode *fbxNode)
     ParseSkin(model, fbxMesh);
 }
 
-void FbxLoader::ParseMeshVertices(FbxObjectManager *model, FbxMesh *fbxMesh)
+void FbxLoader::ParseMeshVertices(FbxModelManager *model, FbxMesh *fbxMesh)
 {
     auto& vertices = model->vertices;
 
     //頂点データの数
     const int controlPointCount = fbxMesh->GetControlPointsCount();
     //必要数だけ頂点データ配列を確保
-    FbxObjectManager::VertexPosNormalUvSkin vert{};
+    FbxModelManager::VertexPosNormalUvSkin vert{};
     model->vertices.resize(controlPointCount, vert);
 
     //FBXメッシュの頂点座標配列を取得
@@ -190,7 +191,7 @@ void FbxLoader::ParseMeshVertices(FbxObjectManager *model, FbxMesh *fbxMesh)
     //FBXメッシュの前兆店座標をモデル内の配列にコピーする
     for(int i = 0; i < controlPointCount; i++)
     {
-        FbxObjectManager::VertexPosNormalUvSkin& vertex = vertices[i];
+        FbxModelManager::VertexPosNormalUvSkin& vertex = vertices[i];
 
         //座標コピー
         vertex.pos.x = (float)pCoord[i][0];
@@ -199,7 +200,7 @@ void FbxLoader::ParseMeshVertices(FbxObjectManager *model, FbxMesh *fbxMesh)
     }
 }
 
-void FbxLoader::ParseMeshFaces(FbxObjectManager *model, FbxMesh *fbxMesh)
+void FbxLoader::ParseMeshFaces(FbxModelManager *model, FbxMesh *fbxMesh)
 {
     auto& vertices = model->vertices;
     auto& indices = model->indices;
@@ -231,7 +232,7 @@ void FbxLoader::ParseMeshFaces(FbxObjectManager *model, FbxMesh *fbxMesh)
 
 
             //頂点法線読み込み
-            FbxObjectManager::VertexPosNormalUvSkin& vertex = vertices[index];
+            FbxModelManager::VertexPosNormalUvSkin& vertex = vertices[index];
             FbxVector4 normal;
             if(fbxMesh->GetPolygonVertexNormal(i,j,normal))
             {
@@ -275,7 +276,7 @@ void FbxLoader::ParseMeshFaces(FbxObjectManager *model, FbxMesh *fbxMesh)
     }
 }
 
-void FbxLoader::ParseMaterial(FbxObjectManager *model, FbxNode *fbxNode)
+void FbxLoader::ParseMaterial(FbxModelManager *model, FbxNode *fbxNode)
 {
     const int materialCount = fbxNode->GetMaterialCount();
     if(materialCount > 0)
@@ -329,12 +330,12 @@ void FbxLoader::ParseMaterial(FbxObjectManager *model, FbxNode *fbxNode)
     }
 }
 
-void FbxLoader::LoadTexture(FbxObjectManager *model, const std::string &fullpath)
+void FbxLoader::LoadTexture(FbxModelManager *model, const std::string &fullpath)
 {
     HRESULT result = S_FALSE;
     //WICテクスチャのロード
-    TexMetadata& metadata = model->metadata;
-    ScratchImage& scratchImg = model->scratchImg;
+    TexMetadata& metadata = model->metaData;
+    ScratchImage& scratchImg = model->scratchImage;
     //ユニコード文字列に変換
     wchar_t wfilepath[128];
     MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfilepath, _countof(wfilepath));
@@ -345,7 +346,7 @@ void FbxLoader::LoadTexture(FbxObjectManager *model, const std::string &fullpath
     }
 }
 
-void FbxLoader::ParseSkin(FbxObjectManager *model, FbxMesh *fbxMesh)
+void FbxLoader::ParseSkin(FbxModelManager *model, FbxMesh *fbxMesh)
 {
     //スキニング情報
     FbxSkin* fbxSkin = static_cast<FbxSkin*>(fbxMesh->GetDeformer(0, FbxDeformer::eSkin));
@@ -455,11 +456,11 @@ void FbxLoader::ParseSkin(FbxObjectManager *model, FbxMesh *fbxMesh)
             vertices[i].boneIndex[weightArrayIndex] = weightSet.index;
             vertices[i].boneWeight[weightArrayIndex] = weightSet.weight;
             //4つに達したら終了
-            if(++weightArrayIndex >= FbxObjectManager::MAX_BONE_INDICES)
+            if(++weightArrayIndex >= FbxModelManager::MAX_BONE_INDICES)
             {
                 float weight = 0.0f;
                 //２番目以降のウェイトを合計
-                for(int j = 1; j < FbxObjectManager::MAX_BONE_INDICES; j++)
+                for(int j = 1; j < FbxModelManager::MAX_BONE_INDICES; j++)
                 {
                     weight += vertices[i].boneWeight[j];
                 }

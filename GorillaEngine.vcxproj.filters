@@ -73,6 +73,9 @@
     <Filter Include="ヘッダー ファイル\loader">
       <UniqueIdentifier>{ef9199b7-0899-4312-bb9b-9c80de6d7899}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Fbx">
+      <UniqueIdentifier>{9712e96f-6e1a-43e9-95c5-b4eea0854433}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -132,11 +135,11 @@
     <ClCompile Include="loader\FbxLoader.cpp">
       <Filter>ソース ファイル\loader</Filter>
     </ClCompile>
-    <ClCompile Include="base\FbxObjectManager.cpp">
+    <ClCompile Include="base\FbxModelManager.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
-    <ClCompile Include="3D\Fbx3DObject.cpp">
-      <Filter>ソース ファイル\3D</Filter>
+    <ClCompile Include="FbxModelObject.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,11 +197,11 @@
     <ClInclude Include="loader\FbxLoader.h">
       <Filter>ヘッダー ファイル\loader</Filter>
     </ClInclude>
-    <ClInclude Include="base\FbxObjectManager.h">
+    <ClInclude Include="base\FbxModelManager.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
-    <ClInclude Include="3D\Fbx3DObject.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
+    <ClInclude Include="FbxModelObject.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +217,12 @@
     <FxCompile Include="Resources\shader\GeometryVS.hlsl">
       <Filter>リソース ファイル\Geometry</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\FBXVS.hlsl">
+      <Filter>リソース ファイル\Fbx</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\FBXPS.hlsl">
+      <Filter>リソース ファイル\Fbx</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Sprite.hlsli">
@@ -221,6 +230,9 @@
     </None>
     <None Include="Resources\shader\Geometry.hlsli">
       <Filter>リソース ファイル\Geometry</Filter>
+    </None>
+    <None Include="Resources\shader\FBX.hlsli">
+      <Filter>リソース ファイル\Fbx</Filter>
     </None>
   </ItemGroup>
 </Project>
