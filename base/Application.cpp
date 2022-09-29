@@ -98,7 +98,7 @@ void Application::Initialize()
 
 #ifdef _DEBUG
 	//ˆêŽž’âŽ~
-	//sceneStopper = SceneStopper::GetInstance();
+	sceneStopper = SceneStopper::GetInstance();
 
 #endif // _DEBUG
 }
@@ -116,16 +116,16 @@ void Application::Update()
 
 #pragma region ˆêŽž’âŽ~
 	//“ü—Í
-	//if(input->Trigger(DIK_F1)){
-	//	if(!sceneStopper->GetIsSceneStop()){
-	//		sceneStopper->SetIsSceneStop(true);
-	//	}
-	//	else if(sceneStopper->GetInstance()){
-	//		sceneStopper->SetIsSceneStop(false);
-	//	}
-	//}
-	////’âŽ~
-	//if(sceneStopper->GetIsSceneStop()) return;
+	if(input->Trigger(DIK_F1)){
+		if(!sceneStopper->GetIsSceneStop()){
+			sceneStopper->SetIsSceneStop(true);
+		}
+		else if(sceneStopper->GetInstance()){
+			sceneStopper->SetIsSceneStop(false);
+		}
+	}
+	//’âŽ~
+	if(sceneStopper->GetIsSceneStop()) return;
 #pragma endregion
 
 #endif // _DEBUG

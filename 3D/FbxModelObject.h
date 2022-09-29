@@ -27,19 +27,19 @@ public:
 /// サブクラス・インナークラス
 /// </summary>
 public:
-	class Common{
+	class CommonFbx{
 		friend class FbxModelObject;
 
 	public:
 		/// <summary>
 		/// グラフィックパイプライン初期化
 		/// </summary>
-		void InitializeGraphicsPipeline();
+		//void InitializeGraphicsPipeline();
 
 		/// <summary>
 		/// デストラクタヒープ初期化
 		/// </summary>
-		void InitializeDescriptorHeap();
+		//void InitializeDescriptorHeap();
 
 	private:
 		//DirectXCommon
@@ -72,14 +72,14 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	static void StaticInitialize(DirectXCommon* dxCommon);
+	//static void StaticInitialize(DirectXCommon* dxCommon);
 
 	/// <summary>
 	/// 静的メンバ解法
 	/// </summary>
-	static void StaticFinalize();
+	//static void StaticFinalize();
 
-	static FbxModelObject* Create();
+	//static FbxModelObject* Create();
 
 
 /// <summary>
@@ -97,7 +97,7 @@ public:
 /// 静的メンバ変数
 /// </summary>
 private:
-	static Common* common;
+	//static CommonFbx* common;
 
 /// <summary>
 /// メンバ変数
