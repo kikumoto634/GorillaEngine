@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2D\Sprite.cpp" />
+    <ClCompile Include="3D\FbxModelObject.cpp" />
     <ClCompile Include="3D\GeometryObject.cpp" />
     <ClCompile Include="3D\ViewProjection.cpp" />
     <ClCompile Include="3D\WorldTransform.cpp" />
@@ -164,7 +165,6 @@
     <ClCompile Include="base\Window.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="debug\SceneStopper.cpp" />
-    <ClCompile Include="FbxModelObject.cpp" />
     <ClCompile Include="input\Input.cpp" />
     <ClCompile Include="loader\FbxLoader.cpp" />
     <ClCompile Include="main.cpp" />
@@ -176,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2D\Sprite.h" />
+    <ClInclude Include="3D\FbxModelObject.h" />
     <ClInclude Include="3D\GeometryObject.h" />
     <ClInclude Include="3D\ViewProjection.h" />
     <ClInclude Include="3D\WorldTransform.h" />
@@ -187,7 +188,6 @@
     <ClInclude Include="base\Window.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="debug\SceneStopper.h" />
-    <ClInclude Include="FbxModelObject.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="loader\FbxLoader.h" />
     <ClInclude Include="math\Vector2.h" />
