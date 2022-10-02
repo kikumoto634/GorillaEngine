@@ -92,7 +92,11 @@ void Application::Initialize()
 	object = GeometryObject::Create(0);
 
 	//FBX
-
+	FbxModelManager::GetInstance()->CreateBuffers();
+	//生成
+	worldTransforFbx.Initialize();
+	FbxModelObject::StaticInitialize(dxCommon);
+	objectFbx = FbxModelObject::Create(FbxLoader::GetInstance()->LoadModeFromFile("cube"));
 
 #pragma endregion
 
@@ -157,6 +161,7 @@ void Application::Update()
 
 #pragma region オブジェクト更新
 	object->Update(worldTransform, camera);
+	objectFbx->Update(worldTransforFbx, camera);
 #pragma endregion
 
 }
@@ -169,6 +174,7 @@ void Application::Draw()
 
 	sprite->Draw();
 	object->Draw();
+	objectFbx->Draw();
 
 	//描画後処理
 	dxCommon->EndDraw();

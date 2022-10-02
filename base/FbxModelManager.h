@@ -70,16 +70,20 @@ public:
 		float boneWeight[MAX_BONE_INDICES];	//ボーン重み
 	};
 
+public:
+	static FbxModelManager* GetInstance();
+
 /// <summary>
 /// メンバ関数
 /// </summary>
 public:
 	~FbxModelManager();
 
+
 	/// <summary>
 	/// バッファ生成
 	/// </summary>
-	void CreateBuffers(ID3D12Device* device);
+	void CreateBuffers();
 
 
 	//getter
@@ -96,6 +100,8 @@ public:
 	D3D12_VERTEX_BUFFER_VIEW GetvbView()	{return vbView;}
 	//インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW GetibView()		{return ibView;}
+	//デスクリプタヒープ
+	ID3D12DescriptorHeap* GetDescriptorHeap()	{return descriptorHeapSRV.Get();}
 
 /// <summary>
 /// メンバ変数

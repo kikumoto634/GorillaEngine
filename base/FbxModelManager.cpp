@@ -1,21 +1,29 @@
 #include "FbxModelManager.h"
+#include "DirectXCommon.h"
 
 using namespace DirectX;
 using namespace std;
+
+FbxModelManager *FbxModelManager::GetInstance()
+{
+	static FbxModelManager instance;
+	return &instance;
+}
 
 FbxModelManager::~FbxModelManager()
 {
 }
 
-void FbxModelManager::CreateBuffers(ID3D12Device *device)
+void FbxModelManager::CreateBuffers()
 {
 	HRESULT result = S_FALSE;
+	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
 	//頂点データの全体サイズ
 	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUvSkin)*vertices.size());
 	{
 		//頂点バッファの生成
-		result = device->CreateCommittedResource
+		result = dxCommon->GetDevice()->CreateCommittedResource
 		(
 			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 			D3D12_HEAP_FLAG_NONE,
@@ -42,7 +50,7 @@ void FbxModelManager::CreateBuffers(ID3D12Device *device)
 	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
 	{
 		//インデックスバッファ生成
-		result = device->CreateCommittedResource
+		result = dxCommon->GetDevice()->CreateCommittedResource
 		(
 			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 			D3D12_HEAP_FLAG_NONE,
@@ -78,7 +86,7 @@ void FbxModelManager::CreateBuffers(ID3D12Device *device)
 			(UINT)metaData.mipLevels
 		);
 	//テクスチャ用バッファの生成
-	result = device->CreateCommittedResource
+	result = dxCommon->GetDevice()->CreateCommittedResource
 		(
 			&CD3DX12_HEAP_PROPERTIES
 			(
@@ -108,7 +116,7 @@ void FbxModelManager::CreateBuffers(ID3D12Device *device)
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;	//シェーダーから見えるように
 	descHeapDesc.NumDescriptors = 1;	//テクスチャ枚数
-	result = device->CreateDescriptorHeap(&descHeapDesc,IID_PPV_ARGS(&descriptorHeapSRV));//生成
+	result = dxCommon->GetDevice()->CreateDescriptorHeap(&descHeapDesc,IID_PPV_ARGS(&descriptorHeapSRV));//生成
 	assert(SUCCEEDED(result));
 	//シェーダーリソースビュー(SRV)生成
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};	//設定構造体
@@ -119,7 +127,7 @@ void FbxModelManager::CreateBuffers(ID3D12Device *device)
 	srvDesc.ViewDimension =D3D12_SRV_DIMENSION_TEXTURE2D;	//2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = 1;
 
-	device->CreateShaderResourceView
+	dxCommon->GetDevice()->CreateShaderResourceView
 	(
 		textureBuffer.Get(),	//ビューと関連付けるバッファ
 		&srvDesc,	//テクスチャ設定情報

@@ -7,6 +7,7 @@
 
 #include <DirectXMath.h>
 #include <wrl.h>
+#include <vector>
 
 class FbxModelObject
 {
@@ -21,6 +22,7 @@ public:
 /// </summary>
 public:
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	template<class T> using vector = std::vector<T>;
 	using XMMATRIX = DirectX::XMMATRIX;
 
 /// <summary>
@@ -34,12 +36,7 @@ public:
 		/// <summary>
 		/// グラフィックパイプライン初期化
 		/// </summary>
-		//void InitializeGraphicsPipeline();
-
-		/// <summary>
-		/// デストラクタヒープ初期化
-		/// </summary>
-		//void InitializeDescriptorHeap();
+		void InitializeGraphicsPipeline();
 
 	private:
 		//DirectXCommon
@@ -49,9 +46,6 @@ public:
 		ComPtr<ID3D12PipelineState> pipelineState;
 		//ルートシグネチャ
 		ComPtr<ID3D12RootSignature> rootSignature;
-
-		FbxModelManager* FbxModelManager;
-
 	};
 
 	//定数バッファ用データ構造体(座標変換行列用)
@@ -69,35 +63,38 @@ public:
 	};
 
 public:
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	//static void StaticInitialize(DirectXCommon* dxCommon);
+	 ///<summary>
+	 ///初期化
+	 ///</summary>
+	static void StaticInitialize(DirectXCommon* dxCommon);
 
-	/// <summary>
-	/// 静的メンバ解法
-	/// </summary>
-	//static void StaticFinalize();
+	 ///<summary>
+	 ///静的メンバ解法
+	 ///</summary>
+	static void StaticFinalize();
 
-	//static FbxModelObject* Create();
+	static FbxModelObject* Create(FbxModelManager* model);
 
 
 /// <summary>
 /// メンバ関数
 /// </summary>
 public:
+	FbxModelObject(FbxModelManager* model);
 
-	void Initialize();
+	bool Initialize();
 
 	void Update(WorldTransform worldTransform, Camera* camera);
 
 	void Draw();
 
+	void PlayAnimation();
+
 /// <summary>
 /// 静的メンバ変数
 /// </summary>
 private:
-	//static CommonFbx* common;
+	static CommonFbx* common;
 
 /// <summary>
 /// メンバ変数
@@ -105,7 +102,9 @@ private:
 public:
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBufferTransform;
+	ConstBufferDataTransform* constMap = nullptr;
 	ComPtr<ID3D12Resource> constBufferSkin;
+	ConstBufferDataSkin* constSkinMap = nullptr;
 
 	//モデル
 	FbxModelManager* model = nullptr;

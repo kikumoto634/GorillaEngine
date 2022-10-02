@@ -85,7 +85,7 @@ FbxModelManager* FbxLoader::LoadModeFromFile(const string &modelName)
     model->fbxScene = fbxScene;
 
     //バッファ生成
-    model->CreateBuffers(device);
+    model->CreateBuffers();
 
     return model;
 }

@@ -14,7 +14,8 @@
 #include "GeometryObject.h"
 
 #include "FbxLoader.h"
-
+#include "FbxModelManager.h"
+#include "FbxModelObject.h"
 
 #ifdef _DEBUG
 #include "SceneStopper.h"
@@ -64,7 +65,8 @@ private:
 	WorldTransform worldTransform;
 
 
-	WorldTransform worldTransform02;
+	FbxModelObject* objectFbx = nullptr;
+	WorldTransform worldTransforFbx;
 #pragma endregion
 
 
