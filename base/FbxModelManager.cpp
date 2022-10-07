@@ -10,10 +10,6 @@ FbxModelManager *FbxModelManager::GetInstance()
 	return &instance;
 }
 
-FbxModelManager::~FbxModelManager()
-{
-}
-
 void FbxModelManager::CreateBuffers()
 {
 	HRESULT result = S_FALSE;

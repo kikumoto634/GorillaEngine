@@ -91,12 +91,13 @@ void Application::Initialize()
 	GeometryObject::StaticInitialize(dxCommon);
 	object = GeometryObject::Create(0);
 
-	//FBX
-	FbxModelManager::GetInstance()->CreateBuffers();
+	
 	//生成
 	worldTransforFbx.Initialize();
+	modelFbx = std::make_unique<FbxModelManager>();
+	modelFbx = std::unique_ptr<FbxModelManager>(FbxLoader::GetInstance()->LoadModeFromFile("cube"));
 	FbxModelObject::StaticInitialize(dxCommon);
-	objectFbx = FbxModelObject::Create(FbxLoader::GetInstance()->LoadModeFromFile("cube"));
+	objectFbx = FbxModelObject::Create(modelFbx.get());
 
 #pragma endregion
 
@@ -160,7 +161,7 @@ void Application::Update()
 #pragma endregion
 
 #pragma region オブジェクト更新
-	object->Update(worldTransform, camera);
+	//object->Update(worldTransform, camera);
 	objectFbx->Update(worldTransforFbx, camera);
 #pragma endregion
 
@@ -173,7 +174,7 @@ void Application::Draw()
 	Sprite::SetPipelineState();
 
 	sprite->Draw();
-	object->Draw();
+	//object->Draw();
 	objectFbx->Draw();
 
 	//描画後処理

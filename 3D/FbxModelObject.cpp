@@ -16,7 +16,7 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/FBXVS.hlsl",    // シェーダファイル名
+		L"Resources/shader/FBXVS.hlsl",    // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",    // エントリーポイント名、シェーダーモデル指定
@@ -39,7 +39,7 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/FBXPS.hlsl",    // シェーダファイル名
+		L"Resources/shader/FBXPS.hlsl",    // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0",    // エントリーポイント名、シェーダーモデル指定
@@ -239,7 +239,7 @@ bool FbxModelObject::Initialize()
 			&resourceDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
-			IID_PPV_ARGS(&constBufferTransform)
+			IID_PPV_ARGS(&constBufferSkin)
 		);
 		assert(SUCCEEDED(result));
 		//frame文の時間を60FPSで設定
@@ -247,7 +247,7 @@ bool FbxModelObject::Initialize()
 		//転送
 		result = constBufferSkin->Map(0, nullptr, (void**)&constSkinMap);
 		assert(SUCCEEDED(result));
-		for(int i = 0; i , MAX_BONES; i++){
+		for(int i = 0; i < MAX_BONES; i++){
 			constSkinMap->bones[i] = XMMatrixIdentity();
 		}
 		constBufferSkin->Unmap(0, nullptr);

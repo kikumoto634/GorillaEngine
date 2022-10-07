@@ -77,8 +77,6 @@ public:
 /// メンバ関数
 /// </summary>
 public:
-	~FbxModelManager();
-
 
 	/// <summary>
 	/// バッファ生成
