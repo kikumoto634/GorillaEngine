@@ -64,8 +64,8 @@ private:
 	GeometryObject* object = nullptr;
 	WorldTransform worldTransform;
 
-	FbxModelManager* modelFbx = nullptr;
-	FbxModelObject* objectFbx = nullptr;
+	std::unique_ptr<FbxModelManager> modelFbx = nullptr;
+	std::unique_ptr<FbxModelObject> objectFbx = nullptr;
 #pragma endregion
 
 

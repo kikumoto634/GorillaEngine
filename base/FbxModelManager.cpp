@@ -108,10 +108,11 @@ void FbxModelManager::CreateBuffer(ID3D12Device *device)
 
 void FbxModelManager::Draw(ID3D12GraphicsCommandList *commandList)
 {
-	commandList->IASetVertexBuffers(0,1,&vbView);
-	commandList->IASetIndexBuffer(&ibView);
 	ID3D12DescriptorHeap* ppHeaps[] = {descriptorHeapSRV.Get()};
 	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	commandList->IASetVertexBuffers(0,1,&vbView);
+	commandList->IASetIndexBuffer(&ibView);
 	commandList->SetGraphicsRootDescriptorTable(1, descriptorHeapSRV->GetGPUDescriptorHandleForHeapStart());
-	commandList->DrawIndexedInstanced((UINT)indices.size(), 1, 0,0,0);
+	commandList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }

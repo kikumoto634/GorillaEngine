@@ -8,8 +8,8 @@ using namespace DirectX;
 
 ID3D12Device* FbxModelObject::device = nullptr;
 Camera* FbxModelObject::camera = nullptr;
-ComPtr<ID3D12RootSignature> FbxModelObject::rootSignature;
-ComPtr<ID3D12PipelineState> FbxModelObject::pipelineState;
+ComPtr<ID3D12RootSignature> FbxModelObject::rootSignature = nullptr;
+ComPtr<ID3D12PipelineState> FbxModelObject::pipelineState = nullptr;
 
 void FbxModelObject::CreateGraphicsPipeline()
 {
@@ -171,6 +171,7 @@ void FbxModelObject::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBufferTransform)
 	);
+	assert(SUCCEEDED(result));
 }
 
 void FbxModelObject::Update()
@@ -180,8 +181,8 @@ void FbxModelObject::Update()
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();
 	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
 	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
 	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
 	matWorld = XMMatrixIdentity();

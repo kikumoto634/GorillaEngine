@@ -32,9 +32,6 @@ Application::Application()
 Application::~Application()
 {
 	delete sprite;
-
-	delete objectFbx;
-	delete modelFbx;
 }
 
 void Application::Run()
@@ -90,22 +87,25 @@ void Application::Initialize()
 
 #pragma region オブジェクト初期化
 
-	////幾何学オブジェクト静的初期化
-	//GeometryObjectManager::GetInstance()->CreateBuffer();
-	////生成
-	//worldTransform.Initialize();
-	//GeometryObject::StaticInitialize(dxCommon);
-	//object = GeometryObject::Create(0);
+	//幾何学オブジェクト静的初期化
+	GeometryObjectManager::GetInstance()->CreateBuffer();
+	//生成
+	worldTransform.Initialize();
+	GeometryObject::StaticInitialize(dxCommon);
+	object = GeometryObject::Create(0);
 
 	//Fbx
-	modelFbx = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+
+	modelFbx = make_unique<FbxModelManager>();
+	modelFbx = unique_ptr<FbxModelManager>(FbxLoader::GetInstance()->LoadModelFromFile("cube"));
 	FbxModelObject::SetDevice(dxCommon->GetDevice());
 	FbxModelObject::SetCamera(camera);
 	FbxModelObject::CreateGraphicsPipeline();
 
-	objectFbx = new FbxModelObject();
+
+	objectFbx = make_unique<FbxModelObject>();
 	objectFbx->Initialize();
-	objectFbx->SetModel(modelFbx);
+	objectFbx->SetModel(modelFbx.get());
 
 #pragma endregion
 
@@ -144,7 +144,7 @@ void Application::Update()
 #endif // _DEBUG
 
 #pragma region 入力処理
-	/*{
+	{
 		if(input->Push(DIK_SPACE)){
 			sprite->SetColor({1,0,0,1});
 		}
@@ -160,7 +160,7 @@ void Application::Update()
 			worldTransform.rotation.y += XMConvertToRadians(-1.f);
 		}
 		worldTransform.UpdateMatrix();
-	}*/
+	}
 #pragma endregion
 
 #pragma region スプライト更新
@@ -169,7 +169,7 @@ void Application::Update()
 #pragma endregion
 
 #pragma region オブジェクト更新
-	//object->Update(worldTransform, camera);
+	object->Update(worldTransform, camera);
 	objectFbx->Update();
 #pragma endregion
 
@@ -179,7 +179,7 @@ void Application::Draw()
 {
 	//描画前処理
 	dxCommon->BeginDraw();
-	//object->Draw();
+	object->Draw();
 	objectFbx->Draw(dxCommon->GetCommandList());
 
 	Sprite::SetPipelineState();
