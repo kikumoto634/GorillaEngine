@@ -1,18 +1,24 @@
 #include "FbxModelObject.h"
+
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
-FbxModelObject::CommonFbx* FbxModelObject::common = nullptr;
+ID3D12Device* FbxModelObject::device = nullptr;
+Camera* FbxModelObject::camera = nullptr;
+ComPtr<ID3D12RootSignature> FbxModelObject::rootSignature;
+ComPtr<ID3D12PipelineState> FbxModelObject::pipelineState;
 
-void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
+void FbxModelObject::CreateGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
 	ComPtr<ID3DBlob> psBlob;    // ピクセルシェーダオブジェクト
 	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
+
+	assert(device);
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -62,7 +68,7 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 
 	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{ // xyz座標(1行で書いたほうが見やすい)
+		{ // xy座標(1行で書いたほうが見やすい)
 			"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
@@ -74,16 +80,6 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 		},
 		{ // uv座標(1行で書いたほうが見やすい)
 			"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
-		{//影響をうけるボーン番号(4つ)
-			"BONEINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-		},
-		{//ボーンのスキンウェイト(4つ)
-			"BONEWEIGHTS",0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 		},
@@ -129,7 +125,7 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 	gpipeline.NumRenderTargets = 1;    // 描画対象は1つ
-	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; // 0～255指定のRGBA
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
@@ -137,13 +133,11 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[3]{};
+	CD3DX12_ROOT_PARAMETER rootparams[2]={};
 	// CBV（座標変換行列用）
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	// SRV（テクスチャ）
 	rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
-	//CBV (スキニング用)
-	rootparams[2].InitAsConstantBufferView(3, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -156,192 +150,68 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 	// バージョン自動判定のシリアライズ
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 	// ルートシグネチャの生成
-	result = common->dxCommon->GetDevice()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(common->rootSignature.ReleaseAndGetAddressOf()));
-	if (FAILED(result)) { assert(0); }
+	result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
+	assert(SUCCEEDED(result));
 
-	gpipeline.pRootSignature = common->rootSignature.Get();
+	gpipeline.pRootSignature = rootSignature.Get();
 
 	// グラフィックスパイプラインの生成
-	result = common->dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(common->pipelineState.ReleaseAndGetAddressOf()));
-	if (FAILED(result)) { assert(0); }
+	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
+	assert(SUCCEEDED(result));
 }
 
-void FbxModelObject::StaticInitialize(DirectXCommon *dxCommon)
-{
-	common = new CommonFbx();
-	common->dxCommon = dxCommon;
-	common->InitializeGraphicsPipeline();
-}
-
-void FbxModelObject::StaticFinalize()
-{
-	if(common != nullptr) return;
-	delete common;
-	common = nullptr;
-}
-
-FbxModelObject *FbxModelObject::Create(FbxModelManager *model)
-{
-	FbxModelObject* object = new FbxModelObject(model);
-	if(object == nullptr){
-		return nullptr;
-	}
-
-	//初期化
-	if(!object->Initialize()){
-		delete object;
-		assert(0);
-		return nullptr;
-	}
-
-	return object;
-}
-
-FbxModelObject::FbxModelObject(FbxModelManager *model)
-{
-	this->model = model;
-}
-
-bool FbxModelObject::Initialize()
+void FbxModelObject::Initialize()
 {
 	HRESULT result;
-
-	//定数バッファ
-	//頂点情報
-	{
-		//ヒープ
-		CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-		//リソース
-		CD3DX12_RESOURCE_DESC resourceDesc =
-		  CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff);
-		//生成
-		result = common->dxCommon->GetDevice()->CreateCommittedResource(
-			&heapProp,
-			D3D12_HEAP_FLAG_NONE,
-			&resourceDesc,
-			D3D12_RESOURCE_STATE_GENERIC_READ,
-			nullptr,
-			IID_PPV_ARGS(&constBufferTransform)
-		);
-		assert(SUCCEEDED(result));
-	}
-	//スキン情報
-	{
-		//ヒープ
-		CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-		//リソース
-		CD3DX12_RESOURCE_DESC resourceDesc =
-		  CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff);
-		//生成
-		result = common->dxCommon->GetDevice()->CreateCommittedResource(
-			&heapProp,
-			D3D12_HEAP_FLAG_NONE,
-			&resourceDesc,
-			D3D12_RESOURCE_STATE_GENERIC_READ,
-			nullptr,
-			IID_PPV_ARGS(&constBufferSkin)
-		);
-		assert(SUCCEEDED(result));
-		//frame文の時間を60FPSで設定
-		frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
-		//転送
-		result = constBufferSkin->Map(0, nullptr, (void**)&constSkinMap);
-		assert(SUCCEEDED(result));
-		for(int i = 0; i < MAX_BONES; i++){
-			constSkinMap->bones[i] = XMMatrixIdentity();
-		}
-		constBufferSkin->Unmap(0, nullptr);
-	}
-	return true;
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff)& ~0xff),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBufferTransform)
+	);
 }
 
-void FbxModelObject::Update(WorldTransform worldTransform, Camera *camera)
+void FbxModelObject::Update()
 {
-	HRESULT result;
+	XMMATRIX matScale, matRot, matTrans;
+
+	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+	matRot = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+
+	matWorld = XMMatrixIdentity();
+	matWorld *= matScale;
+	matWorld *= matRot;
+	matWorld *= matTrans;
 
 	const XMMATRIX& matViewProjection = camera->GetViewProjectionMatrix();
-	const XMMATRIX& modelTransform = model->GetModelTransform();
+	const XMMATRIX& modelTranslation = model->GetModelTransform();
 	const Vector3& cameraPos = camera->GetEye();
 
+	HRESULT result;
+
+	ConstBufferDataTransform* constMap = nullptr;
 	result = constBufferTransform->Map(0, nullptr, (void**)&constMap);
 	if(SUCCEEDED(result)){
 		constMap->viewproj = matViewProjection;
-		constMap->world = modelTransform * worldTransform.matWorld;
+		constMap->world = modelTranslation * matWorld;
 		constMap->cameraPos = cameraPos;
 		constBufferTransform->Unmap(0, nullptr);
 	}
-
-	//ボーン
-	vector<Bone>& bones = model->GetBones();
-	//アニメーション
-	if(isPlay){
-		//1frame進める
-		currentTime += frameTime;
-		//最後まで再生したら
-		if(currentTime > endTime){
-			currentTime = startTime;
-		}
-	}
-	//定数バッファへデータ転送
-	result = constBufferSkin->Map(0,nullptr, (void**)&constSkinMap);
-	assert(SUCCEEDED(result));
-	for(int i = 0; i < bones.size(); i++){
-		//今の姿勢行列
-		XMMATRIX matCurrentPose;
-		//今の姿勢行列を取得
-		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
-		//XMMATRIXに変換
-		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
-		//合成してスキニング行列に
-		constSkinMap->bones[i] = bones[i].invInitialPose * matCurrentPose;
-	}
-	constBufferSkin->Unmap(0,nullptr);
-	bones.clear();
 }
 
-void FbxModelObject::Draw()
+void FbxModelObject::Draw(ID3D12GraphicsCommandList *commandList)
 {
 	if(model == nullptr)	return;
 
-	//パイプラインステートの設定
-	common->dxCommon->GetCommandList()->SetPipelineState(common->pipelineState.Get());
-	//ルートシグネチャの設定
-	common->dxCommon->GetCommandList()->SetGraphicsRootSignature(common->rootSignature.Get());
-	//プリミティブ形状を設定
-	common->dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//定数バッファビィーをセット
-	common->dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBufferTransform->GetGPUVirtualAddress());
-	common->dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(2, constBufferSkin->GetGPUVirtualAddress());
-
-	//デスクリプタヒープのセット
-	ID3D12DescriptorHeap* ppHeaps[] = {model->GetDescriptorHeap()};
-	common->dxCommon->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-	//頂点バッファをセット
-	common->dxCommon->GetCommandList()->IASetVertexBuffers(0, 1, &model->GetvbView());
-	//インデックスバッファをセット
-	common->dxCommon->GetCommandList()->IASetIndexBuffer(&model->GetibView());
-	//シェーダリソースビューをセット
-	common->dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(1, model->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-	//描画コマンド
-	common->dxCommon->GetCommandList()->DrawIndexedInstanced((UINT)model->GetIndices(), 1, 0, 0, 0);
-}
-
-void FbxModelObject::PlayAnimation()
-{
-	FbxScene* fbxScene = model->GetFbxScene();
-	//0番にアニメーション取得
-	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
-	//アニメーションの名前取得
-	const char* animstackname = animstack->GetName();
-	//アニメーションの時間情報
-	FbxTakeInfo* takeinfo = fbxScene->GetTakeInfo(animstackname);
-
-	//開始時間取得
-	startTime = takeinfo->mLocalTimeSpan.GetStart();
-	//終了時間
-	endTime = takeinfo->mLocalTimeSpan.GetStop();
-	//開始時間に合わせる
-	currentTime = startTime;
-	//再生中状態にする
-	isPlay = true;
+	commandList->SetPipelineState(pipelineState.Get());
+	commandList->SetGraphicsRootSignature(rootSignature.Get());
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	commandList->SetGraphicsRootConstantBufferView(0, constBufferTransform->GetGPUVirtualAddress());
+	model->Draw(commandList);
 }

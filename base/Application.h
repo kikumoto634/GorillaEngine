@@ -64,14 +64,12 @@ private:
 	GeometryObject* object = nullptr;
 	WorldTransform worldTransform;
 
-
-	std::unique_ptr<FbxModelManager> modelFbx;
+	FbxModelManager* modelFbx = nullptr;
 	FbxModelObject* objectFbx = nullptr;
-	WorldTransform worldTransforFbx;
 #pragma endregion
 
 
 #ifdef _DEBUG
-	SceneStopper* sceneStopper;
+	SceneStopper* sceneStopper = nullptr;
 #endif // _DEBUG
 };

@@ -129,9 +129,6 @@
     <ClCompile Include="camera\Camera.cpp">
       <Filter>ソース ファイル\camera</Filter>
     </ClCompile>
-    <ClCompile Include="loader\FbxLoader.cpp">
-      <Filter>ソース ファイル\loader</Filter>
-    </ClCompile>
     <ClCompile Include="base\FbxModelManager.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
@@ -140,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="debugProcess\SceneStopper.cpp">
       <Filter>ソース ファイル\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="loader\FbxLoader.cpp">
+      <Filter>ソース ファイル\loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -191,9 +191,6 @@
     <ClInclude Include="camera\Camera.h">
       <Filter>ヘッダー ファイル\camera</Filter>
     </ClInclude>
-    <ClInclude Include="loader\FbxLoader.h">
-      <Filter>ヘッダー ファイル\loader</Filter>
-    </ClInclude>
     <ClInclude Include="base\FbxModelManager.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
@@ -202,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="debugProcess\SceneStopper.h">
       <Filter>ヘッダー ファイル\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="loader\FbxLoader.h">
+      <Filter>ヘッダー ファイル\loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

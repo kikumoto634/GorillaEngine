@@ -17,9 +17,9 @@ struct ViewProjection{
 
 #pragma region ビュー行列
 	//視点座標
-	Vector3 eye = {0,0,-50.f};
+	Vector3 eye = {0,0,-100.f};
 	//注視点座標
-	Vector3 target = {0,0,0};
+	Vector3 target = {0,20,0};
 	//上方向ベクトル
 	Vector3 up = {0,1,0};
 #pragma endregion

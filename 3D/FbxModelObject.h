@@ -1,124 +1,54 @@
 #pragma once
+
+#include <Window.h>
+#include <wrl.h>
+#include <d3d12.h>
+#include <d3dx12.h>
+#include <DirectXMath.h>
+#include <string>
+
 #include "FbxModelManager.h"
 #include "Camera.h"
-#include "WorldTransform.h"
-#include "FbxLoader.h"
-#include "DirectXCommon.h"
+#include "Vector2.h"
+#include "Vector3.h"
 
-#include <DirectXMath.h>
-#include <wrl.h>
-#include <vector>
-
-class FbxModelObject
-{
-/// <summary>
-/// 定数
-/// </summary>
-public:
-	static const int MAX_BONES = 32;
-
-/// <summary>
-/// エイリアス
-/// </summary>
-public:
-	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	template<class T> using vector = std::vector<T>;
+class FbxModelObject{
+protected:
+	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
-
-/// <summary>
-/// サブクラス・インナークラス
-/// </summary>
 public:
-	class CommonFbx{
-		friend class FbxModelObject;
-
-	public:
-		/// <summary>
-		/// グラフィックパイプライン初期化
-		/// </summary>
-		void InitializeGraphicsPipeline();
-
-	private:
-		//DirectXCommon
-		DirectXCommon* dxCommon = nullptr;
-
-		//パイプラインステートオブジェクト
-		ComPtr<ID3D12PipelineState> pipelineState;
-		//ルートシグネチャ
-		ComPtr<ID3D12RootSignature> rootSignature;
+	struct ConstBufferDataTransform{
+		XMMATRIX viewproj;
+		XMMATRIX world;
+		Vector3 cameraPos;
 	};
 
-	//定数バッファ用データ構造体(座標変換行列用)
-	struct ConstBufferDataTransform
-	{
-		XMMATRIX viewproj;	//ビュープロジェクション
-		XMMATRIX world;		//ワールド行列
-		Vector3 cameraPos;	//カメラ座標(ワールド座標)
-	};
-
-	//定数バッファ用データ構造体(スキニング)
-	struct ConstBufferDataSkin
-	{
-		XMMATRIX bones[MAX_BONES];
-	};
-
-public:
-	 ///<summary>
-	 ///初期化
-	 ///</summary>
-	static void StaticInitialize(DirectXCommon* dxCommon);
-
-	 ///<summary>
-	 ///静的メンバ解法
-	 ///</summary>
-	static void StaticFinalize();
-
-	static FbxModelObject* Create(FbxModelManager* model);
-
-
-/// <summary>
-/// メンバ関数
-/// </summary>
-public:
-	FbxModelObject(FbxModelManager* model);
-
-	bool Initialize();
-
-	void Update(WorldTransform worldTransform, Camera* camera);
-
-	void Draw();
-
-	void PlayAnimation();
-
-/// <summary>
-/// 静的メンバ変数
-/// </summary>
 private:
-	static CommonFbx* common;
+	static ID3D12Device* device;
+	static Camera* camera;
 
-/// <summary>
-/// メンバ変数
-/// </summary>
+	static ComPtr<ID3D12RootSignature> rootSignature;
+	static ComPtr<ID3D12PipelineState> pipelineState;
+
 public:
-	//定数バッファ
+	static void SetDevice(ID3D12Device* device)	{FbxModelObject::device = device;}
+	static void SetCamera(Camera* camera)	{FbxModelObject::camera = camera;}
+	static void CreateGraphicsPipeline();
+
+public:
+	void Initialize();
+	void Update();
+	void Draw(ID3D12GraphicsCommandList* commandList);
+
+	void SetModel(FbxModelManager* model)	{this->model = model;}
+
+protected:
 	ComPtr<ID3D12Resource> constBufferTransform;
-	ConstBufferDataTransform* constMap = nullptr;
-	ComPtr<ID3D12Resource> constBufferSkin;
-	ConstBufferDataSkin* constSkinMap = nullptr;
 
-	//モデル
+	Vector3 scale = {1,1,1};
+	Vector3 rotation = {0,0,0};
+	Vector3 position = {0,0,0};
+	XMMATRIX matWorld;
 	FbxModelManager* model = nullptr;
-
-	//アニメーション
-	//1frameの時間
-	FbxTime frameTime;
-	//アニメーション開始時間
-	FbxTime startTime;
-	//アニメーション終了時間
-	FbxTime endTime;
-	//現在時間(アニメーション)
-	FbxTime currentTime;
-	//アニメーション再生中
-	bool isPlay = false;
 };
-
