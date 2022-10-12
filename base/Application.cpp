@@ -72,8 +72,14 @@ void Application::Initialize()
 	camera = Camera::GetInstance();
 	camera->Initialize();
 
-	//FBXマネージャー
+	///オブジェクト
+	//幾何学
+	//幾何学オブジェクト静的初期化
+	GeometryObjectManager::GetInstance()->CreateBuffer();
+	GeometryObject::StaticInitialize(dxCommon);
+	//FBX
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
+	FbxModelObject::StaticInitialize(dxCommon);
 
 #pragma endregion
 
@@ -87,25 +93,15 @@ void Application::Initialize()
 
 #pragma region オブジェクト初期化
 
-	//幾何学オブジェクト静的初期化
-	GeometryObjectManager::GetInstance()->CreateBuffer();
 	//生成
 	worldTransform.Initialize();
-	GeometryObject::StaticInitialize(dxCommon);
 	object = GeometryObject::Create(0);
 
 	//Fbx
-
+	worldTransformFbx.Initialize();
 	modelFbx = make_unique<FbxModelManager>();
 	modelFbx = unique_ptr<FbxModelManager>(FbxLoader::GetInstance()->LoadModelFromFile("cube"));
-	FbxModelObject::SetDevice(dxCommon->GetDevice());
-	FbxModelObject::SetCamera(camera);
-	FbxModelObject::CreateGraphicsPipeline();
-
-
-	objectFbx = make_unique<FbxModelObject>();
-	objectFbx->Initialize();
-	objectFbx->SetModel(modelFbx.get());
+	objectFbx = FbxModelObject::Create(modelFbx.get());
 
 #pragma endregion
 
@@ -143,6 +139,10 @@ void Application::Update()
 
 #endif // _DEBUG
 
+	worldTransformFbx.translation = {0,-40,25};
+	worldTransformFbx.rotation = {XMConvertToRadians(0),XMConvertToRadians(0),0};
+	worldTransformFbx.UpdateMatrix();
+
 #pragma region 入力処理
 	{
 		if(input->Push(DIK_SPACE)){
@@ -170,7 +170,7 @@ void Application::Update()
 
 #pragma region オブジェクト更新
 	object->Update(worldTransform, camera);
-	objectFbx->Update();
+	objectFbx->Update(worldTransformFbx, camera);
 #pragma endregion
 
 }
@@ -180,7 +180,7 @@ void Application::Draw()
 	//描画前処理
 	dxCommon->BeginDraw();
 	object->Draw();
-	objectFbx->Draw(dxCommon->GetCommandList());
+	objectFbx->Draw();
 
 	Sprite::SetPipelineState();
 	sprite->Draw();
@@ -192,6 +192,7 @@ void Application::Draw()
 void Application::Finalize()
 {
 	FbxLoader::GetInstance()->Finalize();
+	FbxModelObject::StaticFinalize();
 	GeometryObject::StaticFinalize();
 	Sprite::StaticFinalize();
 	window->Finalize();

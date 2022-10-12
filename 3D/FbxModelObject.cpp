@@ -6,19 +6,108 @@
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
-ID3D12Device* FbxModelObject::device = nullptr;
-Camera* FbxModelObject::camera = nullptr;
-ComPtr<ID3D12RootSignature> FbxModelObject::rootSignature = nullptr;
-ComPtr<ID3D12PipelineState> FbxModelObject::pipelineState = nullptr;
+FbxModelObject::CommonFbx* FbxModelObject::common = nullptr;
 
-void FbxModelObject::CreateGraphicsPipeline()
+void FbxModelObject::StaticInitialize(DirectXCommon *dxCommon)
+{
+	common = new CommonFbx();
+	common->dxCommon = dxCommon;
+
+	common->InitializeGraphicsPipeline();
+}
+
+void FbxModelObject::StaticFinalize()
+{
+	if(common != nullptr) return ;
+	delete common;
+	common= nullptr;
+}
+
+FbxModelObject *FbxModelObject::Create(FbxModelManager* model)
+{
+	FbxModelObject* object = new FbxModelObject(model);
+	if(object==nullptr){
+		return false;
+	}
+
+	//初期化
+	if(!object->Initialize()){
+		delete object;
+		assert(0);
+		return nullptr;
+	}
+	object->SetModel(model);
+
+	return object;
+}
+
+FbxModelObject::FbxModelObject()
+{
+}
+
+FbxModelObject::FbxModelObject(FbxModelManager *model)
+{
+	this->model = model;
+}
+
+bool FbxModelObject::Initialize()
+{
+	HRESULT result;
+	{
+		CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+		CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff)& ~0xff);
+
+		result = common->dxCommon->GetDevice()->CreateCommittedResource(
+			&heapProp,
+			D3D12_HEAP_FLAG_NONE,
+			&resourceDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&constBufferTransform)
+		);
+		assert(SUCCEEDED(result));
+	}
+	return true;
+}
+
+void FbxModelObject::Update(WorldTransform worldTransform, Camera* camera)
+{
+	XMFLOAT4 planeVec(0,1,0,0);
+
+	const XMMATRIX& matViewProjection = camera->GetViewProjectionMatrix();
+	const XMMATRIX& modelTranslation = model->GetModelTransform();
+	const XMMATRIX& modelshadow = XMMatrixShadow(XMLoadFloat4(&planeVec),-XMLoadFloat3(&paralleLightVec));
+	const Vector3& cameraPos = camera->GetEye();
+
+	HRESULT result;
+
+	result = constBufferTransform->Map(0, nullptr, (void**)&constMap);
+	if(SUCCEEDED(result)){
+		constMap->viewproj = matViewProjection;
+		constMap->world = modelTranslation * worldTransform.matWorld;
+		constMap->shadow = modelshadow;
+		constMap->cameraPos = cameraPos;
+		constBufferTransform->Unmap(0, nullptr);
+	}
+}
+
+void FbxModelObject::Draw()
+{
+	if(model == nullptr)	return;
+
+	common->dxCommon->GetCommandList()->SetPipelineState(common->pipelineState.Get());
+	common->dxCommon->GetCommandList()->SetGraphicsRootSignature(common->rootSignature.Get());
+	common->dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	common->dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBufferTransform->GetGPUVirtualAddress());
+	model->Draw(common->dxCommon->GetCommandList());
+}
+
+void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
 	ComPtr<ID3DBlob> psBlob;    // ピクセルシェーダオブジェクト
 	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
-
-	assert(device);
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -150,69 +239,12 @@ void FbxModelObject::CreateGraphicsPipeline()
 	// バージョン自動判定のシリアライズ
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 	// ルートシグネチャの生成
-	result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
+	result = dxCommon->GetDevice()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 
 	gpipeline.pRootSignature = rootSignature.Get();
 
 	// グラフィックスパイプラインの生成
-	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
+	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
-}
-
-void FbxModelObject::Initialize()
-{
-	HRESULT result;
-	result = device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff)& ~0xff),
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&constBufferTransform)
-	);
-	assert(SUCCEEDED(result));
-}
-
-void FbxModelObject::Update()
-{
-	XMMATRIX matScale, matRot, matTrans;
-
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
-	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
-
-	matWorld = XMMatrixIdentity();
-	matWorld *= matScale;
-	matWorld *= matRot;
-	matWorld *= matTrans;
-
-	const XMMATRIX& matViewProjection = camera->GetViewProjectionMatrix();
-	const XMMATRIX& modelTranslation = model->GetModelTransform();
-	const Vector3& cameraPos = camera->GetEye();
-
-	HRESULT result;
-
-	ConstBufferDataTransform* constMap = nullptr;
-	result = constBufferTransform->Map(0, nullptr, (void**)&constMap);
-	if(SUCCEEDED(result)){
-		constMap->viewproj = matViewProjection;
-		constMap->world = modelTranslation * matWorld;
-		constMap->cameraPos = cameraPos;
-		constBufferTransform->Unmap(0, nullptr);
-	}
-}
-
-void FbxModelObject::Draw(ID3D12GraphicsCommandList *commandList)
-{
-	if(model == nullptr)	return;
-
-	commandList->SetPipelineState(pipelineState.Get());
-	commandList->SetGraphicsRootSignature(rootSignature.Get());
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	commandList->SetGraphicsRootConstantBufferView(0, constBufferTransform->GetGPUVirtualAddress());
-	model->Draw(commandList);
 }

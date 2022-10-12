@@ -11,6 +11,8 @@
 #include "Camera.h"
 #include "Vector2.h"
 #include "Vector3.h"
+#include"WorldTransform.h"
+#include "DirectXCommon.h"
 
 class FbxModelObject{
 protected:
@@ -18,37 +20,51 @@ protected:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
+
+	class CommonFbx{
+		friend class FbxModelObject;
+
+	public:
+		void InitializeGraphicsPipeline();
+
+	private:
+		DirectXCommon* dxCommon = nullptr;
+
+		ComPtr<ID3D12RootSignature> rootSignature;
+		ComPtr<ID3D12PipelineState> pipelineState;
+	};
+
 	struct ConstBufferDataTransform{
 		XMMATRIX viewproj;
 		XMMATRIX world;
+		XMMATRIX shadow;
 		Vector3 cameraPos;
 	};
 
+public:
+	static void StaticInitialize(DirectXCommon* dxCommon);
+	static void StaticFinalize();
+
+	static FbxModelObject* Create(FbxModelManager* model);
+
 private:
-	static ID3D12Device* device;
-	static Camera* camera;
-
-	static ComPtr<ID3D12RootSignature> rootSignature;
-	static ComPtr<ID3D12PipelineState> pipelineState;
+	static CommonFbx* common;
 
 public:
-	static void SetDevice(ID3D12Device* device)	{FbxModelObject::device = device;}
-	static void SetCamera(Camera* camera)	{FbxModelObject::camera = camera;}
-	static void CreateGraphicsPipeline();
+	FbxModelObject();
+	FbxModelObject(FbxModelManager* model);
 
-public:
-	void Initialize();
-	void Update();
-	void Draw(ID3D12GraphicsCommandList* commandList);
+	bool Initialize();
+	void Update(WorldTransform worldTransform, Camera* camera);
+	void Draw();
 
 	void SetModel(FbxModelManager* model)	{this->model = model;}
 
 protected:
-	ComPtr<ID3D12Resource> constBufferTransform;
+	DirectX::XMFLOAT3 paralleLightVec = {1,-1,1};
 
-	Vector3 scale = {1,1,1};
-	Vector3 rotation = {0,0,0};
-	Vector3 position = {0,0,0};
-	XMMATRIX matWorld;
+	ComPtr<ID3D12Resource> constBufferTransform;
+	ConstBufferDataTransform* constMap = nullptr;
+
 	FbxModelManager* model = nullptr;
 };

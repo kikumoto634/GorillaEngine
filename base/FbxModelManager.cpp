@@ -5,19 +5,20 @@ void FbxModelManager::CreateBuffer(ID3D12Device *device)
 	HRESULT result = S_FALSE;
 
 	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv)*vertices.size());
-
 	{
+		CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+		CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
+
 		result = device->CreateCommittedResource(
-			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+			&heapProp,
 			D3D12_HEAP_FLAG_NONE,
-			&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
+			&resourceDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
 			IID_PPV_ARGS(&vertBuffer)
 		);
 		assert(SUCCEEDED(result));
 
-		VertexPosNormalUv* vertMap = nullptr;
 		result = vertBuffer->Map(0, nullptr, (void**)&vertMap);
 		if(SUCCEEDED(result)){
 			std::copy(vertices.begin(), vertices.end(), vertMap);
@@ -29,19 +30,20 @@ void FbxModelManager::CreateBuffer(ID3D12Device *device)
 	vbView.StrideInBytes = sizeof(vertices[0]);
 
 	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
-
 	{
+		CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+		CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeIB);
+
 		result = device->CreateCommittedResource(
-			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+			&heapProp,
 			D3D12_HEAP_FLAG_NONE,
-			&CD3DX12_RESOURCE_DESC::Buffer(sizeIB),
+			&resourceDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
 			IID_PPV_ARGS(&indexBuffer)
 		);
 		assert(SUCCEEDED(result));
 
-		unsigned short* indexMap = nullptr;
 		result = indexBuffer->Map(0, nullptr, (void**)&indexMap);
 		if(SUCCEEDED(result)){
 			std::copy(indices.begin(), indices.end(), indexMap);
@@ -56,23 +58,27 @@ void FbxModelManager::CreateBuffer(ID3D12Device *device)
 	const DirectX::Image* img = scratchImage.GetImage(0,0,0);
 	assert(img);
 
-	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-		metaData.format,
-		metaData.width,
-		(UINT)metaData.height,
-		(UINT16)metaData.arraySize,
-		(UINT16)metaData.mipLevels
-	);
+	{
+		CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
 
-	result = device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
-		D3D12_HEAP_FLAG_NONE,
-		&texresDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&texBuffer)
-	);
-	assert(SUCCEEDED(result));
+		CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+			metaData.format,
+			metaData.width,
+			(UINT)metaData.height,
+			(UINT16)metaData.arraySize,
+			(UINT16)metaData.mipLevels
+		);
+
+		result = device->CreateCommittedResource(
+			&heapProp,
+			D3D12_HEAP_FLAG_NONE,
+			&texresDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&texBuffer)
+		);
+		assert(SUCCEEDED(result));
+	}
 
 	result = texBuffer->WriteToSubresource(
 		0,

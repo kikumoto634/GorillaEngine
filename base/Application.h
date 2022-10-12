@@ -65,7 +65,8 @@ private:
 	WorldTransform worldTransform;
 
 	std::unique_ptr<FbxModelManager> modelFbx = nullptr;
-	std::unique_ptr<FbxModelObject> objectFbx = nullptr;
+	FbxModelObject* objectFbx = nullptr;
+	WorldTransform worldTransformFbx;
 #pragma endregion
 
 
