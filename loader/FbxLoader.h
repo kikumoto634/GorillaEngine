@@ -22,6 +22,8 @@ public:
 	/// <returns>インスタンス</returns>
 	static FbxLoader* GetInstance();
 
+	static FbxLoader* InstanceDelete();
+
 public:
 	/// <summary>
 	/// 初期化

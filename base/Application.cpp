@@ -27,11 +27,14 @@ Application::Application()
 	window = Window::GetInstance();
 	dxCommon = DirectXCommon::GetInstance();
 	input = Input::GetInstance();
+	camera = Camera::GetInstance();
 }
 
 Application::~Application()
 {
-	delete sprite;
+	//delete objectFbx;
+	//delete object;
+	//delete sprite;
 }
 
 void Application::Run()
@@ -64,44 +67,43 @@ void Application::Initialize()
 	//Input初期化
 	input->Initialize(window->GetHwnd());
 
-	////テクスチャ
+	//テクスチャ
 	TextureManager::GetInstance()->Initialize(dxCommon);
 	TextureManager::Load(0, "Texture.jpg");
 
 	//カメラ
-	camera = Camera::GetInstance();
 	camera->Initialize();
 
-	///オブジェクト
-	//幾何学
-	//幾何学オブジェクト静的初期化
-	GeometryObjectManager::GetInstance()->CreateBuffer();
-	GeometryObject::StaticInitialize(dxCommon);
+	//Geometry
+	//GeometryObjectManager::GetInstance()->CreateBuffer();
+	//GeometryObject::StaticInitialize(dxCommon);
+	
 	//FBX
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
-	FbxModelObject::StaticInitialize(dxCommon);
+	//FbxModelObject::StaticInitialize(dxCommon);
 
 #pragma endregion
 
 #pragma region スプライト初期化
 	//スプライト静的初期化
-	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
+	//Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
 	//生成
-	sprite = Sprite::Create(0, Vector2(100.f,100.f));
-	sprite->SetSize(Vector2(100,100));
+	//sprite = make_unique<Sprite>();
+	//sprite = unique_ptr<Sprite>(Sprite::Create(0, Vector2(100.f,100.f)));
+	//sprite->SetSize(Vector2(100,100));
 #pragma endregion
 
 #pragma region オブジェクト初期化
 
-	//生成
-	worldTransform.Initialize();
-	object = GeometryObject::Create(0);
+	//Geometry
+	/*worldTransform.Initialize();
+	object = GeometryObject::Create(0);*/
 
 	//Fbx
-	worldTransformFbx.Initialize();
-	modelFbx = make_unique<FbxModelManager>();
-	modelFbx = unique_ptr<FbxModelManager>(FbxLoader::GetInstance()->LoadModelFromFile("cube"));
-	objectFbx = FbxModelObject::Create(modelFbx.get());
+	//worldTransformFbx.Initialize();
+	//modelFbx = make_unique<FbxModelManager>();
+	//modelFbx = unique_ptr<FbxModelManager>(FbxLoader::GetInstance()->LoadModelFromFile("cube"));
+	//objectFbx = FbxModelObject::Create(modelFbx.get());
 
 #pragma endregion
 
@@ -139,20 +141,20 @@ void Application::Update()
 
 #endif // _DEBUG
 
-	worldTransformFbx.translation = {0,-40,25};
-	worldTransformFbx.rotation = {XMConvertToRadians(0),XMConvertToRadians(0),0};
-	worldTransformFbx.UpdateMatrix();
+	//worldTransformFbx.translation = {0,-40,25};
+	//worldTransformFbx.rotation = {XMConvertToRadians(0),XMConvertToRadians(0),0};
+	//worldTransformFbx.UpdateMatrix();
 
 #pragma region 入力処理
-	{
+	/*{
 		if(input->Push(DIK_SPACE)){
 			sprite->SetColor({1,0,0,1});
 		}
 		else{
 			sprite->SetColor({1,1,1,1});
 		}
-	}
-	{
+	}*/
+	/*{
 		if(input->Push(DIK_RIGHT)){
 			worldTransform.rotation.y += XMConvertToRadians(1.f);
 		}
@@ -160,7 +162,7 @@ void Application::Update()
 			worldTransform.rotation.y += XMConvertToRadians(-1.f);
 		}
 		worldTransform.UpdateMatrix();
-	}
+	}*/
 #pragma endregion
 
 #pragma region スプライト更新
@@ -169,8 +171,8 @@ void Application::Update()
 #pragma endregion
 
 #pragma region オブジェクト更新
-	object->Update(worldTransform, camera);
-	objectFbx->Update(worldTransformFbx, camera);
+	//object->Update(worldTransform, camera);
+	//objectFbx->Update(worldTransformFbx, camera);
 #pragma endregion
 
 }
@@ -179,11 +181,11 @@ void Application::Draw()
 {
 	//描画前処理
 	dxCommon->BeginDraw();
-	object->Draw();
-	objectFbx->Draw();
+	//object->Draw();
+	//objectFbx->Draw();
 
-	Sprite::SetPipelineState();
-	sprite->Draw();
+	//Sprite::SetPipelineState();
+	//sprite->Draw();
 
 	//描画後処理
 	dxCommon->EndDraw();
@@ -191,9 +193,14 @@ void Application::Draw()
 
 void Application::Finalize()
 {
+	//delete object;
+	//GeometryObject::StaticFinalize();
+
+	//delete sprite;
+	//Sprite::StaticFinalize();
+
 	FbxLoader::GetInstance()->Finalize();
-	FbxModelObject::StaticFinalize();
-	GeometryObject::StaticFinalize();
-	Sprite::StaticFinalize();
+	//FbxModelObject::StaticFinalize();
+	//GeometryObject::StaticFinalize();
 	window->Finalize();
 }

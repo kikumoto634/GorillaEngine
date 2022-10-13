@@ -20,9 +20,10 @@ void GeometryObject::StaticInitialize(DirectXCommon *dxCommon)
 
 void GeometryObject::StaticFinalize()
 {
-	if(common != nullptr) return ;
-	delete common;
-	common = nullptr;
+	if(common != nullptr){
+		delete common;
+		common = nullptr;
+	}
 }
 
 GeometryObject *GeometryObject::Create(UINT texNumber, XMFLOAT4 color)

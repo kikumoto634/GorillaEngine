@@ -56,17 +56,17 @@ private:
 
 #pragma region スプライト関連
 
-	Sprite* sprite = nullptr;
+	//std::unique_ptr<Sprite> sprite;
 
 #pragma endregion
 
 #pragma region オブジェクト関連
-	GeometryObject* object = nullptr;
-	WorldTransform worldTransform;
+	//GeometryObject* object = nullptr;
+	//WorldTransform worldTransform;
 
-	std::unique_ptr<FbxModelManager> modelFbx = nullptr;
-	FbxModelObject* objectFbx = nullptr;
-	WorldTransform worldTransformFbx;
+	//std::unique_ptr<FbxModelManager> modelFbx = nullptr;
+	//FbxModelObject* objectFbx = nullptr;
+	//WorldTransform worldTransformFbx;
 #pragma endregion
 
 
