@@ -4,11 +4,11 @@
 
 using namespace DirectX;
 
-GeometryObject::Common* GeometryObject::common = nullptr;
+GeometryObject::CommonGeometry* GeometryObject::common = nullptr;
 
 void GeometryObject::StaticInitialize(DirectXCommon *dxCommon)
 {
-	common = new Common();
+	common = new CommonGeometry();
 	common->dxCommon = dxCommon;
 
 	common->InitializeGraphicsPipeline();
@@ -128,7 +128,7 @@ void GeometryObject::Draw()
 #pragma endregion
 }
 
-void GeometryObject::Common::InitializeGraphicsPipeline()
+void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 {
 	HRESULT result;
 
@@ -296,7 +296,7 @@ void GeometryObject::Common::InitializeGraphicsPipeline()
 	assert(SUCCEEDED(result));
 }
 
-void GeometryObject::Common::InitializeDescriptorHeap()
+void GeometryObject::CommonGeometry::InitializeDescriptorHeap()
 {
 	HRESULT result;
 

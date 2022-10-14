@@ -75,35 +75,33 @@ void Application::Initialize()
 	camera->Initialize();
 
 	//Geometry
-	//GeometryObjectManager::GetInstance()->CreateBuffer();
-	//GeometryObject::StaticInitialize(dxCommon);
+	GeometryObjectManager::GetInstance()->CreateBuffer();
+	GeometryObject::StaticInitialize(dxCommon);
 	
 	//FBX
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
-	//FbxModelObject::StaticInitialize(dxCommon);
+	FbxModelObject::StaticInitialize(dxCommon);
 
 #pragma endregion
 
 #pragma region スプライト初期化
 	//スプライト静的初期化
-	//Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
+	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
 	//生成
-	//sprite = make_unique<Sprite>();
-	//sprite = unique_ptr<Sprite>(Sprite::Create(0, Vector2(100.f,100.f)));
-	//sprite->SetSize(Vector2(100,100));
+	sprite = (Sprite::Create(0, Vector2(100.f,100.f)));
+	sprite->SetSize(Vector2(100,100));
 #pragma endregion
 
 #pragma region オブジェクト初期化
 
 	//Geometry
-	/*worldTransform.Initialize();
-	object = GeometryObject::Create(0);*/
+	//worldTransform.Initialize();
+	//object = GeometryObject::Create(0);
 
 	//Fbx
 	//worldTransformFbx.Initialize();
-	//modelFbx = make_unique<FbxModelManager>();
-	//modelFbx = unique_ptr<FbxModelManager>(FbxLoader::GetInstance()->LoadModelFromFile("cube"));
-	//objectFbx = FbxModelObject::Create(modelFbx.get());
+	//modelFbx = (FbxLoader::GetInstance()->LoadModelFromFile("cube"));
+	//objectFbx = FbxModelObject::Create(modelFbx);
 
 #pragma endregion
 
@@ -184,8 +182,8 @@ void Application::Draw()
 	//object->Draw();
 	//objectFbx->Draw();
 
-	//Sprite::SetPipelineState();
-	//sprite->Draw();
+	Sprite::SetPipelineState();
+	sprite->Draw();
 
 	//描画後処理
 	dxCommon->EndDraw();
@@ -193,14 +191,16 @@ void Application::Draw()
 
 void Application::Finalize()
 {
-	//delete object;
-	//GeometryObject::StaticFinalize();
-
-	//delete sprite;
-	//Sprite::StaticFinalize();
-
+	//delete objectFbx;
+	//delete modelFbx;
+	FbxModelObject::StaticFinalize();
 	FbxLoader::GetInstance()->Finalize();
-	//FbxModelObject::StaticFinalize();
-	//GeometryObject::StaticFinalize();
+
+	//delete object;
+	GeometryObject::StaticFinalize();
+
+	delete sprite;
+	Sprite::StaticFinalize();
+
 	window->Finalize();
 }

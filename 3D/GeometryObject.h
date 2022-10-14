@@ -23,7 +23,7 @@ public:
 /// インナークラス
 /// </summary>
 public:
-	class Common{
+	class CommonGeometry{
 		friend class GeometryObject;
 
 	public:
@@ -73,7 +73,7 @@ public:
 	static GeometryObject* Create(UINT texNumber, DirectX::XMFLOAT4 color = {1,1,1,1});
 
 private:
-	static Common* common;
+	static CommonGeometry* common;
 
 public:
 	GeometryObject();

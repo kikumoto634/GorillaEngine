@@ -18,16 +18,17 @@ void FbxModelObject::StaticInitialize(DirectXCommon *dxCommon)
 
 void FbxModelObject::StaticFinalize()
 {
-	if(common != nullptr) return ;
-	delete common;
-	common= nullptr;
+	if(common != nullptr){
+		delete common;
+		common = nullptr;
+	}
 }
 
 FbxModelObject *FbxModelObject::Create(FbxModelManager* model)
 {
 	FbxModelObject* object = new FbxModelObject(model);
-	if(object==nullptr){
-		return false;
+	if(object == nullptr){
+		return nullptr;
 	}
 
 	//‰Šú‰»
@@ -36,7 +37,6 @@ FbxModelObject *FbxModelObject::Create(FbxModelManager* model)
 		assert(0);
 		return nullptr;
 	}
-	object->SetModel(model);
 
 	return object;
 }

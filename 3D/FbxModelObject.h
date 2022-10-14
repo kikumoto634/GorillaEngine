@@ -58,8 +58,6 @@ public:
 	void Update(WorldTransform worldTransform, Camera* camera);
 	void Draw();
 
-	void SetModel(FbxModelManager* model)	{this->model = model;}
-
 protected:
 	DirectX::XMFLOAT3 paralleLightVec = {1,-1,1};
 
