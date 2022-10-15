@@ -61,12 +61,12 @@ private:
 #pragma endregion
 
 #pragma region オブジェクト関連
-	//GeometryObject* object = nullptr;
-	//WorldTransform worldTransform;
+	GeometryObject* object = nullptr;
+	WorldTransform worldTransform = {};
 
-	//FbxModelManager* modelFbx = nullptr;
-	//FbxModelObject* objectFbx = nullptr;
-	//WorldTransform worldTransformFbx;
+	FbxModelManager* modelFbx = nullptr;
+	FbxModelObject* objectFbx = nullptr;
+	WorldTransform worldTransformFbx;
 #pragma endregion
 
 

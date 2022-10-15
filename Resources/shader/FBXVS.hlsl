@@ -6,8 +6,15 @@ VSOutput main( VSInput input )
 	//ピクセルシェーダーに渡す値
 	VSOutput output;
 	//行列による座標変換
-	output.svpos = mul(shadow, input.pos);
-	output.svpos = mul(mul(viewproj, world), output.svpos);
+	if(input.instNo == 0){
+		output.svpos = mul(mul(viewproj, world), input.pos);
+	}
+	else if(input.instNo != 0){
+		output.svpos = mul(shadow, input.pos);
+		output.svpos = mul(mul(viewproj, world), output.svpos);
+	}
+	//インスタンスナンバーを渡す
+	output.instNo = input.instNo;
 	//ワールド法線を次のステージに渡す
 	output.normal = wnormal.xyz;
 	//入力値をそのまま次のステージを渡す

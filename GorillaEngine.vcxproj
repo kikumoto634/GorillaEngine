@@ -182,6 +182,7 @@
     <ClInclude Include="base\DirectXCommon.h" />
     <ClInclude Include="base\FbxModelManager.h" />
     <ClInclude Include="base\GeometryObjectManager.h" />
+    <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\Window.h" />
     <ClInclude Include="camera\Camera.h" />

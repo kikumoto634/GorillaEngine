@@ -120,5 +120,5 @@ void FbxModelManager::Draw(ID3D12GraphicsCommandList *commandList)
 	commandList->IASetVertexBuffers(0,1,&vbView);
 	commandList->IASetIndexBuffer(&ibView);
 	commandList->SetGraphicsRootDescriptorTable(1, descriptorHeapSRV->GetGPUDescriptorHandleForHeapStart());
-	commandList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
+	commandList->DrawIndexedInstanced((UINT)indices.size(), 2, 0, 0, 0);
 }

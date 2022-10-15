@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "GameScene01.h"
+#include "SafeDelete.h"
 
 Application* Application::app = nullptr;
 
@@ -32,9 +32,6 @@ Application::Application()
 
 Application::~Application()
 {
-	//delete objectFbx;
-	//delete object;
-	//delete sprite;
 }
 
 void Application::Run()
@@ -95,13 +92,13 @@ void Application::Initialize()
 #pragma region オブジェクト初期化
 
 	//Geometry
-	//worldTransform.Initialize();
-	//object = GeometryObject::Create(0);
+	worldTransform.Initialize();
+	object = GeometryObject::Create(0);
 
 	//Fbx
-	//worldTransformFbx.Initialize();
-	//modelFbx = (FbxLoader::GetInstance()->LoadModelFromFile("cube"));
-	//objectFbx = FbxModelObject::Create(modelFbx);
+	worldTransformFbx.Initialize();
+	modelFbx = (FbxLoader::GetInstance()->LoadModelFromFile("cube"));
+	objectFbx = FbxModelObject::Create(modelFbx);
 
 #pragma endregion
 
@@ -139,20 +136,20 @@ void Application::Update()
 
 #endif // _DEBUG
 
-	//worldTransformFbx.translation = {0,-40,25};
-	//worldTransformFbx.rotation = {XMConvertToRadians(0),XMConvertToRadians(0),0};
-	//worldTransformFbx.UpdateMatrix();
+	worldTransformFbx.translation = {0,-40,25};
+	worldTransformFbx.rotation = {XMConvertToRadians(0),XMConvertToRadians(0),0};
+	worldTransformFbx.UpdateMatrix();
 
 #pragma region 入力処理
-	/*{
+	{
 		if(input->Push(DIK_SPACE)){
 			sprite->SetColor({1,0,0,1});
 		}
 		else{
 			sprite->SetColor({1,1,1,1});
 		}
-	}*/
-	/*{
+	}
+	{
 		if(input->Push(DIK_RIGHT)){
 			worldTransform.rotation.y += XMConvertToRadians(1.f);
 		}
@@ -160,7 +157,7 @@ void Application::Update()
 			worldTransform.rotation.y += XMConvertToRadians(-1.f);
 		}
 		worldTransform.UpdateMatrix();
-	}*/
+	}
 #pragma endregion
 
 #pragma region スプライト更新
@@ -169,8 +166,8 @@ void Application::Update()
 #pragma endregion
 
 #pragma region オブジェクト更新
-	//object->Update(worldTransform, camera);
-	//objectFbx->Update(worldTransformFbx, camera);
+	object->Update(worldTransform, camera);
+	objectFbx->Update(worldTransformFbx, camera);
 #pragma endregion
 
 }
@@ -179,8 +176,8 @@ void Application::Draw()
 {
 	//描画前処理
 	dxCommon->BeginDraw();
-	//object->Draw();
-	//objectFbx->Draw();
+	object->Draw();
+	objectFbx->Draw();
 
 	Sprite::SetPipelineState();
 	sprite->Draw();
@@ -191,15 +188,14 @@ void Application::Draw()
 
 void Application::Finalize()
 {
-	//delete objectFbx;
-	//delete modelFbx;
+	FBXDelete(objectFbx, modelFbx, worldTransformFbx);
 	FbxModelObject::StaticFinalize();
 	FbxLoader::GetInstance()->Finalize();
 
-	//delete object;
+	GeometryDelete(object, worldTransform);
 	GeometryObject::StaticFinalize();
 
-	delete sprite;
+	SpriteDelete(sprite);
 	Sprite::StaticFinalize();
 
 	window->Finalize();
