@@ -22,7 +22,7 @@ public:
 	/// <returns>インスタンス</returns>
 	static FbxLoader* GetInstance();
 
-	static FbxLoader* InstanceDelete();
+	static void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
 
 public:
 	/// <summary>
@@ -77,6 +77,9 @@ private:
 
 	//テクスチャ読み込み
 	void LoadTexture(FbxModelManager* model, const std::string& fullpath);
+
+	//スキニンぐ情報の読み取り
+	void ParseSkin(FbxModelManager* model, FbxMesh* fbxMesh);
 
 	//ディレクトリを含んだfileパスからファイル名を抽出する。
 	std::string ExtractFileName(const std::string& path);

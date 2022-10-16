@@ -8,10 +8,11 @@
 #include <string>
 
 #include "FbxModelManager.h"
+#include "FbxLoader.h"
 #include "Camera.h"
 #include "Vector2.h"
 #include "Vector3.h"
-#include"WorldTransform.h"
+#include "WorldTransform.h"
 #include "DirectXCommon.h"
 
 class FbxModelObject{
@@ -19,8 +20,11 @@ protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
-public:
 
+public:
+	static const int MAX_BONES = 32;
+
+public:
 	class CommonFbx{
 		friend class FbxModelObject;
 
@@ -39,6 +43,12 @@ public:
 		XMMATRIX world;
 		XMMATRIX shadow;
 		Vector3 cameraPos;
+	};
+
+	//定数バッファ用データ構造体(スキニング)
+	struct ConstBufferDataSkin
+	{
+		XMMATRIX bones[MAX_BONES];
 	};
 
 public:
@@ -62,7 +72,11 @@ protected:
 	DirectX::XMFLOAT3 paralleLightVec = {1,-1,1};
 
 	ComPtr<ID3D12Resource> constBufferTransform;
+	//定数バッファ(スキン)
+	ComPtr<ID3D12Resource> constBufferSkin;
+
 	ConstBufferDataTransform* constMap = nullptr;
+	ConstBufferDataSkin* constSkinMap = nullptr;
 
 	FbxModelManager* model = nullptr;
 };

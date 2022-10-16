@@ -22,6 +22,15 @@ struct Node{
 	Node* parent = nullptr;
 };
 
+struct Bone{
+	std::string name;
+	DirectX::XMMATRIX invInitialPose;
+	FbxLoader* fbxCluster;
+	Bone(const std::string& name){
+		this->name = name;
+	}
+};
+
 class FbxModelManager{
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -33,16 +42,23 @@ private:
 	using string = std::string;
 
 public:
+	static const int MAX_BONE_INDICES = 4;
+
+public:
 	friend class FbxLoader;
 public:
 	//頂点データ
-	struct VertexPosNormalUv{
+	struct VertexPosNormalUvSkin{
 		Vector3 pos;
 		Vector3 normal;
 		Vector2 uv;
+		UINT boneIndex[MAX_BONE_INDICES];
+		float boneWeight[MAX_BONE_INDICES];
 	};
 
 public:
+
+	~FbxModelManager();
 
 	//バッファ生成
 	void CreateBuffer(ID3D12Device* device);
@@ -52,14 +68,21 @@ public:
 
 	const XMMATRIX& GetModelTransform() {return meshNode->globalTransform;}
 
+	//Getter
+	vector<Bone>& GetBones()	{return bones;}
+	FbxScene* GetFbxScene()	{return fbxScene;}
+
 private:
 	string name;
 	vector<Node> nodes;
+	vector<Bone> bones;
+
+	FbxScene* fbxScene = nullptr;
 
 	//メッシュを持つノード
 	Node* meshNode = nullptr;
 	//頂点データ配列
-	vector<VertexPosNormalUv> vertices;
+	vector<VertexPosNormalUvSkin> vertices;
 	//頂点インデックス
 	vector<unsigned short> indices;
 
@@ -67,7 +90,7 @@ private:
 	ComPtr<ID3D12Resource> indexBuffer;
 	ComPtr<ID3D12Resource> texBuffer;
 
-	VertexPosNormalUv* vertMap = nullptr;
+	VertexPosNormalUvSkin* vertMap = nullptr;
 	unsigned short* indexMap = nullptr;
 
 	D3D12_VERTEX_BUFFER_VIEW vbView{};

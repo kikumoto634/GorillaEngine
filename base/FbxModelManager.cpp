@@ -1,10 +1,15 @@
 #include "FbxModelManager.h"
 
+FbxModelManager::~FbxModelManager()
+{
+	fbxScene->Destory();
+}
+
 void FbxModelManager::CreateBuffer(ID3D12Device *device)
 {
 	HRESULT result = S_FALSE;
 
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv)*vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUvSkin)*vertices.size());
 	{
 		CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 		CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);

@@ -67,6 +67,23 @@ bool FbxModelObject::Initialize()
 		);
 		assert(SUCCEEDED(result));
 	}
+
+	{
+		CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+		CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) &~0xff);
+
+		result = common->dxCommon->GetDevice()->CreateCommittedResource
+		(
+			&heapProp,
+			D3D12_HEAP_FLAG_NONE,
+			&resourceDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&constBufferSkin)
+		);
+		assert(SUCCEEDED(result));
+	}
+
 	return true;
 }
 
@@ -89,6 +106,26 @@ void FbxModelObject::Update(WorldTransform worldTransform, Camera* camera)
 		constMap->cameraPos = cameraPos;
 		constBufferTransform->Unmap(0, nullptr);
 	}
+
+
+	//ボーン配列
+	std::vector<Bone>& bones = model->GetBones();
+
+	//	定数バッファへデータ転送
+	result = constBufferSkin->Map(0,nullptr, (void**)&constSkinMap);
+	assert(SUCCEEDED(result));
+	for(int i = 0; i < bones.size(); i++)
+	{
+		//今の姿勢行列
+		XMMATRIX matCurrentPose;
+		//今の姿勢行列を取得
+		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(0);
+		//XMMATRIXに変換
+		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
+		//合成してスキニング行列に
+		constSkinMap->bones[i] = bones[i].invInitialPose * matCurrentPose;
+	}
+	constBufferSkin->Unmap(0,nullptr);
 }
 
 void FbxModelObject::Draw()
@@ -169,6 +206,16 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 		},
 		{ // uv座標(1行で書いたほうが見やすい)
 			"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+		},
+		{//影響をうけるボーン番号(4つ)
+			"BONEINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		},
+		{//ボーンのスキンウェイト(4つ)
+			"BONEWEIGHTS",0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 		},
