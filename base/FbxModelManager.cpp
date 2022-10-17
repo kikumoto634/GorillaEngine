@@ -2,7 +2,7 @@
 
 FbxModelManager::~FbxModelManager()
 {
-	fbxScene->Destory();
+	//fbxScene->Destory();
 }
 
 void FbxModelManager::CreateBuffer(ID3D12Device *device)

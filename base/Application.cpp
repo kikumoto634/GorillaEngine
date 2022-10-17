@@ -97,7 +97,7 @@ void Application::Initialize()
 
 	//Fbx
 	worldTransformFbx.Initialize();
-	modelFbx = (FbxLoader::GetInstance()->LoadModelFromFile("cube"));
+	modelFbx = (FbxLoader::GetInstance()->LoadModelFromFile("boneTest"));
 	objectFbx = FbxModelObject::Create(modelFbx);
 
 #pragma endregion

@@ -12,24 +12,43 @@
 #include "Vector2.h"
 #include "Vector3.h"
 
-struct Node{
+#include <fbxsdk.h>
+
+struct Node
+{
+	//名前
 	std::string name;
-	DirectX::XMVECTOR scaling = {1,1,1,0};
-	DirectX::XMVECTOR rotation = {0,0,0,0};
-	DirectX::XMVECTOR translation = {0,0,0,1};
+	//ローカルスケール
+	DirectX::XMVECTOR scaling = {1, 1, 1, 0};
+	//ローカル回転角
+	DirectX::XMVECTOR rotation = {0,0, 0, 0};
+	//ローカル移動
+	DirectX::XMVECTOR translation = {0, 0, 0, 1};
+	//ローカル変形行列
 	DirectX::XMMATRIX transform;
+	//グローバル変形行列
 	DirectX::XMMATRIX globalTransform;
+	//親ノード
 	Node* parent = nullptr;
 };
 
-struct Bone{
+
+//ボーン構造体
+struct Bone
+{
+	//名前
 	std::string name;
+	//初期姿勢の逆行列
 	DirectX::XMMATRIX invInitialPose;
-	FbxLoader* fbxCluster;
-	Bone(const std::string& name){
+	//クラスター(FBX側のボーン情報)
+	FbxCluster* fbxCluster;
+	//コンストラクタ
+	Bone(const std::string& name)
+	{
 		this->name = name;
 	}
 };
+
 
 class FbxModelManager{
 private:
