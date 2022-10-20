@@ -84,6 +84,17 @@ bool FbxModelObject::Initialize()
 		assert(SUCCEEDED(result));
 	}
 
+	//frame文の時間を60FPSで設定
+	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
+
+	//定数バッファへのデータ転送
+	result = constBufferSkin->Map(0, nullptr, (void**)&constSkinMap);
+	assert(SUCCEEDED(result));
+	for(int i = 0; i < MAX_BONES; i++){
+		constSkinMap->bones[i] = XMMatrixIdentity();
+	}
+	constBufferSkin->Unmap(0, nullptr);
+
 	return true;
 }
 
@@ -107,9 +118,19 @@ void FbxModelObject::Update(WorldTransform worldTransform, Camera* camera)
 		constBufferTransform->Unmap(0, nullptr);
 	}
 
-
 	//ボーン配列
 	std::vector<Bone>& bones = model->GetBones();
+
+	//アニメーション
+	if(isPlay){
+		//1frame進める
+		currentTime += frameTime;
+		//最後まで再生したら
+		if(currentTime > endTime)
+		{
+			currentTime = startTime;
+		}
+	}
 
 	//	定数バッファへデータ転送
 	result = constBufferSkin->Map(0,nullptr, (void**)&constSkinMap);
@@ -119,7 +140,7 @@ void FbxModelObject::Update(WorldTransform worldTransform, Camera* camera)
 		//今の姿勢行列
 		XMMATRIX matCurrentPose;
 		//今の姿勢行列を取得
-		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(0);
+		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
 		//XMMATRIXに変換
 		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
 		//合成してスキニング行列に
@@ -297,4 +318,24 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 	// グラフィックスパイプラインの生成
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
+}
+
+void FbxModelObject::PlayAnimation()
+{
+	FbxScene* fbxScene = model->GetFbxScene();
+	//0番にアニメーション取得
+	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+	//アニメーションの名前取得
+	const char* animstackname = animstack->GetName();
+	//アニメーションの時間情報
+	FbxTakeInfo* takeinfo = fbxScene->GetTakeInfo(animstackname);
+
+	//開始時間取得
+	startTime = takeinfo->mLocalTimeSpan.GetStart();
+	//終了時間
+	endTime = takeinfo->mLocalTimeSpan.GetStop();
+	//開始時間に合わせる
+	currentTime = startTime;
+	//再生中状態にする
+	isPlay = true;
 }

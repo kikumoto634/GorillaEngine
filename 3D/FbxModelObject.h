@@ -68,6 +68,11 @@ public:
 	void Update(WorldTransform worldTransform, Camera* camera);
 	void Draw();
 
+	/// <summary>
+	/// アニメーション開始
+	/// </summary>
+	void PlayAnimation();
+
 protected:
 	DirectX::XMFLOAT3 paralleLightVec = {1,-1,1};
 
@@ -79,4 +84,15 @@ protected:
 	ConstBufferDataSkin* constSkinMap = nullptr;
 
 	FbxModelManager* model = nullptr;
+
+	//1frameの時間
+	FbxTime frameTime;
+	//アニメーション開始時間
+	FbxTime startTime;
+	//アニメーション終了時間
+	FbxTime endTime;
+	//現在時間(アニメーション)
+	FbxTime currentTime;
+	//アニメーション再生中
+	bool isPlay = false;
 };
