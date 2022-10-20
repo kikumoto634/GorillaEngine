@@ -97,9 +97,9 @@ void Application::Initialize()
 
 	//Fbx
 	worldTransformFbx.Initialize();
-	modelFbx = FbxLoader::GetInstance()->LoadModeFromFile("boneTest");
+	modelFbx = FbxLoader::GetInstance()->LoadModeFromFile("cube");
 	objectFbx = FbxModelObject::Create(modelFbx);
-	objectFbx->PlayAnimation();
+	//objectFbx->PlayAnimation();
 
 #pragma endregion
 
@@ -137,9 +137,9 @@ void Application::Update()
 
 #endif // _DEBUG
 
-	worldTransformFbx.translation = {0,-40,25};
-	worldTransformFbx.rotation = {XMConvertToRadians(0),XMConvertToRadians(0),0};
-	//worldTransformFbx.scale = {10,10,10};
+	worldTransformFbx.translation = {0,-10,0};
+	worldTransformFbx.rotation = {XMConvertToRadians(180),XMConvertToRadians(90),XMConvertToRadians(10)};
+	worldTransformFbx.scale = {0.001f,0.001f,0.001f};
 	worldTransformFbx.UpdateMatrix();
 
 #pragma region ì¸óÕèàóù
