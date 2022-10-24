@@ -137,9 +137,9 @@ void Application::Update()
 
 #endif // _DEBUG
 
-	worldTransformFbx.translation = {0,-10,0};
-	worldTransformFbx.rotation = {XMConvertToRadians(180),XMConvertToRadians(90),XMConvertToRadians(10)};
-	worldTransformFbx.scale = {0.001f,0.001f,0.001f};
+	worldTransformFbx.translation = {0,-30,0};
+	/*worldTransformFbx.rotation = {XMConvertToRadians(180),XMConvertToRadians(90),XMConvertToRadians(10)};
+	worldTransformFbx.scale = {0.001f,0.001f,0.001f};*/
 	worldTransformFbx.UpdateMatrix();
 
 #pragma region ì¸óÕèàóù
