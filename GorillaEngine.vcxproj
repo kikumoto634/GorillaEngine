@@ -167,8 +167,10 @@
     <ClCompile Include="input\Input.cpp" />
     <ClCompile Include="loader\FbxLoader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="math\Matrix4.cpp" />
     <ClCompile Include="math\Vector2.cpp" />
     <ClCompile Include="math\Vector3.cpp" />
+    <ClCompile Include="math\Vector4.cpp" />
     <ClCompile Include="scene\GameScene01.cpp" />
     <ClCompile Include="scene\GameSceneBase.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
@@ -189,8 +191,10 @@
     <ClInclude Include="debugProcess\SceneStopper.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="loader\FbxLoader.h" />
+    <ClInclude Include="math\Matrix4.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
+    <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="scene\GameScene01.h" />
     <ClInclude Include="scene\GameSceneBase.h" />
     <ClInclude Include="scene\SceneManager.h" />

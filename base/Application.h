@@ -69,6 +69,10 @@ private:
 	WorldTransform worldTransformFbx;
 #pragma endregion
 
+#pragma region ƒJƒƒ‰ŠÖ˜A
+	Vector3 target = {};
+	Vector3 eye = {};
+#pragma endregion
 
 #ifdef _DEBUG
 	SceneStopper* sceneStopper = nullptr;

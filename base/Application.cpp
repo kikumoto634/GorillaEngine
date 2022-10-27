@@ -103,6 +103,14 @@ void Application::Initialize()
 
 #pragma endregion
 
+#pragma region カメラ初期化
+
+	target = camera->GetTarget();
+	eye = camera->GetEye();
+
+
+#pragma endregion
+
 #ifdef _DEBUG
 	//一時停止
 	sceneStopper = SceneStopper::GetInstance();
@@ -112,13 +120,6 @@ void Application::Initialize()
 
 void Application::Update()
 {
-#pragma region 汎用機能更新
-	//入力情報更新
-	input->Update();
-	//カメラ
-	camera->Update();
-#pragma endregion
-
 #ifdef _DEBUG
 
 #pragma region 一時停止
@@ -138,11 +139,11 @@ void Application::Update()
 #endif // _DEBUG
 
 	worldTransformFbx.translation = {0,-30,0};
-	/*worldTransformFbx.rotation = {XMConvertToRadians(180),XMConvertToRadians(90),XMConvertToRadians(10)};
-	worldTransformFbx.scale = {0.001f,0.001f,0.001f};*/
 	worldTransformFbx.UpdateMatrix();
 
 #pragma region 入力処理
+
+	//スプライト
 	{
 		if(input->Push(DIK_SPACE)){
 			sprite->SetColor({1,0,0,1});
@@ -151,6 +152,8 @@ void Application::Update()
 			sprite->SetColor({1,1,1,1});
 		}
 	}
+
+	//幾何学
 	{
 		if(input->Push(DIK_RIGHT)){
 			worldTransform.rotation.y += XMConvertToRadians(1.f);
@@ -160,6 +163,19 @@ void Application::Update()
 		}
 		worldTransform.UpdateMatrix();
 	}
+
+	//カメラ
+	if(input->Push(DIK_D)){
+		//座標移動
+		//eye.x += 1.f;
+		//target.x += 1.f;
+	}
+	else if(input->Push(DIK_A)){
+		//座標移動
+		//eye.x += -1.f;
+		//target.x += -1.f;
+	}
+
 #pragma endregion
 
 #pragma region スプライト更新
@@ -172,6 +188,15 @@ void Application::Update()
 	objectFbx->Update(worldTransformFbx, camera);
 #pragma endregion
 
+#pragma region 汎用機能更新
+	//入力情報更新
+	input->Update();
+	//カメラ
+	camera->SetTarget(target);
+	camera->SetEye(eye);
+
+	camera->Update();
+#pragma endregion
 }
 
 void Application::Draw()

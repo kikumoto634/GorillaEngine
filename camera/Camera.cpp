@@ -14,9 +14,11 @@ void Camera::Initialize()
 
 	const float distance = 100.f;	//カメラの距離
 
+	//カメラ
 	eye = {0, 0, -distance};
 	target = {0, 0, 0};
 	up = {0, 1, 0};
+
 
 	UpdateViewMatrix();
 	UpdateProjectionMatrix();
@@ -48,15 +50,4 @@ void Camera::UpdateProjectionMatrix()
 		(float)window->GetWindowWidth() / window->GetWindowHeight(),			//aspect比(画面横幅/画面縦幅)
 		0.1f, 1000.0f				//前端、奥端
 	);
-}
-
-void Camera::CameraMovement(XMFLOAT3 pos)
-{
-	eye.x += pos.x;
-	eye.y += pos.y;
-	eye.z += pos.z;
-
-	target.x += pos.x;
-	target.y += pos.y;
-	target.z += pos.z;
 }

@@ -46,14 +46,13 @@ public:
 	void SetTarget(const Vector3& target)	{this->target = target; }
 	void SetUp(const Vector3& up)	{this->up = up; }
 
-	void CameraMovement(XMFLOAT3 pos);
-
 private:
 	//アスペクト用
 	Window* window;
 
 protected:
 
+	//カメラ情報
 	//透視投影
 	XMMATRIX matProjection;	//プロジェクション行列
 	//ビュー変換行列
