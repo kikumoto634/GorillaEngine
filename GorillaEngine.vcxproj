@@ -164,6 +164,7 @@
     <ClCompile Include="base\TextureManager.cpp" />
     <ClCompile Include="base\Window.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
+    <ClCompile Include="camera\RailCamera.cpp" />
     <ClCompile Include="debugProcess\SceneStopper.cpp" />
     <ClCompile Include="input\Input.cpp" />
     <ClCompile Include="loader\FbxLoader.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\Window.h" />
     <ClInclude Include="camera\Camera.h" />
+    <ClInclude Include="camera\RailCamera.h" />
     <ClInclude Include="debugProcess\SceneStopper.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="loader\FbxLoader.h" />
