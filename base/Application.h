@@ -6,6 +6,7 @@
 
 #include "TextureManager.h"
 #include "Sprite.h"
+#include "PostEffect.h"
 
 #include "Camera.h"
 #include "WorldTransform.h"
@@ -57,6 +58,7 @@ private:
 #pragma region スプライト関連
 
 	Sprite* sprite = nullptr;
+	PostEffect* postEffect = nullptr;
 
 #pragma endregion
 
@@ -70,8 +72,7 @@ private:
 #pragma endregion
 
 #pragma region カメラ関連
-	Vector3 target = {};
-	Vector3 eye = {};
+
 #pragma endregion
 
 #ifdef _DEBUG

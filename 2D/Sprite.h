@@ -21,6 +21,7 @@ public://エイリアス
 public://サブクラス
 	class Common{
 		friend class Sprite;
+		friend class PostEffect;
 
 	private:
 		//頂点数
@@ -77,7 +78,7 @@ public://静的メンバ関数
 	static Sprite* Create(UINT texNumber, Vector2 pos, XMFLOAT4 color = {1,1,1,1},
 		Vector2 anchorpoint = {0.f,0.f}, bool isFlipX = false, bool isFlipY = false);
 
-private://静的メンバ変数
+protected://静的メンバ変数
 	static Common* common;
 
 
@@ -149,7 +150,7 @@ public://メンバ関数
 	/// </summary>
 	void SetColor(XMFLOAT4 color);
 
-private://メンバ変数
+protected://メンバ変数
 	///頂点バッファ
 	ComPtr<ID3D12Resource> vertBuff;
 	//定数バッファ

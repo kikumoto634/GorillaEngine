@@ -12,7 +12,7 @@ void Camera::Initialize()
 {
 	window = Window::GetInstance();
 
-	const float distance = 100.f;	//ƒJƒƒ‰‚Ì‹——£
+	const float distance = 20.f;	//ƒJƒƒ‰‚Ì‹——£
 
 	//ƒJƒƒ‰
 	view.eye = {0, 0, -distance};

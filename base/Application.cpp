@@ -67,6 +67,7 @@ void Application::Initialize()
 	//テクスチャ
 	TextureManager::GetInstance()->Initialize(dxCommon);
 	TextureManager::Load(0, "Texture.jpg");
+	TextureManager::Load(1, "white1x1.png");
 
 	//カメラ
 	camera->Initialize();
@@ -85,8 +86,12 @@ void Application::Initialize()
 	//スプライト静的初期化
 	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
 	//生成
-	sprite = (Sprite::Create(0, Vector2(100.f,100.f)));
+	sprite = (Sprite::Create(1, Vector2(100.f,100.f)));
 	sprite->SetSize(Vector2(100,100));
+
+	//ポストエフェクト
+	postEffect = (PostEffect::Create(0, Vector2(0.f, 0.f)));
+
 #pragma endregion
 
 #pragma region オブジェクト初期化
@@ -97,16 +102,13 @@ void Application::Initialize()
 
 	//Fbx
 	worldTransformFbx.Initialize();
-	modelFbx = FbxLoader::GetInstance()->LoadModeFromFile("cube");
+	modelFbx = FbxLoader::GetInstance()->LoadModeFromFile("boneTest");
 	objectFbx = FbxModelObject::Create(modelFbx);
-	//objectFbx->PlayAnimation();
+	objectFbx->PlayAnimation();
 
 #pragma endregion
 
 #pragma region カメラ初期化
-
-	target = camera->GetTarget();
-	eye = camera->GetEye();
 
 
 #pragma endregion
@@ -138,7 +140,8 @@ void Application::Update()
 
 #endif // _DEBUG
 
-	worldTransformFbx.translation = {0,-30,0};
+	worldTransformFbx.translation = {0,-2.5f,0};
+	worldTransformFbx.rotation = {0,XMConvertToRadians(90),0};
 	worldTransformFbx.UpdateMatrix();
 
 #pragma region 入力処理
@@ -192,9 +195,6 @@ void Application::Update()
 	//入力情報更新
 	input->Update();
 	//カメラ
-	camera->SetTarget(target);
-	camera->SetEye(eye);
-
 	camera->Update();
 #pragma endregion
 }
@@ -203,11 +203,15 @@ void Application::Draw()
 {
 	//描画前処理
 	dxCommon->BeginDraw();
-	object->Draw();
+	//object->Draw();
 	objectFbx->Draw();
+
+#pragma region 2D描画
+	postEffect->Draw();
 
 	Sprite::SetPipelineState();
 	sprite->Draw();
+#pragma endregion 2D描画終了
 
 	//描画後処理
 	dxCommon->EndDraw();

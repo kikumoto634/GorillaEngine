@@ -14,10 +14,10 @@ void RailCamera::Initialize(WorldTransform world, Vector3 Rot)
 	//更新
 	this->world.UpdateMatrix();
 
-	const float distance = 100.f;	//カメラの距離
+	const float distance = 8.f;	//カメラの距離
 	//カメラ
 	view.eye = {0, 0, -distance};
-	view.target = {0, 0, 0};
+	view.target = {0, 2.5f, 0};
 	view.up = {0, 1, 0};
 	//更新
 	view.UpdateViewMatrix();
@@ -32,12 +32,12 @@ void RailCamera::Update(Vector3 pos, Vector3 Rot)
 	world.UpdateMatrix();
 
 	
-	view.eye = world.translation;
+	/*view.eye = world.translation;
 	Vector3 forward ={0,0,1};
 	forward = ;
 	view.target= view.eye + forward;
 	Vector3 up = {0,1,0};
-	view.up = ;
+	view.up = ;*/
 
 
 	view.matViewProjection = view.matView * view.matProjection;

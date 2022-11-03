@@ -2,7 +2,6 @@
 #include "WorldTransform.h"
 #include "ViewProjection.h"
 #include "Window.h"
-#include <Matrix4.cpp>
 
 class RailCamera
 {
@@ -14,9 +13,9 @@ public:
 	void  Update(Vector3 pos = {0,0,0}, Vector3 Rot = {0,0,0});
 
 	//getter
-	Matrix4& GetMatProjection()	{return view.matProjection;}
-	Matrix4& GetMatView()	{return view.matView;}
-	Matrix4& GetViewProjectionMatrix()	{return view.matViewProjection;}
+	DirectX::XMMATRIX& GetMatProjection()	{return view.matProjection;}
+	DirectX::XMMATRIX& GetMatView()	{return view.matView;}
+	DirectX::XMMATRIX& GetViewProjectionMatrix()	{return view.matViewProjection;}
 
 
 	Vector3& GetEye() {return view.eye; }
