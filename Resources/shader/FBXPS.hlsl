@@ -8,11 +8,6 @@ SamplerState smp : register(s0);
 //エントリーポイント
 float4 main(VSOutput input) : SV_TARGET
 {
-	//影
-	if(input.instNo != 0){
-		return float4(0,0,0,1);
-	}
-
 	//テクスチャマッピング
 	float4 texcolor = tex.Sample(smp, input.uv);
 	//Lambert反射
