@@ -3,8 +3,8 @@
 #include <d3d12.h>
 #include <wrl.h>
 
-#include "Vector2.h"
-#include "Vector3.h"
+#include "../Engine/math/Vector2.h"
+#include "../Engine/math/Vector3.h"
 
 //定数バッファ用データ構造体
 struct ConstBufferDataWorldTransform{

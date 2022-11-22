@@ -78,7 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)base;$(SolutionDir)scene;$(SolutionDir)2D;$(SolutionDir)math;$(SolutionDir)input;$(SolutionDir)3D;$(SolutionDir)camera;$(SolutionDir)debugProcess;$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)loader;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)scene;$(SolutionDir)camera;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -152,51 +152,49 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="2D\Sprite.cpp" />
-    <ClCompile Include="3D\FbxModelObject.cpp" />
-    <ClCompile Include="3D\GeometryObject.cpp" />
-    <ClCompile Include="3D\ViewProjection.cpp" />
-    <ClCompile Include="3D\WorldTransform.cpp" />
-    <ClCompile Include="base\Application.cpp" />
-    <ClCompile Include="base\DirectXCommon.cpp" />
-    <ClCompile Include="base\FbxModelManager.cpp" />
-    <ClCompile Include="base\GeometryObjectManager.cpp" />
-    <ClCompile Include="base\TextureManager.cpp" />
-    <ClCompile Include="base\Window.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="camera\RailCamera.cpp" />
-    <ClCompile Include="debugProcess\SceneStopper.cpp" />
+    <ClCompile Include="Engine\2D\Sprite.cpp" />
+    <ClCompile Include="Engine\3D\FbxModelObject.cpp" />
+    <ClCompile Include="Engine\3D\GeometryObject.cpp" />
+    <ClCompile Include="Engine\3D\ViewProjection.cpp" />
+    <ClCompile Include="Engine\3D\WorldTransform.cpp" />
+    <ClCompile Include="Engine\base\Application.cpp" />
+    <ClCompile Include="Engine\base\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\base\FbxModelManager.cpp" />
+    <ClCompile Include="Engine\base\GeometryObjectManager.cpp" />
+    <ClCompile Include="Engine\base\TextureManager.cpp" />
+    <ClCompile Include="Engine\base\Window.cpp" />
+    <ClCompile Include="Engine\input\Input.cpp" />
+    <ClCompile Include="Engine\loader\FbxLoader.cpp" />
+    <ClCompile Include="Engine\math\Vector2.cpp" />
+    <ClCompile Include="Engine\math\Vector3.cpp" />
+    <ClCompile Include="Engine\math\Vector4.cpp" />
     <ClCompile Include="Game\3D\BaseObjects.cpp" />
-    <ClCompile Include="input\Input.cpp" />
-    <ClCompile Include="loader\FbxLoader.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="math\Vector2.cpp" />
-    <ClCompile Include="math\Vector3.cpp" />
-    <ClCompile Include="math\Vector4.cpp" />
     <ClCompile Include="scene\BaseScene.cpp" />
     <ClCompile Include="scene\SampleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="2D\Sprite.h" />
-    <ClInclude Include="3D\FbxModelObject.h" />
-    <ClInclude Include="3D\GeometryObject.h" />
-    <ClInclude Include="3D\ViewProjection.h" />
-    <ClInclude Include="3D\WorldTransform.h" />
-    <ClInclude Include="base\Application.h" />
-    <ClInclude Include="base\DirectXCommon.h" />
-    <ClInclude Include="base\FbxModelManager.h" />
-    <ClInclude Include="base\GeometryObjectManager.h" />
-    <ClInclude Include="base\TextureManager.h" />
-    <ClInclude Include="base\Window.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="camera\RailCamera.h" />
-    <ClInclude Include="debugProcess\SceneStopper.h" />
+    <ClInclude Include="Engine\2D\Sprite.h" />
+    <ClInclude Include="Engine\3D\FbxModelObject.h" />
+    <ClInclude Include="Engine\3D\GeometryObject.h" />
+    <ClInclude Include="Engine\3D\ViewProjection.h" />
+    <ClInclude Include="Engine\3D\WorldTransform.h" />
+    <ClInclude Include="Engine\base\Application.h" />
+    <ClInclude Include="Engine\base\DirectXCommon.h" />
+    <ClInclude Include="Engine\base\FbxModelManager.h" />
+    <ClInclude Include="Engine\base\GeometryObjectManager.h" />
+    <ClInclude Include="Engine\base\TextureManager.h" />
+    <ClInclude Include="Engine\base\Window.h" />
+    <ClInclude Include="Engine\input\Input.h" />
+    <ClInclude Include="Engine\loader\FbxLoader.h" />
+    <ClInclude Include="Engine\math\Vector2.h" />
+    <ClInclude Include="Engine\math\Vector3.h" />
+    <ClInclude Include="Engine\math\Vector4.h" />
     <ClInclude Include="Game\3D\BaseObjects.h" />
-    <ClInclude Include="input\Input.h" />
-    <ClInclude Include="loader\FbxLoader.h" />
-    <ClInclude Include="math\Vector2.h" />
-    <ClInclude Include="math\Vector3.h" />
-    <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="scene\BaseScene.h" />
     <ClInclude Include="scene\SampleScene.h" />
   </ItemGroup>

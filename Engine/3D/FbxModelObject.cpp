@@ -1,7 +1,7 @@
 #include "FbxModelObject.h"
 
 #include <d3dcompiler.h>
-#include "Sprite.h"
+#include "../Engine/2D/Sprite.h"
 #pragma comment(lib, "d3dcompiler.lib")
 
 using namespace Microsoft::WRL;

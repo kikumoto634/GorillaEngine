@@ -1,8 +1,8 @@
 #pragma once
-#include "Window.h"
-#include "Vector3.h"
+#include "../Engine/base/Window.h"
+#include "../Engine/math/Vector3.h"
 
-#include "ViewProjection.h"
+#include "../Engine/3D/ViewProjection.h"
 
 #include <DirectXMath.h>
 

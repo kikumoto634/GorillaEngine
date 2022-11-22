@@ -5,8 +5,8 @@
 #include <DirectXMath.h>
 
 
-#include "Vector2.h"
-#include "Vector3.h"
+#include "../Engine/math/Vector2.h"
+#include "../Engine/math/Vector3.h"
 
 class GeometryObjectManager
 {

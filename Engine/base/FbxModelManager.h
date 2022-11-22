@@ -4,13 +4,13 @@
 #include <DirectXMath.h>
 #include <vector>
 #include <DirectXTex.h>
-#include <Window.h>
+#include "../Engine/base/Window.h"
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
 
-#include "Vector2.h"
-#include "Vector3.h"
+#include "../Engine/math/Vector2.h"
+#include "../Engine/math/Vector3.h"
 
 #include <fbxsdk.h>
 

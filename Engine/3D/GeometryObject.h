@@ -2,9 +2,9 @@
 #include <d3d12.h>
 #include <wrl.h>
 
-#include "DirectXCommon.h"
-#include "GeometryObjectManager.h"
-#include "TextureManager.h"
+#include "../Engine/base/DirectXCommon.h"
+#include "../Engine/base/GeometryObjectManager.h"
+#include "../Engine/base/TextureManager.h"
 #include "Camera.h"
 #include "WorldTransform.h"
 

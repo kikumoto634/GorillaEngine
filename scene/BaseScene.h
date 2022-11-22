@@ -1,7 +1,7 @@
 #pragma once
-#include "DirectXCommon.h"
-#include "Window.h"
-#include "Input.h"
+#include "../Engine/base/DirectXCommon.h"
+#include "../Engine/base/Window.h"
+#include "../Engine/input/Input.h"
 #include "Camera.h"
 
 

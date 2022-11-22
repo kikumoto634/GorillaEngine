@@ -3,17 +3,18 @@
 #include "DirectXCommon.h"
 
 #include "TextureManager.h"
-#include "Sprite.h"
+
 
 #include "GeometryObjectManager.h"
-#include "GeometryObject.h"
+#include "../Engine/3D/GeometryObject.h"
 
-#include "FbxLoader.h"
+#include "../Engine/loader/FbxLoader.h"
 #include "FbxModelManager.h"
-#include "FbxModelObject.h"
+#include "../Engine/3D/FbxModelObject.h"
 
 
 #include "BaseScene.h"
+#include "../Engine/2D/Sprite.h"
 
 
 
