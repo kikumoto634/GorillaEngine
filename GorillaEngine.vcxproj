@@ -152,7 +152,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="2D\PostEffect.cpp" />
     <ClCompile Include="2D\Sprite.cpp" />
     <ClCompile Include="3D\FbxModelObject.cpp" />
     <ClCompile Include="3D\GeometryObject.cpp" />
@@ -167,18 +166,17 @@
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="camera\RailCamera.cpp" />
     <ClCompile Include="debugProcess\SceneStopper.cpp" />
+    <ClCompile Include="Game\3D\BaseObjects.cpp" />
     <ClCompile Include="input\Input.cpp" />
     <ClCompile Include="loader\FbxLoader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Vector2.cpp" />
     <ClCompile Include="math\Vector3.cpp" />
     <ClCompile Include="math\Vector4.cpp" />
-    <ClCompile Include="scene\GameScene01.cpp" />
-    <ClCompile Include="scene\GameSceneBase.cpp" />
-    <ClCompile Include="scene\SceneManager.cpp" />
+    <ClCompile Include="scene\BaseScene.cpp" />
+    <ClCompile Include="scene\SampleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="2D\PostEffect.h" />
     <ClInclude Include="2D\Sprite.h" />
     <ClInclude Include="3D\FbxModelObject.h" />
     <ClInclude Include="3D\GeometryObject.h" />
@@ -188,20 +186,19 @@
     <ClInclude Include="base\DirectXCommon.h" />
     <ClInclude Include="base\FbxModelManager.h" />
     <ClInclude Include="base\GeometryObjectManager.h" />
-    <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\Window.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="camera\RailCamera.h" />
     <ClInclude Include="debugProcess\SceneStopper.h" />
+    <ClInclude Include="Game\3D\BaseObjects.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="loader\FbxLoader.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
-    <ClInclude Include="scene\GameScene01.h" />
-    <ClInclude Include="scene\GameSceneBase.h" />
-    <ClInclude Include="scene\SceneManager.h" />
+    <ClInclude Include="scene\BaseScene.h" />
+    <ClInclude Include="scene\SampleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
