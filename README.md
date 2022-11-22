@@ -21,13 +21,16 @@ Finalize()   : sp->Finalize();
 
 
 幾何学オブジェクト出力
+
 ・スプライトと同様、application.cpp内のTextureManager.cppにオブジェクトに貼り付けたいスプライトpathとTexNumberを決める。
 (pathの誤り、TexNumberの被りは避けてください。)
 
 ・シーンにてBaseSprite.h/.cppを継承したクラスを変数する。
+
 (unique_ptrを使用すること。参考としてSampleGeometryObject.h/.cppがある。)
 
 ・SceneにInitialize(),Update(),Draw(),Finalze()の中に#pragma にて2D処理の位置が指定されている。
+
 Initialize() : sp = make_unique>SampleSprite>();    
                sp->Initialize(引数:(UINT texNumber));
 Update()     : sp->Update(引数:(camera));
