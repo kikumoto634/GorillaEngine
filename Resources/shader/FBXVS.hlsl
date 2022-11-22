@@ -57,8 +57,6 @@ VSOutput main( VSInput input )
 	VSOutput output;
 	//行列による座標変換
 	output.svpos = mul(mul(viewproj, world), skinned.pos);
-	//インスタンスナンバーを渡す
-	output.instNo = input.instNo;
 	//ワールド法線を次のステージに渡す
 	output.normal = wnormal.xyz;
 	//入力値をそのまま次のステージを渡す

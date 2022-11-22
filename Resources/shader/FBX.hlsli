@@ -2,7 +2,6 @@ cbuffer cbuff0 : register(b0)
 {
 	matrix viewproj;	//ビュープロジェクション行列
 	matrix world;		//ワールド行列
-	matrix shadow;
 	float3 cameraPos;	//カメラ座標(ワールド座標)
 };
 
@@ -20,7 +19,6 @@ struct VSInput
 	float4 pos : POSITION;	//位置
 	float3 normal : NORMAL;	//頂点法線
 	float2 uv  : TEXCOORD;	//テクスチャ―座標
-	uint instNo : SV_InstanceID;	//インスタンスナンバー
 	uint4  boneIndices : BONEINDICES;	//ボーンの番号
 	float4 boneWeights : BONEWEIGHTS;	//ボーンのスキンウェイト
 };
@@ -31,5 +29,4 @@ struct VSOutput
 	float4 svpos : SV_POSITION;	//システム用頂点座標
 	float3 normal : NORMAL;		//法線
 	float2 uv : TEXCOORD;		//uv値
-	uint instNo : SV_InstanceID;	//インスタンスナンバー
 };
