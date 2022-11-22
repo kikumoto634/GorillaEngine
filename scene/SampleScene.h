@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseScene.h"
 #include "../Game/3D/SampleFbxObject/SampleFbxObject.h"
+#include "../Game/2D/SampleSprite/SampleSprite.h"
 
 class SampleScene : public BaseScene
 {
@@ -36,5 +37,6 @@ public:
 
 private:
 	std::unique_ptr<SampleFbxObject> obj;
+	std::unique_ptr<SampleSprite> sp;
 };
 

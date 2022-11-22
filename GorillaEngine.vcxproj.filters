@@ -94,6 +94,18 @@
     <Filter Include="ヘッダー ファイル\Game\3D\SampleFbxObj">
       <UniqueIdentifier>{290283ec-e8c0-429d-82c8-a1497a9a6cda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\2D">
+      <UniqueIdentifier>{8c305fec-40eb-4bdd-ad79-77df9925e8d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\2D">
+      <UniqueIdentifier>{146d2af1-bf07-4573-8a4e-17cd53245a07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\2D\SampleSp">
+      <UniqueIdentifier>{d7c73088-bb8e-47cd-ae38-d0227f1c5969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\2D\SampleSp">
+      <UniqueIdentifier>{b9ed47f6-925a-4393-94c5-5bd4141d0491}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -165,6 +177,12 @@
     <ClCompile Include="Game\3D\SampleFbxObject\SampleFbxObject.cpp">
       <Filter>ソース ファイル\Game\3D\SampleFbxObj</Filter>
     </ClCompile>
+    <ClCompile Include="Game\2D\BaseSprites.cpp">
+      <Filter>ソース ファイル\Game\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\2D\SampleSprite\SampleSprite.cpp">
+      <Filter>ソース ファイル\Game\2D\SampleSp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
@@ -232,6 +250,12 @@
     </ClInclude>
     <ClInclude Include="Game\3D\SampleFbxObject\SampleFbxObject.h">
       <Filter>ヘッダー ファイル\Game\3D\SampleFbxObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\2D\BaseSprites.h">
+      <Filter>ヘッダー ファイル\Game\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\2D\SampleSprite\SampleSprite.h">
+      <Filter>ヘッダー ファイル\Game\2D\SampleSp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
