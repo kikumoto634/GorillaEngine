@@ -5,7 +5,7 @@
 #include "../../Engine/base/FbxModelManager.h"
 #include "../../Engine/3D/FbxModelObject.h"
 
-class BaseObjects
+class BaseFbxObjects
 {
 public:
 	/// <summary>

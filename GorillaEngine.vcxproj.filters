@@ -132,7 +132,7 @@
     <ClCompile Include="scene\SampleScene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
-    <ClCompile Include="Game\3D\BaseObjects.cpp">
+    <ClCompile Include="Game\3D\BaseFbxObjects.cpp">
       <Filter>ソース ファイル\Game\3D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2D\Sprite.cpp">
@@ -206,9 +206,6 @@
     <ClInclude Include="scene\SampleScene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
-    <ClInclude Include="Game\3D\BaseObjects.h">
-      <Filter>ヘッダー ファイル\Game\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\2D\Sprite.h">
       <Filter>ヘッダー ファイル\Engine\2D</Filter>
     </ClInclude>
@@ -268,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="Engine\math\Easing\Easing.h">
       <Filter>ヘッダー ファイル\Engine\math\Easing</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\3D\BaseFbxObjects.h">
+      <Filter>ヘッダー ファイル\Game\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

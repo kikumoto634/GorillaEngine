@@ -1,6 +1,6 @@
-#include "BaseObjects.h"
+#include "BaseFbxObjects.h"
 
-void BaseObjects::Initialize(std::string filePath)
+void BaseFbxObjects::Initialize(std::string filePath)
 {
 	model = FbxLoader::GetInstance()->LoadModeFromFile(filePath);
 	object = FbxModelObject::Create(model);
@@ -8,20 +8,20 @@ void BaseObjects::Initialize(std::string filePath)
 	world.UpdateMatrix();
 }
 
-void BaseObjects::Update(Camera *camera)
+void BaseFbxObjects::Update(Camera *camera)
 {
 	this->camera = camera;
 	world.UpdateMatrix();
 	object->Update(world, this->camera);
 }
 
-void BaseObjects::Draw()
+void BaseFbxObjects::Draw()
 {
 	//ƒvƒŒƒCƒ„[
 	object->Draw();
 }
 
-void BaseObjects::Finalize()
+void BaseFbxObjects::Finalize()
 {
 	delete model;
 	model = nullptr;

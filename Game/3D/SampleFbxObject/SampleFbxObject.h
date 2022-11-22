@@ -1,8 +1,8 @@
 #pragma once
-#include "../BaseObjects.h"
+#include "../BaseFbxObjects.h"
 #include "../../../Engine/input/Input.h"
 
-class SampleFbxObject : public BaseObjects
+class SampleFbxObject : public BaseFbxObjects
 {
 //ƒƒ“ƒoŠÖ”
 public:
