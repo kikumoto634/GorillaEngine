@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseScene.h"
+#include "../Game/3D/SampleFbxObject/SampleFbxObject.h"
 
 class SampleScene : public BaseScene
 {
@@ -32,5 +33,8 @@ public:
 	/// å„èàóù
 	/// </summary>
 	void Finalize() override;
+
+private:
+	std::unique_ptr<SampleFbxObject> obj;
 };
 

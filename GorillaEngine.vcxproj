@@ -171,6 +171,7 @@
     <ClCompile Include="Engine\math\Vector3.cpp" />
     <ClCompile Include="Engine\math\Vector4.cpp" />
     <ClCompile Include="Game\3D\BaseObjects.cpp" />
+    <ClCompile Include="Game\3D\SampleFbxObject\SampleFbxObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scene\BaseScene.cpp" />
     <ClCompile Include="scene\SampleScene.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Engine\math\Vector3.h" />
     <ClInclude Include="Engine\math\Vector4.h" />
     <ClInclude Include="Game\3D\BaseObjects.h" />
+    <ClInclude Include="Game\3D\SampleFbxObject\SampleFbxObject.h" />
     <ClInclude Include="scene\BaseScene.h" />
     <ClInclude Include="scene\SampleScene.h" />
   </ItemGroup>

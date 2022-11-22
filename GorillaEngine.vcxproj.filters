@@ -88,6 +88,12 @@
     <Filter Include="ヘッダー ファイル\Game\3D">
       <UniqueIdentifier>{4c4fdb4d-7c3f-431a-a161-12b986251feb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\3D\SampleFbxObj">
+      <UniqueIdentifier>{a286ec1a-2191-48c4-a219-f77bebdfcf67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\3D\SampleFbxObj">
+      <UniqueIdentifier>{290283ec-e8c0-429d-82c8-a1497a9a6cda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -156,6 +162,9 @@
     <ClCompile Include="Engine\math\Vector4.cpp">
       <Filter>ソース ファイル\Engine\math</Filter>
     </ClCompile>
+    <ClCompile Include="Game\3D\SampleFbxObject\SampleFbxObject.cpp">
+      <Filter>ソース ファイル\Game\3D\SampleFbxObj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
@@ -220,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="Engine\math\Vector4.h">
       <Filter>ヘッダー ファイル\Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\3D\SampleFbxObject\SampleFbxObject.h">
+      <Filter>ヘッダー ファイル\Game\3D\SampleFbxObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
