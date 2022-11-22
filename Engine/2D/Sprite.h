@@ -5,8 +5,8 @@
 #include <DirectXMath.h>
 
 #include "../Engine/base/TextureManager.h"
-#include "../Engine/math/Vector2.h"
-#include "../Engine/math/Vector3.h"
+#include "../Engine/math/Vector/Vector2.h"
+#include "../Engine/math/Vector/Vector3.h"
 
 /// <summary>
 /// スプライト

@@ -1,7 +1,5 @@
 #include "Camera.h"
 
-//using namespace DirectX;
-
 Camera *Camera::GetInstance()
 {
 	static Camera instance;

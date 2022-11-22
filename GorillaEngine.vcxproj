@@ -153,7 +153,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camera\Camera.cpp" />
-    <ClCompile Include="camera\RailCamera.cpp" />
     <ClCompile Include="Engine\2D\Sprite.cpp" />
     <ClCompile Include="Engine\3D\FbxModelObject.cpp" />
     <ClCompile Include="Engine\3D\GeometryObject.cpp" />
@@ -167,9 +166,10 @@
     <ClCompile Include="Engine\base\Window.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
     <ClCompile Include="Engine\loader\FbxLoader.cpp" />
-    <ClCompile Include="Engine\math\Vector2.cpp" />
-    <ClCompile Include="Engine\math\Vector3.cpp" />
-    <ClCompile Include="Engine\math\Vector4.cpp" />
+    <ClCompile Include="Engine\math\Easing\Easing.cpp" />
+    <ClCompile Include="Engine\math\Vector\Vector2.cpp" />
+    <ClCompile Include="Engine\math\Vector\Vector3.cpp" />
+    <ClCompile Include="Engine\math\Vector\Vector4.cpp" />
     <ClCompile Include="Game\2D\BaseSprites.cpp" />
     <ClCompile Include="Game\2D\SampleSprite\SampleSprite.cpp" />
     <ClCompile Include="Game\3D\BaseObjects.cpp" />
@@ -180,7 +180,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h" />
-    <ClInclude Include="camera\RailCamera.h" />
     <ClInclude Include="Engine\2D\Sprite.h" />
     <ClInclude Include="Engine\3D\FbxModelObject.h" />
     <ClInclude Include="Engine\3D\GeometryObject.h" />
@@ -194,9 +193,10 @@
     <ClInclude Include="Engine\base\Window.h" />
     <ClInclude Include="Engine\input\Input.h" />
     <ClInclude Include="Engine\loader\FbxLoader.h" />
-    <ClInclude Include="Engine\math\Vector2.h" />
-    <ClInclude Include="Engine\math\Vector3.h" />
-    <ClInclude Include="Engine\math\Vector4.h" />
+    <ClInclude Include="Engine\math\Easing\Easing.h" />
+    <ClInclude Include="Engine\math\Vector\Vector2.h" />
+    <ClInclude Include="Engine\math\Vector\Vector3.h" />
+    <ClInclude Include="Engine\math\Vector\Vector4.h" />
     <ClInclude Include="Game\2D\BaseSprites.h" />
     <ClInclude Include="Game\2D\SampleSprite\SampleSprite.h" />
     <ClInclude Include="Game\3D\BaseObjects.h" />

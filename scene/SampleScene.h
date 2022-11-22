@@ -36,6 +36,8 @@ public:
 	void Finalize() override;
 
 private:
+	float time = 0.f;
+
 	std::unique_ptr<SampleFbxObject> obj;
 	std::unique_ptr<SampleSprite> sp;
 };

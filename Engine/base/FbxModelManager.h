@@ -9,8 +9,8 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 
-#include "../Engine/math/Vector2.h"
-#include "../Engine/math/Vector3.h"
+#include "../Engine/math/Vector/Vector2.h"
+#include "../Engine/math/Vector/Vector3.h"
 
 #include <fbxsdk.h>
 

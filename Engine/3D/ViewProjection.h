@@ -1,5 +1,5 @@
 #pragma once
-#include "../Engine/math/Vector3.h"
+#include "../Engine/math/Vector/Vector3.h"
 
 #include <DirectXMath.h>
 

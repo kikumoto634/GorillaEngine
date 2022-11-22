@@ -106,15 +106,24 @@
     <Filter Include="ヘッダー ファイル\Game\2D\SampleSp">
       <UniqueIdentifier>{b9ed47f6-925a-4393-94c5-5bd4141d0491}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\math\Vector">
+      <UniqueIdentifier>{eb765e86-4d56-47b4-867f-62711b5a4426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\math\Vector">
+      <UniqueIdentifier>{db74bb4f-71b6-4558-994f-451d10b17b01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\math\Easing">
+      <UniqueIdentifier>{58f3fda8-68f6-4077-8f5a-622afe7f52e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\math\Easing">
+      <UniqueIdentifier>{6b0e4025-daeb-4bcd-a2e8-d2034dfc62a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="camera\Camera.cpp">
-      <Filter>ソース ファイル\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="camera\RailCamera.cpp">
       <Filter>ソース ファイル\camera</Filter>
     </ClCompile>
     <ClCompile Include="scene\BaseScene.cpp">
@@ -165,15 +174,6 @@
     <ClCompile Include="Engine\loader\FbxLoader.cpp">
       <Filter>ソース ファイル\Engine\loader</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\math\Vector2.cpp">
-      <Filter>ソース ファイル\Engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\Vector3.cpp">
-      <Filter>ソース ファイル\Engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\Vector4.cpp">
-      <Filter>ソース ファイル\Engine\math</Filter>
-    </ClCompile>
     <ClCompile Include="Game\3D\SampleFbxObject\SampleFbxObject.cpp">
       <Filter>ソース ファイル\Game\3D\SampleFbxObj</Filter>
     </ClCompile>
@@ -183,12 +183,21 @@
     <ClCompile Include="Game\2D\SampleSprite\SampleSprite.cpp">
       <Filter>ソース ファイル\Game\2D\SampleSp</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\math\Vector\Vector2.cpp">
+      <Filter>ソース ファイル\Engine\math\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Vector\Vector3.cpp">
+      <Filter>ソース ファイル\Engine\math\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Vector\Vector4.cpp">
+      <Filter>ソース ファイル\Engine\math\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Easing\Easing.cpp">
+      <Filter>ソース ファイル\Engine\math\Easing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
-      <Filter>ヘッダー ファイル\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="camera\RailCamera.h">
       <Filter>ヘッダー ファイル\camera</Filter>
     </ClInclude>
     <ClInclude Include="scene\BaseScene.h">
@@ -239,15 +248,6 @@
     <ClInclude Include="Engine\loader\FbxLoader.h">
       <Filter>ヘッダー ファイル\Engine\loader</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\math\Vector2.h">
-      <Filter>ヘッダー ファイル\Engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\Vector3.h">
-      <Filter>ヘッダー ファイル\Engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\Vector4.h">
-      <Filter>ヘッダー ファイル\Engine\math</Filter>
-    </ClInclude>
     <ClInclude Include="Game\3D\SampleFbxObject\SampleFbxObject.h">
       <Filter>ヘッダー ファイル\Game\3D\SampleFbxObj</Filter>
     </ClInclude>
@@ -256,6 +256,18 @@
     </ClInclude>
     <ClInclude Include="Game\2D\SampleSprite\SampleSprite.h">
       <Filter>ヘッダー ファイル\Game\2D\SampleSp</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Vector\Vector2.h">
+      <Filter>ヘッダー ファイル\Engine\math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Vector\Vector3.h">
+      <Filter>ヘッダー ファイル\Engine\math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Vector\Vector4.h">
+      <Filter>ヘッダー ファイル\Engine\math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Easing\Easing.h">
+      <Filter>ヘッダー ファイル\Engine\math\Easing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

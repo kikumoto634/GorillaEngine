@@ -10,8 +10,8 @@
 #include "../Engine/base/FbxModelManager.h"
 #include "../Engine/loader/FbxLoader.h"
 #include "Camera.h"
-#include "../Engine/math/Vector2.h"
-#include "../Engine/math/Vector3.h"
+#include "../Engine/math/Vector/Vector2.h"
+#include "../Engine/math/Vector/Vector3.h"
 #include "WorldTransform.h"
 #include "../Engine/base/DirectXCommon.h"
 

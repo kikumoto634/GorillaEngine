@@ -1,5 +1,7 @@
 #include "SampleScene.h"
 
+#include "../Engine/math//Easing/Easing.h"
+
 using namespace std;
 
 SampleScene::SampleScene(DirectXCommon *dxCommon, Window *window)
@@ -21,7 +23,7 @@ void SampleScene::Initialize()
 #pragma region _3D初期化
 	obj = make_unique<SampleFbxObject>();
 	obj->Initialize("cube");
-	obj->SetPosition({0, 0, 100});
+	obj->SetPosition({0, -50, 200});
 #pragma endregion _3D初期化
 
 #pragma region _2D初期化
@@ -35,6 +37,9 @@ void SampleScene::Update()
 	BaseScene::Update();
 
 #pragma region _3D更新
+	//Vector3 pos = Easing_Linear_Point2({0, 0, 300}, {0, -100, 300}, Time_OneWay(time, 2.f));
+	//Vector3 pos = Easing_Linear_Point3({0, 0, 300}, {0, -50, 500}, {0, -100, 300}, Time_Loop(time, 2.f));
+	//obj->SetPosition(pos);
 	obj->Update(camera);
 #pragma endregion _3D更新
 

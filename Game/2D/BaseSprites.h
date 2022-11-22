@@ -1,6 +1,6 @@
 #pragma once
 #include "../Engine/2D/Sprite.h"
-#include "../Engine/math/Vector2.h"
+#include "../Engine/math/Vector/Vector2.h"
 
 class BaseSprites
 {
