@@ -118,6 +118,12 @@
     <Filter Include="ヘッダー ファイル\Engine\math\Easing">
       <UniqueIdentifier>{6b0e4025-daeb-4bcd-a2e8-d2034dfc62a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\3D\SampleGeometryObj">
+      <UniqueIdentifier>{31a5dfa9-d5f4-4906-8525-09d9ef837058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\3D\SampleGeometryObj">
+      <UniqueIdentifier>{c31ad653-486c-4240-950c-aa93eb114f0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -195,6 +201,12 @@
     <ClCompile Include="Engine\math\Easing\Easing.cpp">
       <Filter>ソース ファイル\Engine\math\Easing</Filter>
     </ClCompile>
+    <ClCompile Include="Game\3D\BaseGeometryObjects.cpp">
+      <Filter>ソース ファイル\Game\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\3D\SampleGeometryObject\SampleGeometryObject.cpp">
+      <Filter>ソース ファイル\Game\3D\SampleGeometryObj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
@@ -268,6 +280,12 @@
     </ClInclude>
     <ClInclude Include="Game\3D\BaseFbxObjects.h">
       <Filter>ヘッダー ファイル\Game\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\3D\BaseGeometryObjects.h">
+      <Filter>ヘッダー ファイル\Game\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\3D\SampleGeometryObject\SampleGeometryObject.h">
+      <Filter>ヘッダー ファイル\Game\3D\SampleGeometryObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

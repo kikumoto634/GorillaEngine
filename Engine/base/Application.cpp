@@ -66,6 +66,7 @@ void Application::Initialize()
 	//テクスチャ
 	TextureManager::GetInstance()->Initialize(dxCommon);
 	TextureManager::Load(0, "white1x1.png");
+	TextureManager::Load(1, "Texture.jpg");
 #pragma endregion
 
 	//スプライト静的初期化

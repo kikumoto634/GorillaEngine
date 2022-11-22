@@ -1,17 +1,16 @@
 #pragma once
-#include "../BaseFbxObjects.h"
-#include "../../../Engine/input/Input.h"
+#include "../BaseGeometryObjects.h"
 
-class SampleFbxObject : public BaseFbxObjects
+class SampleGeometryObject : public BaseGeometryObjects
 {
-//メンバ関数
+	//メンバ関数
 public:
-	~SampleFbxObject();
+	~SampleGeometryObject();
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(std::string filePath) override;
+	void Initialize(UINT texNumber) override;
 
 	/// <summary>
 	/// 更新
@@ -27,6 +26,5 @@ public:
 	/// 後処理
 	/// </summary>
 	void Finalize() override;
-
 };
 

@@ -21,14 +21,17 @@ void SampleScene::Initialize()
 	BaseScene::Initialize();
 
 #pragma region _3D‰Šú‰»
-	obj = make_unique<SampleFbxObject>();
+	/*obj = make_unique<SampleFbxObject>();
 	obj->Initialize("cube");
-	obj->SetPosition({0, -50, 200});
+	obj->SetPosition({0, -50, 200});*/
+
+	obj2 = make_unique<SampleGeometryObject>();
+	obj2->Initialize(1);
 #pragma endregion _3D‰Šú‰»
 
 #pragma region _2D‰Šú‰»
-	sp = make_unique<SampleSprite>();
-	sp->Initialize(0);
+	//sp = make_unique<SampleSprite>();
+	//sp->Initialize(0);
 #pragma endregion _2D‰Šú‰»
 }
 
@@ -40,11 +43,13 @@ void SampleScene::Update()
 	//Vector3 pos = Easing_Linear_Point2({0, 0, 300}, {0, -100, 300}, Time_OneWay(time, 2.f));
 	//Vector3 pos = Easing_Linear_Point3({0, 0, 300}, {0, -50, 500}, {0, -100, 300}, Time_Loop(time, 2.f));
 	//obj->SetPosition(pos);
-	obj->Update(camera);
+	//obj->Update(camera);
+
+	obj2->Update(camera);
 #pragma endregion _3DXV
 
 #pragma region _2DXV
-	sp->Update();
+	//sp->Update();
 #pragma endregion _2DXV
 
 	BaseScene::EndUpdate();
@@ -55,11 +60,13 @@ void SampleScene::Draw()
 	BaseScene::Draw();
 
 #pragma region _2D_”wŒi•`‰æ
-	sp->Draw();
+	//sp->Draw();
 #pragma endregion _2D_”wŒi•`‰æ
 
 #pragma region _3D•`‰æ
-	obj->Draw();
+	//obj->Draw();
+
+	obj2->Draw();
 #pragma endregion _3D•`‰æ
 
 #pragma region _2D_UI•`‰æ
@@ -73,11 +80,13 @@ void SampleScene::Draw()
 void SampleScene::Finalize()
 {
 #pragma region _3D‰ğ•ú
-	obj->Finalize();
+	//obj->Finalize();
+
+	obj2->Finalize();
 #pragma endregion _3D‰ğ•ú
 
 #pragma region _2D‰ğ•ú
-	sp->Finalize();
+	//sp->Finalize();
 #pragma endregion _2D‰ğ•ú
 
 	BaseScene::Finalize();
