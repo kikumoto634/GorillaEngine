@@ -13,6 +13,11 @@ public:
 	void UpdateProjectionMatrix(int width, int height);
 
 public:
+	//ビルボード行列
+	static XMMATRIX matBillboard;
+	//Y軸周りビルボード行列
+	static XMMATRIX matBillboardY;
+
 	//カメラ情報
 	//透視投影
 	XMMATRIX matProjection;	//プロジェクション行列

@@ -27,6 +27,11 @@ public:
 	/// </summary>
 	virtual void Update();
 
+	/// <summary>
+	/// ’‹“_ˆÚ“®
+	/// </summary>
+	/// <param name="move">ˆÚ“®—Ê(radian‚ğİ’è)</param>
+	void CameraMoveEyeVeector(Vector3 move);
 
 	//getter
 	const XMMATRIX& GetMatProjection()	{return view.matProjection;}
@@ -37,6 +42,7 @@ public:
 	const Vector3& GetEye() {return view.eye; }
 	const Vector3& GetTarget() {return view.target; }
 	const Vector3& GetUp() {return view.up; }
+	const DirectX::XMMATRIX& GetBillboard() {return view.matBillboard;}
 
 	//setter
 	void SetEye(const Vector3& eye)	{this->view.eye = eye; }

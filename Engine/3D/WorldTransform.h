@@ -52,6 +52,6 @@ struct WorldTransform{
 	/// <summary>
 	/// s—ñ‚ÌXV
 	/// </summary>
-	void UpdateMatrix();
+	void UpdateMatrix(DirectX::XMMATRIX matBillboard = DirectX::XMMatrixIdentity());
 };
 

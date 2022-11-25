@@ -247,6 +247,7 @@ void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 	//ラスタライザ設定 背面カリング	ポリゴン内塗りつぶし	深度クリッピング有効
 	pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	//ブレンドステート
+	//pipelineDesc.BlendState.AlphaToCoverageEnable = true;
 	//レンダーターゲットのブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	//RGBAすべてのチャンネルを描画

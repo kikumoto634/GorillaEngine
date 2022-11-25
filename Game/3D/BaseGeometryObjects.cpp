@@ -7,12 +7,12 @@ void BaseGeometryObjects::Initialize(UINT texNumber)
 	world.UpdateMatrix();
 }
 
-void BaseGeometryObjects::Update(Camera *camera)
+void BaseGeometryObjects::Update(Camera *camera, bool IsBillboard)
 {
 	this->camera = camera;
-	world.UpdateMatrix();
+	if(!IsBillboard)	    world.UpdateMatrix();
+	else if(IsBillboard)	world.UpdateMatrix(this->camera->GetBillboard());
 	object->Update(world, this->camera);
-
 }
 
 void BaseGeometryObjects::Draw()

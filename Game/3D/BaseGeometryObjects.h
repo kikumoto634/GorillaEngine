@@ -15,7 +15,9 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	virtual void Update(Camera* camera);
+	/// <param name="camera"></param>
+	/// <param name="matBillboard">ビルボード開始</param>
+	virtual void Update(Camera* camera, bool IsBillboard = false);
 
 	/// <summary>
 	/// 描画

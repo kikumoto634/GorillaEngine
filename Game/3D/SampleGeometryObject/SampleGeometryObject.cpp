@@ -13,7 +13,7 @@ void SampleGeometryObject::Initialize(UINT texNumber)
 void SampleGeometryObject::Update(Camera *camera)
 {
 	this->camera = camera;
-	BaseGeometryObjects::Update(this->camera);
+	BaseGeometryObjects::Update(this->camera, false);
 }
 
 void SampleGeometryObject::Draw()

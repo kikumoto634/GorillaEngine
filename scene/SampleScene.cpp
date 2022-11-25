@@ -3,6 +3,7 @@
 #include "../Engine/math//Easing/Easing.h"
 
 using namespace std;
+using namespace DirectX;
 
 SampleScene::SampleScene(DirectXCommon *dxCommon, Window *window)
 		: BaseScene(
@@ -38,6 +39,24 @@ void SampleScene::Initialize()
 void SampleScene::Update()
 {
 	BaseScene::Update();
+
+#pragma region “ü—Íˆ—
+
+	if(input->Push(DIK_A)){
+		camera->CameraMoveEyeVeector({XMConvertToRadians(-30.f), 0.f, 0.f});
+	}
+	else if(input->Push(DIK_D)){
+		camera->CameraMoveEyeVeector({XMConvertToRadians(30.f), 0.f, 0.f});
+	}
+
+	if(input->Push(DIK_S)){
+		camera->CameraMoveEyeVeector({0.f, XMConvertToRadians(-30.f), 0.f});
+	}
+	else if(input->Push(DIK_W)){
+		camera->CameraMoveEyeVeector({0.f, XMConvertToRadians(30.f), 0.f});
+	}
+
+#pragma endregion “ü—Íˆ—
 
 #pragma region _3DXV
 	//Vector3 pos = Easing_Linear_Point2({0, 0, 300}, {0, -100, 300}, Time_OneWay(time, 2.f));

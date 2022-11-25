@@ -8,10 +8,11 @@ void BaseFbxObjects::Initialize(std::string filePath)
 	world.UpdateMatrix();
 }
 
-void BaseFbxObjects::Update(Camera *camera)
+void BaseFbxObjects::Update(Camera *camera, bool IsBillboard)
 {
 	this->camera = camera;
-	world.UpdateMatrix();
+	if(!IsBillboard)		world.UpdateMatrix();
+	else if(IsBillboard)	world.UpdateMatrix(this->camera->GetBillboard());
 	object->Update(world, this->camera);
 }
 
