@@ -1,34 +1,40 @@
 #include "Geometry.hlsli"
 
+//四角形の超点数
+static const uint vnum = 4;
+
+//センターからオフセット
+static const float4 offset_array[vnum] = 
+{
+	float4(-0.5f, -0.5f, 0, 0),//左下
+	float4(-0.5f, +0.5f, 0, 0),//左上
+	float4(+0.5f, -0.5f, 0, 0),//右下
+	float4(+0.5f, +0.5f, 0, 0),//右上
+};
+static const float2 uv_array[vnum] = 
+{
+	float2(0, 1),//左下
+	float2(0, 0),//左上
+	float2(1, 1),//右下
+	float2(1, 0),//右上
+};
+
 //三角形の入力から、点を1つ出力サンプル
-[maxvertexcount(6)]
+[maxvertexcount(vnum)]
 void main(
-	triangle VSOutput input[3] : SV_POSITION,
+	point VSOutput input[1] : SV_POSITION,
 	//点ストリーム
 	inout TriangleStream< GSOutput > output
 )
 {
-	for (uint i = 0; i < 3; i++)
-	{
-		GSOutput element;	//出力頂点データ
-		element.svpos = input[i].svpos;	//頂点座標をコピー
-		element.normal = input[i].normal;	//法線をコピー
-		element.uv = input[i].uv;	//ＵＶをコピー
-		//頂点を1つ出力(出力リストに追加)
+	GSOutput element;
+	//4頂点分
+	for(uint i = 0; i < vnum; i++){
+		//ワールド座標ベースでずらす
+		element.svpos = input[0].svpos + offset_array[i];
+		//ビュー、射影変換
+		element.svpos = mul(mat, element.svpos);
+		element.uv = uv_array[i];
 		output.Append(element);
 	}
-	//現在のストリップを終了
-	output.RestartStrip();
-
-	// 2つ目の三角形
-    for (uint i = 0; i < 3; i++)    {
-        GSOutput element;
-        // X方向に20ずらす
-        element.svpos = input[i].svpos + float4(20.0f, 0.0f, 0.0f, 0.0f);
-        element.normal = input[i].normal;
-        // UVを5倍に
-        element.uv = input[i].uv * 5.0f;
-        output.Append(element);
-    }
-
 }

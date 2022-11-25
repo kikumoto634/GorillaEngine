@@ -16,13 +16,10 @@ public://エイリアス
 public:	//定数
 	//テクスチャの最大枚数
 	static const int maxObjectCount = 512;
-
+	static const int vertexCount = 1;
 public:
-	struct VertexPosNormalUv
-	{
+	struct VertexPos{
 		Vector3 pos;
-		Vector3 normal;
-		Vector2 uv;
 	};
 
 public:
@@ -35,37 +32,22 @@ public:
 	void CreateBuffer();
 
 	//Get
-	
 	int GetMaxObjectCount()	{return maxObjectCount;}
-	
-	//インデックス
-	uint16_t GetIndices()	{return _countof(indices);}
-
+	//頂点情報
+	int Getvertices()	{return _countof(vertices);}
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW GetvbView()	{return vbView;}
-	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW GetibView()		{return ibView;}
 
 
 private:
 	//頂点バッファ
 	ComPtr<ID3D12Resource> vertBuffer;
-	//インデックスバッファ
-	ComPtr<ID3D12Resource> indexBuffer;
-
 	//頂点マップ
-	VertexPosNormalUv* vertMap = nullptr;
-	//インデックスマップ
-	uint16_t* indexMap = nullptr;
+	VertexPos* vertMap = nullptr;
 
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
-	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView{};
-
 	//頂点データ
-	VertexPosNormalUv vertices[24];
-	//インデックスデータ
-	uint16_t indices[36];
+	VertexPos vertices[vertexCount];
 };
 

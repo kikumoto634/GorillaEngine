@@ -92,7 +92,6 @@ void GeometryObject::Update(WorldTransform worldTransform, Camera* camera)
 	const XMMATRIX& matView = camera->GetMatView();
 	const XMMATRIX& matProjection = camera->GetMatProjection();
 
-	constMap->color = color;
 	constMap->mat = matWorld * matView * matProjection;
 }
 
@@ -104,7 +103,8 @@ void GeometryObject::Draw()
 	//ルートシグネチャの設定
 	common->dxCommon->GetCommandList()->SetGraphicsRootSignature(common->rootSignature.Get());
 	//プリミティブ形状を設定
-	common->dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//common->dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	common->dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 #pragma endregion
 
 #pragma region 個別描画コマンド
@@ -117,15 +117,12 @@ void GeometryObject::Draw()
 	common->textureManager->SetDescriptorHeaps(common->dxCommon->GetCommandList());
 	//頂点バッファの設定
 	common->dxCommon->GetCommandList()->IASetVertexBuffers(0, 1, &common->geometryObjectManager->GetvbView());
-	//インデックスバッファの設定
-	common->dxCommon->GetCommandList()->IASetIndexBuffer(&common->geometryObjectManager->GetibView());
 
 	//シェーダリソースビューをセット
 	common->textureManager->SetShaderResourceView(common->dxCommon->GetCommandList(), 1, texNumber);
 
 	//描画コマンド
-	//common->dxCommon->GetCommandList()->DrawIndexedInstanced(common->geometryObjectManager->GetIndices(),1, 0, 0, 0);
-	common->dxCommon->GetCommandList()->DrawIndexedInstanced(3,1, 0, 0, 0);
+	common->dxCommon->GetCommandList()->DrawInstanced(common->geometryObjectManager->Getvertices(), 1, 0, 0);
 #pragma endregion
 }
 
@@ -223,24 +220,6 @@ void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		//入力データ種別 (標準はD3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA)
 			0												//一度に描画するインスタンス数
 		},
-		{//法線ベクトル
-			"NORMAL",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-			0
-		},
-		{//uv座標
-			"TEXCOORD",
-			0,
-			DXGI_FORMAT_R32G32_FLOAT,
-			0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-			0
-		},
 	};
 
 	///ルートパラメータ
@@ -291,7 +270,8 @@ void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
 	pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
 	//図形の形状設定 (プリミティブトポロジー)
-	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	//pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 	//その他設定
 	pipelineDesc.NumRenderTargets = 1;		//描画対象は一つ
 	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;	//0~255指定のRGBA
