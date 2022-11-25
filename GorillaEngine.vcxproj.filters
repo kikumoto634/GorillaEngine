@@ -307,6 +307,9 @@
     <FxCompile Include="Resources\shader\FBXPS.hlsl">
       <Filter>リソース ファイル\Fbx</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\BasicGeometryShader.hlsl">
+      <Filter>リソース ファイル\Geometry</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Sprite.hlsli">

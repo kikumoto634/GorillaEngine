@@ -124,7 +124,8 @@ void GeometryObject::Draw()
 	common->textureManager->SetShaderResourceView(common->dxCommon->GetCommandList(), 1, texNumber);
 
 	//描画コマンド
-	common->dxCommon->GetCommandList()->DrawIndexedInstanced(common->geometryObjectManager->GetIndices(),1, 0, 0, 0);
+	//common->dxCommon->GetCommandList()->DrawIndexedInstanced(common->geometryObjectManager->GetIndices(),1, 0, 0, 0);
+	common->dxCommon->GetCommandList()->DrawIndexedInstanced(3,1, 0, 0, 0);
 #pragma endregion
 }
 
@@ -134,6 +135,7 @@ void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 
 	//シェーダーオブジェクト
 	ComPtr<ID3DBlob> vsBlob;
+	ComPtr<ID3DBlob> gsBlob;
 	ComPtr<ID3DBlob> psBlob;
 	ComPtr<ID3DBlob> errorBlob;
 
@@ -146,6 +148,30 @@ void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	//デバック用設定
 		0,
 		&vsBlob, &errorBlob);
+	//エラーなら
+	if(FAILED(result)){
+		//errorBlobからエラー内容をstring型にコピー
+		std::string error;
+		error.resize(errorBlob->GetBufferSize());
+
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+					errorBlob->GetBufferSize(),
+					error.begin());
+		error += "\n";
+		//エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(error.c_str());
+		assert(0);
+	}
+
+	//ジオメトリシェーダーの読み込みコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/shader/BasicGeometryShader.hlsl",		//シェーダーファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
+		"main", "gs_5_0",					//エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	//デバック用設定
+		0,
+		&gsBlob, &errorBlob);
 	//エラーなら
 	if(FAILED(result)){
 		//errorBlobからエラー内容をstring型にコピー
@@ -240,6 +266,7 @@ void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	//シェーダー設定
 	pipelineDesc.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
+	pipelineDesc.GS = CD3DX12_SHADER_BYTECODE(gsBlob.Get());
 	pipelineDesc.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
 	
 	//サンプルマスク設定

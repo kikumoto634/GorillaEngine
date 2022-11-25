@@ -56,7 +56,7 @@ void WorldTransform::UpdateMatrix(DirectX::XMMATRIX matBillboard)
 	matWorld = XMMatrixIdentity(); // 変形をリセット
 	matWorld *= matScale;          // ワールド行列にスケーリングを反映
 	matWorld *= matRot;            // ワールド行列に回転を反映
-	matWorld *= matBillboard;	//ビルボード行列を掛ける
+	//matWorld *= matBillboard;	//ビルボード行列を掛ける
 	matWorld *= matTrans;          // ワールド行列に平行移動を反映
 
 	// 親行列の指定がある場合は、掛け算する
