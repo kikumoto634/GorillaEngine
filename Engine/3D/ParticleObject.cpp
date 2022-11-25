@@ -87,6 +87,8 @@ bool ParticleObject::Initialize(UINT texNumber)
 
 void ParticleObject::Update(WorldTransform worldTransform, Camera* camera)
 {
+	common->particleManager->Update();
+
 	//カメラの行列取得
 	const XMMATRIX& matWorld = worldTransform.matWorld;
 	const XMMATRIX& matView = camera->GetMatView();
@@ -123,8 +125,13 @@ void ParticleObject::Draw()
 	common->textureManager->SetShaderResourceView(common->dxCommon->GetCommandList(), 1, texNumber);
 
 	//描画コマンド
-	common->dxCommon->GetCommandList()->DrawInstanced(common->particleManager->Getvertices(), 1, 0, 0);
+	common->dxCommon->GetCommandList()->DrawInstanced(common->particleManager->GetParticle(), 1, 0, 0);
 #pragma endregion
+}
+
+void ParticleObject::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel)
+{
+	common->particleManager->Add(life,position,velocity,accel);
 }
 
 void ParticleObject::CommonGeometry::InitializeGraphicsPipeline()
@@ -263,10 +270,22 @@ void ParticleObject::CommonGeometry::InitializeGraphicsPipeline()
 	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;		//加算
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;			//ソースの値を100% 使う	(ソースカラー			 ： 今から描画しようとしている色)
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;		//デストの値を  0% 使う	(デスティネーションカラー： 既にキャンバスに描かれている色)
-	//各種設定
+	
+	//半透明合成
+	/*blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;*/
+
+	//加算合成
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;	//設定
-	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;			//ソースの値を 何% 使う
-	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;	//デストの値を 何% 使う
+	blenddesc.SrcBlend = D3D12_BLEND_ONE;			//ソースの値を 何% 使う
+	blenddesc.DestBlend = D3D12_BLEND_ONE;	//デストの値を 何% 使う
+	
+	//減算合成
+	/*blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+	blenddesc.SrcBlend = D3D12_BLEND_ONE;
+	blenddesc.DestBlend = D3D12_BLEND_ONE;*/
+
 	//頂点レイアウト設定
 	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
 	pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
@@ -280,6 +299,8 @@ void ParticleObject::CommonGeometry::InitializeGraphicsPipeline()
 	//デプスステンシルステートの設定	(深度テストを行う、書き込み許可、深度がちいさければ許可)
 	pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;	//深度値フォーマット
+	//デプスの書き込み禁止
+	pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
 	///テクスチャサンプラー
 	//設定

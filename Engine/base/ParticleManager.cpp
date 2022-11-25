@@ -16,23 +16,6 @@ void ParticleManager::CreateBuffer()
 	HRESULT result;
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
-#pragma region 四角形情報
-	////頂点データ
-	//VertexPos vertices[] = {
-	//	//前
-	//	{{0.0f, 0.0f, 0.0f}},//左下
-	//};
-	//copy(begin(vertices), end(vertices), this->vertices);
-	for(int i = 0; i < vertexCount; i++){
-		//X,Y,Zすべて[-5.0f, +5.0f]でランダムに分布
-		const float rnd_width = 10.f;
-		vertices[i].pos.x = (float)rand()/RAND_MAX*rnd_width - rnd_width/2.f;
-		vertices[i].pos.y = (float)rand()/RAND_MAX*rnd_width - rnd_width/2.f;
-		vertices[i].pos.z = (float)rand()/RAND_MAX*rnd_width - rnd_width/2.f;
-	}
-
-#pragma endregion
-
 	//頂点バッファ
 	//サイズ
 	UINT sizeVB = static_cast<UINT>(sizeof(VertexPos)*_countof(vertices));
@@ -64,4 +47,50 @@ void ParticleManager::CreateBuffer()
 	vbView.BufferLocation = vertBuffer->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeVB;
 	vbView.StrideInBytes = sizeof(VertexPos);
+}
+
+void ParticleManager::Update()
+{
+	//寿命がつきたパーティクルの全削除
+	particle.remove_if([](Particle& x){
+		return x.frame >= x.num_frame;
+		}
+	);
+
+	//全パーティクル更新
+	for(std::forward_list<Particle>::iterator it = particle.begin(); it != particle.end(); it++)
+	{
+		//経過フレーム数をカウント
+		it->frame++;
+		//速度に加速度を加算
+		it->velocity = it->velocity + it->accel;
+		//速度による移動
+		it->position = it->position + it->velocity;
+	}
+
+	//頂点バッファへのデータ転送
+	HRESULT result = vertBuffer->Map(0,nullptr,(void**)&vertMap);
+	if(SUCCEEDED(result)){
+		//パーティクルの情報を1ずつ反映
+		for(std::forward_list<Particle>::iterator it = particle.begin(); it != particle.end(); it++){
+			//座標
+			vertMap->pos = it->position;
+			//次の頂点
+			vertMap++;
+		}
+		vertBuffer->Unmap(0,nullptr);
+	}
+}
+
+void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel)
+{
+	//リストに要素を追加
+	particle.emplace_front();
+	//追加した要素の参照
+	Particle& p = particle.front();
+	//値のセット
+	p.position = position;
+	p.velocity = velocity;
+	p.accel = accel;
+	p.num_frame = life;
 }

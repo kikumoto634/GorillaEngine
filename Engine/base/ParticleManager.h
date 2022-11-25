@@ -3,7 +3,7 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <DirectXMath.h>
-
+#include <forward_list>
 
 #include "../Engine/math/Vector/Vector2.h"
 #include "../Engine/math/Vector/Vector3.h"
@@ -17,10 +17,25 @@ public:	//定数
 	//テクスチャの最大枚数
 	static const int maxObjectCount = 512;
 	//頂点数
-	static const int vertexCount = 30;
+	static const int vertexCount = 1024;
 public:
 	struct VertexPos{
 		Vector3 pos;
+	};
+
+	//パーティクル粒
+	struct Particle
+	{
+		//座標
+		Vector3 position = {};
+		//速度
+		Vector3 velocity = {};
+		//加速度
+		Vector3 accel = {};
+		//現在のフレーム
+		int frame = 0;
+		//終了フレーム
+		int num_frame = 0;
 	};
 
 public:
@@ -32,13 +47,28 @@ public:
 	/// </summary>
 	void CreateBuffer();
 
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
+
+	/// <summary>
+	/// パーティクル追加
+	/// </summary>
+	/// <param name="life">生存時間</param>
+	/// <param name="position">初期座標</param>
+	/// <param name="velocity">速度</param>
+	/// <param name="accel">加速度</param>
+	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel);
+
 	//Get
 	int GetMaxObjectCount()	{return maxObjectCount;}
 	//頂点情報
 	int Getvertices()	{return _countof(vertices);}
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW GetvbView()	{return vbView;}
-
+	//パーティクル描画数
+	UINT GetParticle()	{return (UINT)std::distance(particle.begin(), particle.end());}
 
 private:
 	//頂点バッファ
@@ -50,5 +80,8 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 	//頂点データ
 	VertexPos vertices[vertexCount];
+
+	//パーティクル配列
+	std::forward_list<Particle> particle;
 };
 

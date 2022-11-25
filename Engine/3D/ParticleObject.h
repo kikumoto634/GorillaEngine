@@ -94,6 +94,14 @@ public:
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// パーティクル追加
+	/// </summary>
+	/// <param name="life">生存時間</param>
+	/// <param name="position">初期座標</param>
+	/// <param name="velocity">速度</param>
+	/// <param name="accel">加速度</param>
+	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel);
 private:
 	//テクスチャデータ
 	UINT texNumber = 0;
