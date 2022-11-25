@@ -73,8 +73,8 @@ void Application::Initialize()
 	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
 	
 	//Geometry
-	GeometryObjectManager::GetInstance()->CreateBuffer();
-	GeometryObject::StaticInitialize(dxCommon);
+	ParticleManager::GetInstance()->CreateBuffer();
+	ParticleObject::StaticInitialize(dxCommon);
 	
 	//FBX
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
@@ -105,7 +105,7 @@ void Application::Finalize()
 {
 	FbxModelObject::StaticFinalize();
 	FbxLoader::GetInstance()->Finalize();
-	GeometryObject::StaticFinalize();
+	ParticleObject::StaticFinalize();
 	Sprite::StaticFinalize();
 
 	scene->Finalize();

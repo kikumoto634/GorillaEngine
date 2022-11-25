@@ -40,9 +40,6 @@
     <Filter Include="ソース ファイル\Engine">
       <UniqueIdentifier>{19904471-5456-41de-9e60-1c7dbfbe0c65}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Engine\math">
-      <UniqueIdentifier>{a249e385-bd10-49d9-acbc-3e9402d6505a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Engine\input">
       <UniqueIdentifier>{1ba15469-4355-448e-9a04-9816bbf3b65b}</UniqueIdentifier>
     </Filter>
@@ -106,23 +103,26 @@
     <Filter Include="ヘッダー ファイル\Game\2D\SampleSp">
       <UniqueIdentifier>{b9ed47f6-925a-4393-94c5-5bd4141d0491}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Engine\math\Vector">
-      <UniqueIdentifier>{eb765e86-4d56-47b4-867f-62711b5a4426}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Engine\math\Vector">
       <UniqueIdentifier>{db74bb4f-71b6-4558-994f-451d10b17b01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\math\Easing">
-      <UniqueIdentifier>{58f3fda8-68f6-4077-8f5a-622afe7f52e3}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Engine\math\Easing">
       <UniqueIdentifier>{6b0e4025-daeb-4bcd-a2e8-d2034dfc62a8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Game\3D\SampleGeometryObj">
+    <Filter Include="ヘッダー ファイル\Game\3D\SampleParticleObj">
+      <UniqueIdentifier>{c31ad653-486c-4240-950c-aa93eb114f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\3D\SampleParticleObj">
       <UniqueIdentifier>{31a5dfa9-d5f4-4906-8525-09d9ef837058}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\SampleGeometryObj">
-      <UniqueIdentifier>{c31ad653-486c-4240-950c-aa93eb114f0a}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\Game\math">
+      <UniqueIdentifier>{a249e385-bd10-49d9-acbc-3e9402d6505a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\math\Vector">
+      <UniqueIdentifier>{eb765e86-4d56-47b4-867f-62711b5a4426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\math\Easing">
+      <UniqueIdentifier>{58f3fda8-68f6-4077-8f5a-622afe7f52e3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +147,7 @@
     <ClCompile Include="Engine\3D\FbxModelObject.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\GeometryObject.cpp">
+    <ClCompile Include="Engine\3D\ParticleObject.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\ViewProjection.cpp">
@@ -165,7 +165,7 @@
     <ClCompile Include="Engine\base\FbxModelManager.cpp">
       <Filter>ソース ファイル\Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\GeometryObjectManager.cpp">
+    <ClCompile Include="Engine\base\ParticleManager.cpp">
       <Filter>ソース ファイル\Engine\base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\TextureManager.cpp">
@@ -190,22 +190,22 @@
       <Filter>ソース ファイル\Game\2D\SampleSp</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Vector\Vector2.cpp">
-      <Filter>ソース ファイル\Engine\math\Vector</Filter>
+      <Filter>ソース ファイル\Game\math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Vector\Vector3.cpp">
-      <Filter>ソース ファイル\Engine\math\Vector</Filter>
+      <Filter>ソース ファイル\Game\math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Vector\Vector4.cpp">
-      <Filter>ソース ファイル\Engine\math\Vector</Filter>
+      <Filter>ソース ファイル\Game\math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Easing\Easing.cpp">
-      <Filter>ソース ファイル\Engine\math\Easing</Filter>
+      <Filter>ソース ファイル\Game\math\Easing</Filter>
     </ClCompile>
-    <ClCompile Include="Game\3D\BaseGeometryObjects.cpp">
+    <ClCompile Include="Game\3D\BaseParticleObjects.cpp">
       <Filter>ソース ファイル\Game\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Game\3D\SampleGeometryObject\SampleGeometryObject.cpp">
-      <Filter>ソース ファイル\Game\3D\SampleGeometryObj</Filter>
+    <ClCompile Include="Game\3D\SampleParticleObject\SampleParticleObject.cpp">
+      <Filter>ソース ファイル\Game\3D\SampleParticleObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,7 +224,7 @@
     <ClInclude Include="Engine\3D\FbxModelObject.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\GeometryObject.h">
+    <ClInclude Include="Engine\3D\ParticleObject.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\ViewProjection.h">
@@ -242,7 +242,7 @@
     <ClInclude Include="Engine\base\FbxModelManager.h">
       <Filter>ヘッダー ファイル\Engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\GeometryObjectManager.h">
+    <ClInclude Include="Engine\base\ParticleManager.h">
       <Filter>ヘッダー ファイル\Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\TextureManager.h">
@@ -281,11 +281,11 @@
     <ClInclude Include="Game\3D\BaseFbxObjects.h">
       <Filter>ヘッダー ファイル\Game\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Game\3D\BaseGeometryObjects.h">
+    <ClInclude Include="Game\3D\BaseParticleObjects.h">
       <Filter>ヘッダー ファイル\Game\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Game\3D\SampleGeometryObject\SampleGeometryObject.h">
-      <Filter>ヘッダー ファイル\Game\3D\SampleGeometryObj</Filter>
+    <ClInclude Include="Game\3D\SampleGeometryObject\SampleParticleObject.h">
+      <Filter>ヘッダー ファイル\Game\3D\SampleParticleObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -295,10 +295,10 @@
     <FxCompile Include="Resources\shader\SpriteVS.hlsl">
       <Filter>リソース ファイル\Sprite</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\GeometryPS.hlsl">
+    <FxCompile Include="Resources\shader\ParticlePS.hlsl">
       <Filter>リソース ファイル\Geometry</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\GeometryVS.hlsl">
+    <FxCompile Include="Resources\shader\ParticleVS.hlsl">
       <Filter>リソース ファイル\Geometry</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\FBXVS.hlsl">
@@ -307,7 +307,7 @@
     <FxCompile Include="Resources\shader\FBXPS.hlsl">
       <Filter>リソース ファイル\Fbx</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\BasicGeometryShader.hlsl">
+    <FxCompile Include="Resources\shader\ParticleGS.hlsl">
       <Filter>リソース ファイル\Geometry</Filter>
     </FxCompile>
   </ItemGroup>
@@ -315,7 +315,7 @@
     <None Include="Resources\shader\Sprite.hlsli">
       <Filter>リソース ファイル\Sprite</Filter>
     </None>
-    <None Include="Resources\shader\Geometry.hlsli">
+    <None Include="Resources\shader\Particle.hlsli">
       <Filter>リソース ファイル\Geometry</Filter>
     </None>
     <None Include="Resources\shader\FBX.hlsli">

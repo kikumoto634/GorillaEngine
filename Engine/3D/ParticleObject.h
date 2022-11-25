@@ -3,7 +3,7 @@
 #include <wrl.h>
 
 #include "../Engine/base/DirectXCommon.h"
-#include "../Engine/base/GeometryObjectManager.h"
+#include "../Engine/base/ParticleManager.h"
 #include "../Engine/base/TextureManager.h"
 #include "Camera.h"
 #include "WorldTransform.h"
@@ -11,7 +11,7 @@
 /// <summary>
 /// 幾何学オブジェクト
 /// </summary>
-class GeometryObject
+class ParticleObject
 {
 /// <summary>
 /// エイリアス
@@ -24,7 +24,7 @@ public:
 /// </summary>
 public:
 	class CommonGeometry{
-		friend class GeometryObject;
+		friend class ParticleObject;
 
 	public:
 		/// <summary>
@@ -48,7 +48,7 @@ public:
 		//デスクリプタヒープ(定数バッファビュー用)
 		ComPtr<ID3D12DescriptorHeap> basicDescHeap;
 
-		GeometryObjectManager* geometryObjectManager;
+		ParticleManager* particleManager;
 		TextureManager* textureManager;
 
 	};
@@ -69,14 +69,14 @@ public:
 	/// </summary>
 	static void StaticFinalize();
 
-	static GeometryObject* Create(UINT texNumber, DirectX::XMFLOAT4 color = {1,1,1,1});
+	static ParticleObject* Create(UINT texNumber, DirectX::XMFLOAT4 color = {1,1,1,1});
 
 private:
 	static CommonGeometry* common;
 
 public:
-	GeometryObject();
-	GeometryObject(UINT texNumber, DirectX::XMFLOAT4 color = {1,1,1,1});
+	ParticleObject();
+	ParticleObject(UINT texNumber, DirectX::XMFLOAT4 color = {1,1,1,1});
 
 	/// <summary>
 	/// 初期化

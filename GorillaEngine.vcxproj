@@ -155,13 +155,13 @@
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="Engine\2D\Sprite.cpp" />
     <ClCompile Include="Engine\3D\FbxModelObject.cpp" />
-    <ClCompile Include="Engine\3D\GeometryObject.cpp" />
+    <ClCompile Include="Engine\3D\ParticleObject.cpp" />
     <ClCompile Include="Engine\3D\ViewProjection.cpp" />
     <ClCompile Include="Engine\3D\WorldTransform.cpp" />
     <ClCompile Include="Engine\base\Application.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\FbxModelManager.cpp" />
-    <ClCompile Include="Engine\base\GeometryObjectManager.cpp" />
+    <ClCompile Include="Engine\base\ParticleManager.cpp" />
     <ClCompile Include="Engine\base\TextureManager.cpp" />
     <ClCompile Include="Engine\base\Window.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
@@ -173,9 +173,9 @@
     <ClCompile Include="Game\2D\BaseSprites.cpp" />
     <ClCompile Include="Game\2D\SampleSprite\SampleSprite.cpp" />
     <ClCompile Include="Game\3D\BaseFbxObjects.cpp" />
-    <ClCompile Include="Game\3D\BaseGeometryObjects.cpp" />
+    <ClCompile Include="Game\3D\BaseParticleObjects.cpp" />
     <ClCompile Include="Game\3D\SampleFbxObject\SampleFbxObject.cpp" />
-    <ClCompile Include="Game\3D\SampleGeometryObject\SampleGeometryObject.cpp" />
+    <ClCompile Include="Game\3D\SampleParticleObject\SampleParticleObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scene\BaseScene.cpp" />
     <ClCompile Include="scene\SampleScene.cpp" />
@@ -184,13 +184,13 @@
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="Engine\2D\Sprite.h" />
     <ClInclude Include="Engine\3D\FbxModelObject.h" />
-    <ClInclude Include="Engine\3D\GeometryObject.h" />
+    <ClInclude Include="Engine\3D\ParticleObject.h" />
     <ClInclude Include="Engine\3D\ViewProjection.h" />
     <ClInclude Include="Engine\3D\WorldTransform.h" />
     <ClInclude Include="Engine\base\Application.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\FbxModelManager.h" />
-    <ClInclude Include="Engine\base\GeometryObjectManager.h" />
+    <ClInclude Include="Engine\base\ParticleManager.h" />
     <ClInclude Include="Engine\base\TextureManager.h" />
     <ClInclude Include="Engine\base\Window.h" />
     <ClInclude Include="Engine\input\Input.h" />
@@ -202,9 +202,9 @@
     <ClInclude Include="Game\2D\BaseSprites.h" />
     <ClInclude Include="Game\2D\SampleSprite\SampleSprite.h" />
     <ClInclude Include="Game\3D\BaseFbxObjects.h" />
-    <ClInclude Include="Game\3D\BaseGeometryObjects.h" />
+    <ClInclude Include="Game\3D\BaseParticleObjects.h" />
     <ClInclude Include="Game\3D\SampleFbxObject\SampleFbxObject.h" />
-    <ClInclude Include="Game\3D\SampleGeometryObject\SampleGeometryObject.h" />
+    <ClInclude Include="Game\3D\SampleGeometryObject\SampleParticleObject.h" />
     <ClInclude Include="scene\BaseScene.h" />
     <ClInclude Include="scene\SampleScene.h" />
   </ItemGroup>
@@ -215,11 +215,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\FBX.hlsli" />
-    <None Include="Resources\shader\Geometry.hlsli" />
+    <None Include="Resources\shader\Particle.hlsli" />
     <None Include="Resources\shader\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\shader\BasicGeometryShader.hlsl">
+    <FxCompile Include="Resources\shader\ParticleGS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
@@ -245,7 +245,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Resources\shader\GeometryPS.hlsl">
+    <FxCompile Include="Resources\shader\ParticlePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -253,7 +253,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Resources\shader\GeometryVS.hlsl">
+    <FxCompile Include="Resources\shader\ParticleVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

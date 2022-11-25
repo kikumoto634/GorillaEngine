@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseScene.h"
-#include "../Game/3D/SampleGeometryObject/SampleGeometryObject.h"
+#include "../Game/3D/SampleParticleObject/SampleParticleObject.h"
 #include "../Game/3D/SampleFbxObject/SampleFbxObject.h"
 #include "../Game/2D/SampleSprite/SampleSprite.h"
 
@@ -40,7 +40,7 @@ private:
 	float time = 0.f;
 
 	//std::unique_ptr<SampleFbxObject> obj;
-	std::unique_ptr<SampleGeometryObject> obj2;
+	std::unique_ptr<SampleParticleObject> obj2;
 	//std::unique_ptr<SampleSprite> sp;
 };
 

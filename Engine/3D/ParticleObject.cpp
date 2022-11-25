@@ -1,12 +1,12 @@
-#include "GeometryObject.h"
+#include "ParticleObject.h"
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
 using namespace DirectX;
 
-GeometryObject::CommonGeometry* GeometryObject::common = nullptr;
+ParticleObject::CommonGeometry* ParticleObject::common = nullptr;
 
-void GeometryObject::StaticInitialize(DirectXCommon *dxCommon)
+void ParticleObject::StaticInitialize(DirectXCommon *dxCommon)
 {
 	common = new CommonGeometry();
 	common->dxCommon = dxCommon;
@@ -14,11 +14,11 @@ void GeometryObject::StaticInitialize(DirectXCommon *dxCommon)
 	common->InitializeGraphicsPipeline();
 	common->InitializeDescriptorHeap();
 
-	common->geometryObjectManager = GeometryObjectManager::GetInstance();
+	common->particleManager = ParticleManager::GetInstance();
 	common->textureManager = TextureManager::GetInstance();
 }
 
-void GeometryObject::StaticFinalize()
+void ParticleObject::StaticFinalize()
 {
 	if(common != nullptr){
 		delete common;
@@ -26,9 +26,9 @@ void GeometryObject::StaticFinalize()
 	}
 }
 
-GeometryObject *GeometryObject::Create(UINT texNumber, XMFLOAT4 color)
+ParticleObject *ParticleObject::Create(UINT texNumber, XMFLOAT4 color)
 {
-	GeometryObject* object = new GeometryObject(texNumber, color);
+	ParticleObject* object = new ParticleObject(texNumber, color);
 	if(object == nullptr){
 		return nullptr;
 	}
@@ -43,17 +43,17 @@ GeometryObject *GeometryObject::Create(UINT texNumber, XMFLOAT4 color)
 	return object;
 }
 
-GeometryObject::GeometryObject()
+ParticleObject::ParticleObject()
 {
 }
 
-GeometryObject::GeometryObject(UINT texNumber, XMFLOAT4 color)
+ParticleObject::ParticleObject(UINT texNumber, XMFLOAT4 color)
 {
 	this->texNumber = texNumber;
 	this->color = color;
 }
 
-bool GeometryObject::Initialize(UINT texNumber)
+bool ParticleObject::Initialize(UINT texNumber)
 {
 	HRESULT result;
 	this->texNumber = texNumber;
@@ -85,7 +85,7 @@ bool GeometryObject::Initialize(UINT texNumber)
 	return true;
 }
 
-void GeometryObject::Update(WorldTransform worldTransform, Camera* camera)
+void ParticleObject::Update(WorldTransform worldTransform, Camera* camera)
 {
 	//カメラの行列取得
 	const XMMATRIX& matWorld = worldTransform.matWorld;
@@ -95,7 +95,7 @@ void GeometryObject::Update(WorldTransform worldTransform, Camera* camera)
 	constMap->mat = matWorld * matView * matProjection;
 }
 
-void GeometryObject::Draw()
+void ParticleObject::Draw()
 {
 #pragma region 共通描画コマンド
 	//パイプラインステートの設定
@@ -116,17 +116,17 @@ void GeometryObject::Draw()
 	//デスクリプタヒープの配列
 	common->textureManager->SetDescriptorHeaps(common->dxCommon->GetCommandList());
 	//頂点バッファの設定
-	common->dxCommon->GetCommandList()->IASetVertexBuffers(0, 1, &common->geometryObjectManager->GetvbView());
+	common->dxCommon->GetCommandList()->IASetVertexBuffers(0, 1, &common->particleManager->GetvbView());
 
 	//シェーダリソースビューをセット
 	common->textureManager->SetShaderResourceView(common->dxCommon->GetCommandList(), 1, texNumber);
 
 	//描画コマンド
-	common->dxCommon->GetCommandList()->DrawInstanced(common->geometryObjectManager->Getvertices(), 1, 0, 0);
+	common->dxCommon->GetCommandList()->DrawInstanced(common->particleManager->Getvertices(), 1, 0, 0);
 #pragma endregion
 }
 
-void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
+void ParticleObject::CommonGeometry::InitializeGraphicsPipeline()
 {
 	HRESULT result;
 
@@ -138,7 +138,7 @@ void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 
 	//頂点シェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/GeometryVS.hlsl",		//シェーダーファイル名
+		L"Resources/shader/ParticleVS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "vs_5_0",					//エントリーポイント名、シェーダーモデル指定
@@ -162,7 +162,7 @@ void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 
 	//ジオメトリシェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/BasicGeometryShader.hlsl",		//シェーダーファイル名
+		L"Resources/shader/ParticleGS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "gs_5_0",					//エントリーポイント名、シェーダーモデル指定
@@ -186,7 +186,7 @@ void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 
 	//ピクセルシェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/GeometryPS.hlsl",		//シェーダーファイル名
+		L"Resources/shader/ParticlePS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "ps_5_0",					//エントリーポイント名、シェーダーモデル指定
@@ -304,14 +304,14 @@ void GeometryObject::CommonGeometry::InitializeGraphicsPipeline()
 	assert(SUCCEEDED(result));
 }
 
-void GeometryObject::CommonGeometry::InitializeDescriptorHeap()
+void ParticleObject::CommonGeometry::InitializeDescriptorHeap()
 {
 	HRESULT result;
 
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc = {};
 	descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	descriptorHeapDesc.NumDescriptors = common->geometryObjectManager->GetMaxObjectCount();
+	descriptorHeapDesc.NumDescriptors = common->particleManager->GetMaxObjectCount();
 	result = dxCommon->GetDevice()->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&basicDescHeap));
 	assert(SUCCEEDED(result));
 }

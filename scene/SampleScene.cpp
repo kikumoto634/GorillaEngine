@@ -26,7 +26,7 @@ void SampleScene::Initialize()
 	obj->Initialize("cube");
 	obj->SetPosition({0, -50, 200});*/
 
-	obj2 = make_unique<SampleGeometryObject>();
+	obj2 = make_unique<SampleParticleObject>();
 	obj2->Initialize(1);
 #pragma endregion _3D‰Šú‰»
 

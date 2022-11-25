@@ -1,11 +1,11 @@
 #pragma once
-#include "../BaseGeometryObjects.h"
+#include "../BaseParticleObjects.h"
 
-class SampleGeometryObject : public BaseGeometryObjects
+class SampleParticleObject : public BaseParticleObjects
 {
 	//ƒƒ“ƒoŠÖ”
 public:
-	~SampleGeometryObject();
+	~SampleParticleObject();
 
 	/// <summary>
 	/// ‰Šú‰»

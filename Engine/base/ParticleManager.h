@@ -8,7 +8,7 @@
 #include "../Engine/math/Vector/Vector2.h"
 #include "../Engine/math/Vector/Vector3.h"
 
-class GeometryObjectManager
+class ParticleManager
 {
 public://エイリアス
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -23,7 +23,7 @@ public:
 	};
 
 public:
-	static GeometryObjectManager* GetInstance();
+	static ParticleManager* GetInstance();
 
 public:
 	/// <summary>

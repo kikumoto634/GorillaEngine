@@ -1,13 +1,13 @@
-#include "BaseGeometryObjects.h"
+#include "BaseParticleObjects.h"
 
-void BaseGeometryObjects::Initialize(UINT texNumber)
+void BaseParticleObjects::Initialize(UINT texNumber)
 {
-	object = GeometryObject::Create(texNumber);
+	object = ParticleObject::Create(texNumber);
 	world.Initialize();
 	world.UpdateMatrix();
 }
 
-void BaseGeometryObjects::Update(Camera *camera, bool IsBillboard)
+void BaseParticleObjects::Update(Camera *camera, bool IsBillboard)
 {
 	this->camera = camera;
 	if(!IsBillboard)	    world.UpdateMatrix();
@@ -15,12 +15,12 @@ void BaseGeometryObjects::Update(Camera *camera, bool IsBillboard)
 	object->Update(world, this->camera);
 }
 
-void BaseGeometryObjects::Draw()
+void BaseParticleObjects::Draw()
 {
 	object->Draw();
 }
 
-void BaseGeometryObjects::Finalize()
+void BaseParticleObjects::Finalize()
 {
 	delete object;
 	object = nullptr;

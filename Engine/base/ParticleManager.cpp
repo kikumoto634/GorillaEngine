@@ -1,17 +1,17 @@
-#include "GeometryObjectManager.h"
+#include "ParticleManager.h"
 #include <cassert>
 #include "DirectXCommon.h"
 
 using namespace std;
 using namespace DirectX;
 
-GeometryObjectManager *GeometryObjectManager::GetInstance()
+ParticleManager *ParticleManager::GetInstance()
 {
-	static GeometryObjectManager instance;
+	static ParticleManager instance;
 	return &instance;
 }
 
-void GeometryObjectManager::CreateBuffer()
+void ParticleManager::CreateBuffer()
 {
 	HRESULT result;
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();

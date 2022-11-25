@@ -2,9 +2,9 @@
 
 #include "Camera.h"
 
-#include "../../Engine/3D/GeometryObject.h"
+#include "../../Engine/3D/ParticleObject.h"
 
-class BaseGeometryObjects
+class BaseParticleObjects
 {
 public:
 	/// <summary>
@@ -38,7 +38,7 @@ public:
 	void SetRotation(const Vector3& rotation)	{world.rotation = rotation;}
 
 protected:
-	GeometryObject* object;
+	ParticleObject* object;
 	WorldTransform world;
 
 	Camera* camera = nullptr;
