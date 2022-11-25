@@ -129,9 +129,9 @@ void ParticleObject::Draw()
 #pragma endregion
 }
 
-void ParticleObject::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel)
+void ParticleObject::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale)
 {
-	common->particleManager->Add(life,position,velocity,accel);
+	common->particleManager->Add(life,position,velocity,accel,start_scale,end_scale);
 }
 
 void ParticleObject::CommonGeometry::InitializeGraphicsPipeline()
@@ -228,6 +228,15 @@ void ParticleObject::CommonGeometry::InitializeGraphicsPipeline()
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		//入力データ種別 (標準はD3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA)
 			0												//一度に描画するインスタンス数
 		},
+		{//スケール
+			"TEXCOORD",
+			0,
+			DXGI_FORMAT_R32_FLOAT,
+			0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+			0
+		}
 	};
 
 	///ルートパラメータ

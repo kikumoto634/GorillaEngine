@@ -66,6 +66,12 @@ void ParticleManager::Update()
 		it->velocity = it->velocity + it->accel;
 		//速度による移動
 		it->position = it->position + it->velocity;
+
+		//進行度を0~1の範囲でスケール計算
+		float f = (float)it->frame / it->num_frame;
+		//線形補完
+		it->scale = (it->end_scale - it->start_scale)*f;
+		it->scale += it->start_scale;
 	}
 
 	//頂点バッファへのデータ転送
@@ -75,6 +81,8 @@ void ParticleManager::Update()
 		for(std::forward_list<Particle>::iterator it = particle.begin(); it != particle.end(); it++){
 			//座標
 			vertMap->pos = it->position;
+			//スケ―ル
+			vertMap->scale = it->scale;
 			//次の頂点
 			vertMap++;
 		}
@@ -82,7 +90,7 @@ void ParticleManager::Update()
 	}
 }
 
-void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel)
+void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale)
 {
 	//リストに要素を追加
 	particle.emplace_front();
@@ -92,5 +100,7 @@ void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 
 	p.position = position;
 	p.velocity = velocity;
 	p.accel = accel;
+	p.start_scale = start_scale;
+	p.end_scale = end_scale;
 	p.num_frame = life;
 }

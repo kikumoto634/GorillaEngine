@@ -21,6 +21,7 @@ public:	//定数
 public:
 	struct VertexPos{
 		Vector3 pos;
+		float scale;
 	};
 
 	//パーティクル粒
@@ -32,6 +33,14 @@ public:
 		Vector3 velocity = {};
 		//加速度
 		Vector3 accel = {};
+
+		//スケール
+		float scale = 1.f;
+		//初期値
+		float start_scale = 1.f;
+		//最終値
+		float end_scale = 0.f;
+
 		//現在のフレーム
 		int frame = 0;
 		//終了フレーム
@@ -59,7 +68,9 @@ public:
 	/// <param name="position">初期座標</param>
 	/// <param name="velocity">速度</param>
 	/// <param name="accel">加速度</param>
-	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel);
+	/// <param name="start_scale">開始時スケール</param>
+	/// <param name="end_scale">終了時スケール</param>
+	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale);
 
 	//Get
 	int GetMaxObjectCount()	{return maxObjectCount;}

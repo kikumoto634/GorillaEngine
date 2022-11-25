@@ -11,6 +11,7 @@ struct VSOutput
 {
 	//システム用頂点座標
 	float4 svpos : SV_POSITION;
+	float scale : TEXCOORD;
 };
 
 //ジオメトリシェーダーからピクセルシェーダーへの出力

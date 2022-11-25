@@ -101,7 +101,9 @@ public:
 	/// <param name="position">初期座標</param>
 	/// <param name="velocity">速度</param>
 	/// <param name="accel">加速度</param>
-	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel);
+	/// <param name="start_scale">開始時スケール</param>
+	/// <param name="end_scale">終了時スケール</param>
+	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale);
 private:
 	//テクスチャデータ
 	UINT texNumber = 0;

@@ -23,10 +23,10 @@ void SampleParticleObject::Initialize(UINT texNumber)
 		//d—Í‚ðŒ©—§‚Ä‚ÄY‚Ì‚Ý[-0.001f, 0]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
 		Vector3 acc{};
 		const float md_acc = 0.001f;
-		acc.y = -(float)rand()/RAND_MAX*md_acc;
+		acc.y = (float)rand()/RAND_MAX*md_acc;
 
 		//’Ç‰Á
-		object->Add(600, pos, vel, acc);
+		object->Add(60, pos, vel, acc, 1.f, 0.f);
 	}
 	BaseParticleObjects::Initialize(texNumber);
 }
