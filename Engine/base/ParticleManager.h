@@ -16,7 +16,8 @@ public://エイリアス
 public:	//定数
 	//テクスチャの最大枚数
 	static const int maxObjectCount = 512;
-	static const int vertexCount = 1;
+	//頂点数
+	static const int vertexCount = 30;
 public:
 	struct VertexPos{
 		Vector3 pos;

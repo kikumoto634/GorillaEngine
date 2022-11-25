@@ -17,12 +17,19 @@ void ParticleManager::CreateBuffer()
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
 #pragma region 四角形情報
-	//頂点データ
-	VertexPos vertices[] = {
-		//前
-		{{0.0f, 0.0f, 0.0f}},//左下
-	};
-	copy(begin(vertices), end(vertices), this->vertices);
+	////頂点データ
+	//VertexPos vertices[] = {
+	//	//前
+	//	{{0.0f, 0.0f, 0.0f}},//左下
+	//};
+	//copy(begin(vertices), end(vertices), this->vertices);
+	for(int i = 0; i < vertexCount; i++){
+		//X,Y,Zすべて[-5.0f, +5.0f]でランダムに分布
+		const float rnd_width = 10.f;
+		vertices[i].pos.x = (float)rand()/RAND_MAX*rnd_width - rnd_width/2.f;
+		vertices[i].pos.y = (float)rand()/RAND_MAX*rnd_width - rnd_width/2.f;
+		vertices[i].pos.z = (float)rand()/RAND_MAX*rnd_width - rnd_width/2.f;
+	}
 
 #pragma endregion
 

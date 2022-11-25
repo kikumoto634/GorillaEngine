@@ -2,6 +2,7 @@
 cbuffer ConstBufferData : register(b0)
 {
 	matrix mat;	//3D変換行列
+	matrix matBillboard;	//ビルボード行列
 };
 
 //頂点シェーダーの出力構造体

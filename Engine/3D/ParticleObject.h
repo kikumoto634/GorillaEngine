@@ -56,6 +56,7 @@ public:
 	//定数バッファ用データ構造体(3D変換行列
 	struct ConstBufferData{
 		DirectX::XMMATRIX mat;	//3D変換行列
+		DirectX::XMMATRIX matBillboard;	//ビルボード行列
 	};
 
 public:

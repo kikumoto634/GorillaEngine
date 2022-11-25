@@ -93,6 +93,7 @@ void ParticleObject::Update(WorldTransform worldTransform, Camera* camera)
 	const XMMATRIX& matProjection = camera->GetMatProjection();
 
 	constMap->mat = matWorld * matView * matProjection;
+	constMap->matBillboard = camera->GetBillboard();
 }
 
 void ParticleObject::Draw()

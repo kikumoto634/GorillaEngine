@@ -13,7 +13,7 @@ void SampleParticleObject::Initialize(UINT texNumber)
 void SampleParticleObject::Update(Camera *camera)
 {
 	this->camera = camera;
-	BaseParticleObjects::Update(this->camera, false);
+	BaseParticleObjects::Update(this->camera);
 }
 
 void SampleParticleObject::Draw()
