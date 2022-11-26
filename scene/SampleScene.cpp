@@ -28,6 +28,14 @@ void SampleScene::Initialize()
 
 	obj2 = make_unique<SampleParticleObject>();
 	obj2->Initialize(1);
+
+	/*ObjModelObject::StaticInitialize(dxCommon->GetDevice(), window->GetWindowWidth(), window->GetWindowHeight());
+	obj3 = ObjModelObject::Create();
+	world.Initialize();
+	world.scale = {4,4,4};
+	world.UpdateMatrix();
+	obj3->Update(world, camera);*/
+
 #pragma endregion _3D‰Šú‰»
 
 #pragma region _2D‰Šú‰»
@@ -65,6 +73,8 @@ void SampleScene::Update()
 	//obj->Update(camera);
 
 	obj2->Update(camera);
+
+	//obj3->Update(world, camera);
 #pragma endregion _3DXV
 
 #pragma region _2DXV
@@ -86,6 +96,11 @@ void SampleScene::Draw()
 	//obj->Draw();
 
 	obj2->Draw();
+
+	//ObjModelObject::PreDraw(dxCommon->GetCommandList());
+	//obj3->Draw();
+	//ObjModelObject::PostDraw();
+
 #pragma endregion _3D•`‰æ
 
 #pragma region _2D_UI•`‰æ
@@ -102,6 +117,9 @@ void SampleScene::Finalize()
 	//obj->Finalize();
 
 	obj2->Finalize();
+
+	//delete obj3;
+	//obj3 = nullptr;
 #pragma endregion _3D‰ð•ú
 
 #pragma region _2D‰ð•ú

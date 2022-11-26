@@ -2,7 +2,10 @@
 #include "BaseScene.h"
 #include "../Game/3D/SampleParticleObject/SampleParticleObject.h"
 #include "../Game/3D/SampleFbxObject/SampleFbxObject.h"
+#include "../Engine/3D/ObjModelObject.h"
+
 #include "../Game/2D/SampleSprite/SampleSprite.h"
+
 
 class SampleScene : public BaseScene
 {
@@ -41,6 +44,10 @@ private:
 
 	//std::unique_ptr<SampleFbxObject> obj;
 	std::unique_ptr<SampleParticleObject> obj2;
+
+	ObjModelObject* obj3 = nullptr;
+	WorldTransform world;
+
 	//std::unique_ptr<SampleSprite> sp;
 };
 

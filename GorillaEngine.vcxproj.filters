@@ -207,6 +207,9 @@
     <ClCompile Include="Game\3D\SampleParticleObject\SampleParticleObject.cpp">
       <Filter>ソース ファイル\Game\3D\SampleParticleObj</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\3D\ObjModelObject.cpp">
+      <Filter>ソース ファイル\Engine\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
@@ -287,6 +290,9 @@
     <ClInclude Include="Game\3D\SampleGeometryObject\SampleParticleObject.h">
       <Filter>ヘッダー ファイル\Game\3D\SampleParticleObj</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\3D\ObjModelObject.h">
+      <Filter>ヘッダー ファイル\Engine\3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">
@@ -310,6 +316,12 @@
     <FxCompile Include="Resources\shader\ParticleGS.hlsl">
       <Filter>リソース ファイル\Geometry</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\ObjPS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ObjVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Sprite.hlsli">
@@ -320,6 +332,9 @@
     </None>
     <None Include="Resources\shader\FBX.hlsli">
       <Filter>リソース ファイル\Fbx</Filter>
+    </None>
+    <None Include="Resources\shader\Obj.hlsli">
+      <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
 </Project>

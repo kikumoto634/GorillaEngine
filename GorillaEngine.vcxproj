@@ -155,6 +155,7 @@
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="Engine\2D\Sprite.cpp" />
     <ClCompile Include="Engine\3D\FbxModelObject.cpp" />
+    <ClCompile Include="Engine\3D\ObjModelObject.cpp" />
     <ClCompile Include="Engine\3D\ParticleObject.cpp" />
     <ClCompile Include="Engine\3D\ViewProjection.cpp" />
     <ClCompile Include="Engine\3D\WorldTransform.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="Engine\2D\Sprite.h" />
     <ClInclude Include="Engine\3D\FbxModelObject.h" />
+    <ClInclude Include="Engine\3D\ObjModelObject.h" />
     <ClInclude Include="Engine\3D\ParticleObject.h" />
     <ClInclude Include="Engine\3D\ViewProjection.h" />
     <ClInclude Include="Engine\3D\WorldTransform.h" />
@@ -214,11 +216,24 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\shader\Obj.hlsli" />
     <None Include="Resources\shader\FBX.hlsli" />
     <None Include="Resources\shader\Particle.hlsli" />
     <None Include="Resources\shader\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\shader\ObjPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ObjVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\shader\ParticleGS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
