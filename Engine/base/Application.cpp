@@ -80,6 +80,10 @@ void Application::Initialize()
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 	FbxModelObject::StaticInitialize(dxCommon);
 
+	//OBJ
+	ObjModelManager::StaticInitialize(dxCommon);
+	ObjModelObject::StaticInitialize(dxCommon);
+
 	scene->Initialize();
 }
 
@@ -103,6 +107,7 @@ void Application::Draw()
 
 void Application::Finalize()
 {
+	ObjModelObject::StaticFinalize();
 	FbxModelObject::StaticFinalize();
 	FbxLoader::GetInstance()->Finalize();
 	ParticleObject::StaticFinalize();

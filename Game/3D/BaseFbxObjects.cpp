@@ -17,7 +17,6 @@ void BaseFbxObjects::Update(Camera *camera)
 
 void BaseFbxObjects::Draw()
 {
-	//ƒvƒŒƒCƒ„[
 	object->Draw();
 }
 

@@ -12,6 +12,9 @@
 #include "FbxModelManager.h"
 #include "../Engine/3D/FbxModelObject.h"
 
+#include "../Engine/base/ObjModelManager.h"
+#include "../Engine/3D/ObjModelObject.h"
+
 
 #include "BaseScene.h"
 #include "../Engine/2D/Sprite.h"

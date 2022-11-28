@@ -1,24 +1,17 @@
 #pragma once
 
-#include "../Engine/base/Window.h"
-#include <wrl.h>
-#include <d3d12.h>
-#include <d3dx12.h>
 #include <DirectXMath.h>
 #include <string>
 
 #include "../Engine/base/FbxModelManager.h"
 #include "../Engine/loader/FbxLoader.h"
-#include "Camera.h"
-#include "../Engine/math/Vector/Vector2.h"
-#include "../Engine/math/Vector/Vector3.h"
+#include "../../camera/Camera.h"
 #include "WorldTransform.h"
 #include "../Engine/base/DirectXCommon.h"
 
 class FbxModelObject{
 protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
@@ -74,8 +67,6 @@ public:
 	void PlayAnimation();
 
 protected:
-	DirectX::XMFLOAT3 paralleLightVec = {1,-1,1};
-
 	ComPtr<ID3D12Resource> constBufferTransform;
 	//定数バッファ(スキン)
 	ComPtr<ID3D12Resource> constBufferSkin;

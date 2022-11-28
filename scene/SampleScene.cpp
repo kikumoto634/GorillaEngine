@@ -22,19 +22,15 @@ void SampleScene::Initialize()
 	BaseScene::Initialize();
 
 #pragma region _3D‰Šú‰»
-	/*obj = make_unique<SampleFbxObject>();
+	obj = make_unique<SampleFbxObject>();
 	obj->Initialize("cube");
-	obj->SetPosition({0, -50, 200});*/
+	obj->SetPosition({0, -50, 200});
 
 	obj2 = make_unique<SampleParticleObject>();
 	obj2->Initialize(1);
 
-	/*ObjModelObject::StaticInitialize(dxCommon->GetDevice(), window->GetWindowWidth(), window->GetWindowHeight());
-	obj3 = ObjModelObject::Create();
-	world.Initialize();
-	world.scale = {4,4,4};
-	world.UpdateMatrix();
-	obj3->Update(world, camera);*/
+	obj3 = make_unique<SampleObjObject>();
+	obj3->Initialize("aa");
 
 #pragma endregion _3D‰Šú‰»
 
@@ -70,11 +66,11 @@ void SampleScene::Update()
 	//Vector3 pos = Easing_Linear_Point2({0, 0, 300}, {0, -100, 300}, Time_OneWay(time, 2.f));
 	//Vector3 pos = Easing_Linear_Point3({0, 0, 300}, {0, -50, 500}, {0, -100, 300}, Time_Loop(time, 2.f));
 	//obj->SetPosition(pos);
-	//obj->Update(camera);
+	obj->Update(camera);
 
 	obj2->Update(camera);
 
-	//obj3->Update(world, camera);
+	obj3->Update(camera);
 #pragma endregion _3DXV
 
 #pragma region _2DXV
@@ -93,13 +89,11 @@ void SampleScene::Draw()
 #pragma endregion _2D_”wŒi•`‰æ
 
 #pragma region _3D•`‰æ
-	//obj->Draw();
+	obj->Draw();
 
 	obj2->Draw();
 
-	//ObjModelObject::PreDraw(dxCommon->GetCommandList());
-	//obj3->Draw();
-	//ObjModelObject::PostDraw();
+	obj3->Draw();
 
 #pragma endregion _3D•`‰æ
 
@@ -114,12 +108,11 @@ void SampleScene::Draw()
 void SampleScene::Finalize()
 {
 #pragma region _3D‰ğ•ú
-	//obj->Finalize();
+	obj->Finalize();
 
 	obj2->Finalize();
 
-	//delete obj3;
-	//obj3 = nullptr;
+	obj3->Finalize();
 #pragma endregion _3D‰ğ•ú
 
 #pragma region _2D‰ğ•ú

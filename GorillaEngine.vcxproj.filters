@@ -124,6 +124,15 @@
     <Filter Include="ソース ファイル\Game\math\Easing">
       <UniqueIdentifier>{58f3fda8-68f6-4077-8f5a-622afe7f52e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Obj">
+      <UniqueIdentifier>{64f7312d-974c-4d51-8c15-3186ca7f85ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\3D\SampleObjObj">
+      <UniqueIdentifier>{07f97024-e6e9-4372-922a-d8221dcfcaa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\3D\SampleObjObj">
+      <UniqueIdentifier>{8eb6ad4c-b470-42bd-847b-87701060ec31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -210,6 +219,15 @@
     <ClCompile Include="Engine\3D\ObjModelObject.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\ObjModelManager.cpp">
+      <Filter>ソース ファイル\Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\3D\BaseObjObject.cpp">
+      <Filter>ソース ファイル\Game\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\3D\SampleObjObject\SampleObjObject.cpp">
+      <Filter>ソース ファイル\Game\3D\SampleObjObj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
@@ -293,6 +311,15 @@
     <ClInclude Include="Engine\3D\ObjModelObject.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\ObjModelManager.h">
+      <Filter>ヘッダー ファイル\Engine\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\3D\BaseObjObject.h">
+      <Filter>ヘッダー ファイル\Game\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\3D\SampleObjObject\SampleObjObject.h">
+      <Filter>ヘッダー ファイル\Game\3D\SampleObjObj</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">
@@ -317,10 +344,10 @@
       <Filter>リソース ファイル\Geometry</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\ObjPS.hlsl">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\Obj</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\ObjVS.hlsl">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\Obj</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -334,7 +361,7 @@
       <Filter>リソース ファイル\Fbx</Filter>
     </None>
     <None Include="Resources\shader\Obj.hlsli">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\Obj</Filter>
     </None>
   </ItemGroup>
 </Project>

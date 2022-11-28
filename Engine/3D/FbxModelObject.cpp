@@ -1,7 +1,6 @@
 #include "FbxModelObject.h"
 
 #include <d3dcompiler.h>
-#include "../Engine/2D/Sprite.h"
 #pragma comment(lib, "d3dcompiler.lib")
 
 using namespace Microsoft::WRL;
@@ -101,11 +100,8 @@ bool FbxModelObject::Initialize()
 
 void FbxModelObject::Update(WorldTransform worldTransform, Camera* camera)
 {
-	XMFLOAT4 planeVec(0,1,0,0);
-
 	const XMMATRIX& matViewProjection = camera->GetViewProjectionMatrix();
 	const XMMATRIX& modelTranslation = model->GetModelTransform();
-	const XMMATRIX& modelshadow = XMMatrixShadow(XMLoadFloat4(&planeVec),-XMLoadFloat3(&paralleLightVec));
 	const Vector3& cameraPos = camera->GetEye();
 
 	HRESULT result;
@@ -114,7 +110,6 @@ void FbxModelObject::Update(WorldTransform worldTransform, Camera* camera)
 	if(SUCCEEDED(result)){
 		constMap->viewproj = matViewProjection;
 		constMap->world = modelTranslation * worldTransform.matWorld;
-		constMap->shadow = modelshadow;
 		constMap->cameraPos = cameraPos;
 		constBufferTransform->Unmap(0, nullptr);
 	}
