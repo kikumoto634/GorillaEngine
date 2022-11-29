@@ -39,6 +39,12 @@ public:
 	/// <param name="move">移動量</param>
 	void MoveVector(Vector3 move);
 
+	/// <summary>
+	/// 回転
+	/// </summary>
+	/// <param name="rot">回転量</param>
+	void RotVector(Vector3 rot);
+
 	//getter
 	const XMMATRIX& GetMatProjection()	{return view.matProjection;}
 	const XMMATRIX& GetMatView()	{return view.matView;}
@@ -48,12 +54,14 @@ public:
 	const Vector3& GetEye() {return view.eye; }
 	const Vector3& GetTarget() {return view.target; }
 	const Vector3& GetUp() {return view.up; }
+	const float& Distance() {return distance; }
 	const DirectX::XMMATRIX& GetBillboard() {return view.matBillboard;}
 
 	//setter
 	void SetEye(const Vector3& eye)	{this->view.eye = eye; }
 	void SetTarget(const Vector3& target)	{this->view.target = target; }
 	void SetUp(const Vector3& up)	{this->view.up = up; }
+	void SetDistance(const float& distance)	{this->distance = distance; }
 
 private:
 	//アスペクト用
@@ -61,5 +69,9 @@ private:
 
 protected:
 	ViewProjection view;
+	float distance = 20.f;	//カメラの距離
+
+	//回転行列
+	XMMATRIX matRot = DirectX::XMMatrixIdentity();
 };
 

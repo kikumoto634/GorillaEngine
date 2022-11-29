@@ -47,17 +47,10 @@ void SampleScene::Update()
 #pragma region “ü—Íˆ—
 
 	if(input->Push(DIK_A)){
-		camera->MoveEyeVeector({XMConvertToRadians(-30.f), 0.f, 0.f});
+		camera->RotVector({0.f, XMConvertToRadians(3.f), 0.f});
 	}
 	else if(input->Push(DIK_D)){
-		camera->MoveEyeVeector({XMConvertToRadians(30.f), 0.f, 0.f});
-	}
-
-	if(input->Push(DIK_S)){
-		camera->MoveEyeVeector({0.f, XMConvertToRadians(-30.f), 0.f});
-	}
-	else if(input->Push(DIK_W)){
-		camera->MoveEyeVeector({0.f, XMConvertToRadians(30.f), 0.f});
+		camera->RotVector({0.f,XMConvertToRadians(-3.f), 0.f});
 	}
 
 #pragma endregion “ü—Íˆ—
