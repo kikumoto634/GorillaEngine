@@ -29,8 +29,17 @@ void SampleScene::Initialize()
 	obj2 = make_unique<SampleParticleObject>();
 	obj2->Initialize(1);
 
-	obj3 = make_unique<SampleObjObject>();
-	obj3->Initialize("chr_sword");
+	obj3_1 = make_unique<SampleObjObject>();
+	obj3_1->Initialize("chr_sword");
+	obj3_1->SetPosition({1,0,0});
+
+	obj3_2 = make_unique<SampleObjObject>();
+	obj3_2->Initialize("ground");
+	obj3_2->SetPosition({0,-1,0});
+
+	obj3_3 = make_unique<SampleObjObject>();
+	obj3_3->Initialize("sphere");
+	obj3_3->SetPosition({-1,0,0});
 
 #pragma endregion _3D‰Šú‰»
 
@@ -56,17 +65,19 @@ void SampleScene::Update()
 #pragma endregion “ü—Íˆ—
 
 #pragma region _3DXV
-	//Vector3 pos = Easing_Linear_Point2({0, 0, 300}, {0, -100, 300}, Time_OneWay(time, 2.f));
-	//Vector3 pos = Easing_Linear_Point3({0, 0, 300}, {0, -50, 500}, {0, -100, 300}, Time_Loop(time, 2.f));
-	//obj->SetPosition(pos);
-	Vector3 rot = obj->GetRotation();
+	/*Vector3 pos = Easing_Linear_Point2({0, 0, 300}, {0, -100, 300}, Time_OneWay(time, 2.f));
+	Vector3 pos = Easing_Linear_Point3({0, 0, 300}, {0, -50, 500}, {0, -100, 300}, Time_Loop(time, 2.f));
+	obj->SetPosition(pos);*/
+	/*Vector3 rot = obj->GetRotation();
 	rot.y += XMConvertToRadians(3.f);
-	obj->SetRotation(rot);
+	obj->SetRotation(rot);*/
 	obj->Update(camera);
 
 	obj2->Update(camera);
 
-	obj3->Update(camera);
+	obj3_1->Update(camera);
+	obj3_2->Update(camera);
+	obj3_3->Update(camera);
 #pragma endregion _3DXV
 
 #pragma region _2DXV
@@ -85,11 +96,13 @@ void SampleScene::Draw()
 #pragma endregion _2D_”wŒi•`‰æ
 
 #pragma region _3D•`‰æ
-	obj->Draw();
+	//obj->Draw();
 
 	obj2->Draw();
 
-	obj3->Draw();
+	obj3_1->Draw();
+	obj3_2->Draw();
+	obj3_3->Draw();
 
 #pragma endregion _3D•`‰æ
 
@@ -108,7 +121,9 @@ void SampleScene::Finalize()
 
 	obj2->Finalize();
 
-	obj3->Finalize();
+	obj3_1->Finalize();
+	obj3_2->Finalize();
+	obj3_3->Finalize();
 #pragma endregion _3D‰ð•ú
 
 #pragma region _2D‰ð•ú

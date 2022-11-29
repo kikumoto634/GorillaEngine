@@ -46,7 +46,9 @@ private:
 
 	std::unique_ptr<SampleParticleObject> obj2;
 
-	std::unique_ptr<SampleObjObject> obj3;
+	std::unique_ptr<SampleObjObject> obj3_1;
+	std::unique_ptr<SampleObjObject> obj3_2;
+	std::unique_ptr<SampleObjObject> obj3_3;
 
 	//std::unique_ptr<SampleSprite> sp;
 };
