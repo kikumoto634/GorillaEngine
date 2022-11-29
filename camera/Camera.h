@@ -11,7 +11,7 @@
 /// </summary>
 class Camera
 {
-public:
+protected:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
@@ -31,7 +31,13 @@ public:
 	/// ’‹“_ˆÚ“®
 	/// </summary>
 	/// <param name="move">ˆÚ“®—Ê(radian‚ğİ’è)</param>
-	void CameraMoveEyeVeector(Vector3 move);
+	void MoveEyeVeector(Vector3 move);
+
+	/// <summary>
+	/// ƒJƒƒ‰ˆÚ“®
+	/// </summary>
+	/// <param name="move">ˆÚ“®—Ê</param>
+	void MoveVector(Vector3 move);
 
 	//getter
 	const XMMATRIX& GetMatProjection()	{return view.matProjection;}

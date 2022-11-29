@@ -4,6 +4,7 @@
 #include <d3d12.h>
 #include <vector>
 #include <d3dx12.h>
+#include <string>
 
 #include "../math/Vector/Vector2.h"
 #include "../math/Vector/Vector3.h"
@@ -48,7 +49,7 @@ public:
 public:
 	~ObjModelManager();
 
-	void CreateModel();
+	void CreateModel(std::string filePath);
 
 	void Draw(ID3D12GraphicsCommandList* commandList);
 

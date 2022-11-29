@@ -30,7 +30,7 @@ void SampleScene::Initialize()
 	obj2->Initialize(1);
 
 	obj3 = make_unique<SampleObjObject>();
-	obj3->Initialize("aa");
+	obj3->Initialize("triangle_mat");
 
 #pragma endregion _3D‰Šú‰»
 
@@ -47,17 +47,17 @@ void SampleScene::Update()
 #pragma region “ü—Íˆ—
 
 	if(input->Push(DIK_A)){
-		camera->CameraMoveEyeVeector({XMConvertToRadians(-30.f), 0.f, 0.f});
+		camera->MoveEyeVeector({XMConvertToRadians(-30.f), 0.f, 0.f});
 	}
 	else if(input->Push(DIK_D)){
-		camera->CameraMoveEyeVeector({XMConvertToRadians(30.f), 0.f, 0.f});
+		camera->MoveEyeVeector({XMConvertToRadians(30.f), 0.f, 0.f});
 	}
 
 	if(input->Push(DIK_S)){
-		camera->CameraMoveEyeVeector({0.f, XMConvertToRadians(-30.f), 0.f});
+		camera->MoveEyeVeector({0.f, XMConvertToRadians(-30.f), 0.f});
 	}
 	else if(input->Push(DIK_W)){
-		camera->CameraMoveEyeVeector({0.f, XMConvertToRadians(30.f), 0.f});
+		camera->MoveEyeVeector({0.f, XMConvertToRadians(30.f), 0.f});
 	}
 
 #pragma endregion “ü—Íˆ—

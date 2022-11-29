@@ -30,9 +30,21 @@ void Camera::Update()
 	view.UpdateProjectionMatrix(window->GetWindowWidth(),window->GetWindowHeight());
 }
 
-void Camera::CameraMoveEyeVeector(Vector3 move)
+void Camera::MoveEyeVeector(Vector3 move)
 {
-	view.eye += move;
+	Vector3 eye_= GetEye();
+	eye_ += move;
+	SetEye(eye_);
+}
+
+void Camera::MoveVector(Vector3 move)
+{
+	Vector3 eye_ = GetEye();
+	Vector3 target_ = GetTarget();
+	eye_ += move;
+	target_ += move;
+	SetEye(eye_);
+	SetTarget(target_);
 }
 
 

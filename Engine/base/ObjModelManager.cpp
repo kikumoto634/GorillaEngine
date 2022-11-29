@@ -21,7 +21,7 @@ ObjModelManager::~ObjModelManager()
 {
 }
 
-void ObjModelManager::CreateModel()
+void ObjModelManager::CreateModel(std::string filePath)
 {
 	HRESULT result = S_FALSE;
 
@@ -36,9 +36,10 @@ void ObjModelManager::CreateModel()
 	//ファイルストリーム
 	ifstream file;
 	//.objファイルを開く
-	const string modelname = "triangle_mat";
+	const string modelname = filePath;
 	const string filename = modelname + ".obj";
 	const string directoryPath = "Resources/" + modelname + "/";
+	//LoadTexture("Resources/", "white1x1.png");
 	file.open(directoryPath + filename);
 	//ファイルオープン失敗
 	assert(file.fill());

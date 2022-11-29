@@ -3,7 +3,7 @@
 void BaseObjObject::Initialize(std::string filePath)
 {
 	model = new ObjModelManager();
-	model->CreateModel();
+	model->CreateModel(filePath);
 	object = ObjModelObject::Create(model);
 	world.Initialize();
 }
