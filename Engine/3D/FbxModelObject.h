@@ -34,7 +34,6 @@ public:
 	struct ConstBufferDataTransform{
 		XMMATRIX viewproj;
 		XMMATRIX world;
-		XMMATRIX shadow;
 		Vector3 cameraPos;
 	};
 
