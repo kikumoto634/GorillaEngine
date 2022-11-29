@@ -29,8 +29,8 @@ void SampleScene::Initialize()
 	obj2 = make_unique<SampleParticleObject>();
 	obj2->Initialize(1);
 
-	obj3 = make_unique<SampleObjObject>();
-	obj3->Initialize("triangle_mat");
+	//obj3 = make_unique<SampleObjObject>();
+	//obj3->Initialize("triangle_mat");
 
 #pragma endregion _3D初期化
 
@@ -63,7 +63,7 @@ void SampleScene::Update()
 
 	obj2->Update(camera);
 
-	obj3->Update(camera);
+	//obj3->Update(camera);
 #pragma endregion _3D更新
 
 #pragma region _2D更新
@@ -86,7 +86,7 @@ void SampleScene::Draw()
 
 	obj2->Draw();
 
-	obj3->Draw();
+	//obj3->Draw();
 
 #pragma endregion _3D描画
 
@@ -105,7 +105,7 @@ void SampleScene::Finalize()
 
 	obj2->Finalize();
 
-	obj3->Finalize();
+	//obj3->Finalize();
 #pragma endregion _3D解放
 
 #pragma region _2D解放
