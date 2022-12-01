@@ -35,6 +35,8 @@ void ObjModelManager::CreateModel(std::string filePath)
 
 	//ファイルストリーム
 	ifstream file;
+	int indexCountTex = 0;
+
 	//.objファイルを開く
 	const string modelname = filePath;
 	const string filename = modelname + ".obj";
@@ -62,12 +64,15 @@ void ObjModelManager::CreateModel(std::string filePath)
 			positions.emplace_back(position);
 		}
 		if(key == "f"){
+			int faceIndexCount = 0;
 			string index_string;
 			while(getline(line_stream, index_string, ' ')){
 				istringstream index_stream(index_string);
 				unsigned short indexPosition, indexNormal, indexTexcoord;
 				index_stream >> indexPosition;
 				index_stream.seekg(1,ios_base::cur);
+
+
 				index_stream >> indexTexcoord;
 				index_stream.seekg(1, ios_base::cur);
 				index_stream >> indexNormal;
@@ -77,7 +82,19 @@ void ObjModelManager::CreateModel(std::string filePath)
 				vertex.normal = normals[indexNormal - 1];
 				vertex.uv = texcoords[indexTexcoord - 1];
 				vertices.emplace_back(vertex);
-				indices.emplace_back((unsigned short)indices.size());
+
+				// インデックスデータの追加
+				if (faceIndexCount >= 3) {
+					// 四角形ポリゴンの4点目なので、
+					// 四角形の0,1,2,3の内 2,3,0で三角形を構築する
+					indices.emplace_back(indexCountTex - 1);
+					indices.emplace_back(indexCountTex);
+					indices.emplace_back(indexCountTex - 3);
+				} else {
+					indices.emplace_back(indexCountTex);
+				}
+				indexCountTex++;
+				faceIndexCount++;
 			}
 		}
 		if(key == "vt"){

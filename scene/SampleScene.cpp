@@ -41,6 +41,9 @@ void SampleScene::Initialize()
 	obj3_3->Initialize("sphere");
 	obj3_3->SetPosition({-1,0,0});
 
+	obj3_4 = make_unique<SampleObjObject>();
+	obj3_4->Initialize("skydome");
+
 #pragma endregion _3D初期化
 
 #pragma region _2D初期化
@@ -78,6 +81,7 @@ void SampleScene::Update()
 	obj3_1->Update(camera);
 	obj3_2->Update(camera);
 	obj3_3->Update(camera);
+	obj3_4->Update(camera);
 #pragma endregion _3D更新
 
 #pragma region _2D更新
@@ -103,6 +107,7 @@ void SampleScene::Draw()
 	obj3_1->Draw();
 	obj3_2->Draw();
 	obj3_3->Draw();
+	obj3_4->Draw();
 
 #pragma endregion _3D描画
 
@@ -124,6 +129,7 @@ void SampleScene::Finalize()
 	obj3_1->Finalize();
 	obj3_2->Finalize();
 	obj3_3->Finalize();
+	obj3_4->Finalize();
 #pragma endregion _3D解放
 
 #pragma region _2D解放
