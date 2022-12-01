@@ -5,6 +5,7 @@
 #include <vector>
 #include <d3dx12.h>
 #include <string>
+#include <unordered_map>
 
 #include "../math/Vector/Vector2.h"
 #include "../math/Vector/Vector3.h"
@@ -49,12 +50,30 @@ public:
 public:
 	~ObjModelManager();
 
-	void CreateModel(std::string filePath);
+	void CreateModel(std::string filePath, bool smmothing = false);
 
 	void Draw(ID3D12GraphicsCommandList* commandList);
 
+	/// <summary>
+	/// エッジ平坦化データの追加
+	/// </summary>
+	/// <param name="indexPosition">座標インデックス</param>
+	/// <param name="indexVertex">頂点インデックス</param>
+	void AddSmmpthData(unsigned short indexPosition, unsigned short indexVertex);
+
+	/// <summary>
+	/// 平坦化された頂点法線の計算
+	/// </summary>
+	void CalculateSmoothedVertexNormals();
+
 	//Getter
 	Material GetMaterial()	{return material;}
+
+	/// <summary>
+	/// 頂点データ数を取得
+	/// </summary>
+	/// <returns>頂点データの数</returns>
+	inline size_t GetVertexCount()	{return vertices.size();}
 
 private:
 	/// <summary>
@@ -96,4 +115,7 @@ private:
 
 	//マテリアル
 	Material material;
+
+	//頂点用法線スムーシング用データ
+	std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData;
 };

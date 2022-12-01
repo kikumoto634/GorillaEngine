@@ -9,7 +9,7 @@ class BaseObjObject
 	/// <summary>
 	/// èâä˙âª
 	/// </summary>
-	virtual void Initialize(std::string filePath);
+	virtual void Initialize(std::string filePath, bool IsSmmothing = false);
 
 	/// <summary>
 	/// çXêV
@@ -32,10 +32,10 @@ class BaseObjObject
 	const Vector3& GetPosition()	{return world.translation;}
 	const Vector3& GetRotation()	{return world.rotation;}
 
+
 	//Setter
 	void SetPosition(const Vector3& position)	{world.translation = position;}
 	void SetRotation(const Vector3& rotation)	{world.rotation = rotation;}
-
 protected:
 	ObjModelManager* model;
 	ObjModelObject* object;

@@ -21,7 +21,7 @@ ObjModelManager::~ObjModelManager()
 {
 }
 
-void ObjModelManager::CreateModel(std::string filePath)
+void ObjModelManager::CreateModel(std::string filePath, bool smmothing)
 {
 	HRESULT result = S_FALSE;
 
@@ -55,7 +55,17 @@ void ObjModelManager::CreateModel(std::string filePath)
 		string key;
 		getline(line_stream, key, ' ');
 
-
+		if(key == "g")
+		{
+			if(modelname.size() > 0)
+			{
+				CalculateSmoothedVertexNormals();
+				indexCountTex = 0;
+			}
+			// グループ名読み込み
+			string groupName;
+			line_stream >> groupName;
+		}
 		if(key == "v"){
 			Vector3 position{};
 			line_stream >> position.x;
@@ -82,6 +92,13 @@ void ObjModelManager::CreateModel(std::string filePath)
 				vertex.normal = normals[indexNormal - 1];
 				vertex.uv = texcoords[indexTexcoord - 1];
 				vertices.emplace_back(vertex);
+
+				//エッジ平滑化用のデータ追加
+				if(smmothing)
+				{
+					//vキー(座標データ)の番号と、すべて合成した頂点のインデックスをセットで登録する
+					AddSmmpthData(indexPosition, (unsigned short)GetVertexCount() - 1);
+				}
 
 				// インデックスデータの追加
 				if (faceIndexCount >= 3) {
@@ -119,6 +136,11 @@ void ObjModelManager::CreateModel(std::string filePath)
 	}
 
 	file.close();
+
+	//頂点法線の平均によるエッジの平滑化
+	if(smmothing){
+		CalculateSmoothedVertexNormals();
+	}
 
 	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv)*vertices.size());
 
@@ -184,6 +206,30 @@ void ObjModelManager::Draw(ID3D12GraphicsCommandList* commandList)
 	 commandList->SetGraphicsRootDescriptorTable(2, descHeap->GetGPUDescriptorHandleForHeapStart());
 	// 描画コマンド
 	commandList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
+}
+
+void ObjModelManager::AddSmmpthData(unsigned short indexPosition, unsigned short indexVertex)
+{
+	smoothData[indexPosition].emplace_back(indexVertex);
+}
+
+void ObjModelManager::CalculateSmoothedVertexNormals()
+{
+	auto it = smoothData.begin();
+	for(; it != smoothData.end(); ++it){
+		//各面用の共通頂点コレクション
+		std::vector<unsigned short>& v = it->second;
+		//全頂点の法線を平均化する
+		XMVECTOR normal = {};
+		for(unsigned short index : v){
+			normal += XMVectorSet(vertices[index].normal.x, vertices[index].normal.y, vertices[index].normal.z,0);
+		}
+		normal = XMVector3Normalize(normal/(float)v.size());
+		//共通法線を使用するすべての頂点データに書き込む
+		for(unsigned short index : v){
+			vertices[index].normal = {normal.m128_f32[0], normal.m128_f32[1], normal.m128_f32[2]};
+		}
+	}
 }
 
 void ObjModelManager::LoadTexture(const std::string &directoryPath, const std::string &filename)

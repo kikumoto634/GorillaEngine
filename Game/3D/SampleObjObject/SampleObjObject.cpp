@@ -5,9 +5,9 @@ SampleObjObject::~SampleObjObject()
 	Finalize();
 }
 
-void SampleObjObject::Initialize(std::string filePath)
+void SampleObjObject::Initialize(std::string filePath, bool IsSmoothing)
 {
-	BaseObjObject::Initialize(filePath);
+	BaseObjObject::Initialize(filePath, IsSmoothing);
 }
 
 void SampleObjObject::Update(Camera *camera)

@@ -1,9 +1,9 @@
 #include "BaseObjObject.h"
 
-void BaseObjObject::Initialize(std::string filePath)
+void BaseObjObject::Initialize(std::string filePath, bool IsSmmothing)
 {
 	model = new ObjModelManager();
-	model->CreateModel(filePath);
+	model->CreateModel(filePath, IsSmmothing);
 	object = ObjModelObject::Create(model);
 	world.Initialize();
 }

@@ -22,9 +22,9 @@ void SampleScene::Initialize()
 	BaseScene::Initialize();
 
 #pragma region _3Dèâä˙âª
-	obj = make_unique<SampleFbxObject>();
-	obj->Initialize("cube");
-	obj->SetPosition({0, -50, 200});
+	//obj = make_unique<SampleFbxObject>();
+	//obj->Initialize("cube");
+	//obj->SetPosition({0, -50, 200});
 
 	obj2 = make_unique<SampleParticleObject>();
 	obj2->Initialize(1);
@@ -38,8 +38,9 @@ void SampleScene::Initialize()
 	obj3_2->SetPosition({0,-1,0});
 
 	obj3_3 = make_unique<SampleObjObject>();
-	obj3_3->Initialize("sphere");
+	obj3_3->Initialize("sphere", true);
 	obj3_3->SetPosition({-1,0,0});
+
 
 	obj3_4 = make_unique<SampleObjObject>();
 	obj3_4->Initialize("skydome");
@@ -74,7 +75,7 @@ void SampleScene::Update()
 	/*Vector3 rot = obj->GetRotation();
 	rot.y += XMConvertToRadians(3.f);
 	obj->SetRotation(rot);*/
-	obj->Update(camera);
+	//obj->Update(camera);
 
 	obj2->Update(camera);
 
@@ -122,7 +123,7 @@ void SampleScene::Draw()
 void SampleScene::Finalize()
 {
 #pragma region _3Dâï˙
-	obj->Finalize();
+	//obj->Finalize();
 
 	obj2->Finalize();
 

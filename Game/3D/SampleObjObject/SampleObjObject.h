@@ -10,7 +10,7 @@ public:
 	/// <summary>
 	/// ‰Šú‰»
 	/// </summary>
-	void Initialize(std::string filePath) override;
+	void Initialize(std::string filePath, bool IsSmoothing = false) override;
 
 	/// <summary>
 	/// XV
