@@ -1,10 +1,13 @@
 #pragma once
 #include "BaseScene.h"
+#include "../Engine/light/Light.h"
+
 #include "../Game/3D/SampleParticleObject/SampleParticleObject.h"
 #include "../Game/3D/SampleFbxObject/SampleFbxObject.h"
 #include "../Game/3D/SampleObjObject/SampleObjObject.h"
 
 #include "../Game/2D/SampleSprite/SampleSprite.h"
+
 
 
 class SampleScene : public BaseScene
@@ -41,6 +44,8 @@ public:
 
 private:
 	float time = 0.f;
+
+	Light* light = nullptr;
 
 	std::unique_ptr<SampleFbxObject> obj;
 

@@ -85,10 +85,15 @@ void ObjModelObject::Update(WorldTransform world, Camera* camera)
 {
 	HRESULT result {};
 
+	const XMMATRIX& matViewProjection = camera->GetViewProjectionMatrix();
+	const Vector3& cameraPos = camera->GetEye();
+
 	// 定数バッファへデータ転送
 	ConstBufferDataB0* constMapB0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMapB0);
-	constMapB0->mat = world.matWorld * camera->GetMatView() * camera->GetMatProjection();	// 行列の合成
+	constMapB0->viewproj = matViewProjection;
+	constMapB0->world = world.matWorld;
+	constMapB0->cameraPos = cameraPos;
 	constBuffB0->Unmap(0, nullptr);
 
 	ConstBufferDataB1* constMapB1 = nullptr;
@@ -113,6 +118,9 @@ void ObjModelObject::Draw()
 	common->dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	common->dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
+	//ライト
+	common->light->Draw(3);
+	//モデル
 	model->Draw(common->dxCommon->GetCommandList());
 }
 
@@ -236,10 +244,11 @@ void ObjModelObject::CommonObj::InitializeGraphicsPipeline()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[3];
+	CD3DX12_ROOT_PARAMETER rootparams[4];
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[3].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);

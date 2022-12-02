@@ -84,6 +84,9 @@ void Application::Initialize()
 	ObjModelManager::StaticInitialize(dxCommon);
 	ObjModelObject::StaticInitialize(dxCommon);
 
+	//Light
+	Light::StaticInitialize(dxCommon);
+
 	scene->Initialize();
 }
 

@@ -7,6 +7,7 @@
 #include "../../camera/Camera.h"
 #include "../base/ObjModelManager.h"
 #include "../base/DirectXCommon.h"
+#include "../light/Light.h"
 
 
 /// <summary>
@@ -33,12 +34,16 @@ public: // サブクラス
 		ComPtr<ID3D12RootSignature> rootsignature;
 		// パイプラインステートオブジェクト
 		ComPtr<ID3D12PipelineState> pipelinestate;
+		//ライト
+		Light* light;
 	};
 
 	// 定数バッファ用データ構造体
 	struct ConstBufferDataB0
 	{
-		XMMATRIX mat;	// ３Ｄ変換行列
+		XMMATRIX viewproj;		//ビュープロジェクション
+		XMMATRIX world;			//ワールド
+		Vector3 cameraPos;		//カメラ座標
 	};
 	struct ConstBufferDataB1
 	{
@@ -61,6 +66,9 @@ public: // 静的メンバ関数
 	/// </summary>
 	/// <returns></returns>
 	static ObjModelObject* Create(ObjModelManager* model);
+
+	//Setter
+	static void SetLight(Light* light)	{common->light = light;}
 
 
 private: // 静的メンバ変数

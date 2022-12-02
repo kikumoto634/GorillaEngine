@@ -133,6 +133,12 @@
     <Filter Include="ヘッダー ファイル\Game\3D\SampleObjObj">
       <UniqueIdentifier>{8eb6ad4c-b470-42bd-847b-87701060ec31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\light">
+      <UniqueIdentifier>{b4402cd7-b145-4e61-b62e-0725987c2eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\light">
+      <UniqueIdentifier>{73c5446c-2f9a-4ac4-8d7e-cba68206dc02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -228,6 +234,9 @@
     <ClCompile Include="Game\3D\SampleObjObject\SampleObjObject.cpp">
       <Filter>ソース ファイル\Game\3D\SampleObjObj</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\light\Light.cpp">
+      <Filter>ソース ファイル\Engine\light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
@@ -319,6 +328,9 @@
     </ClInclude>
     <ClInclude Include="Game\3D\SampleObjObject\SampleObjObject.h">
       <Filter>ヘッダー ファイル\Game\3D\SampleObjObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\light\Light.h">
+      <Filter>ヘッダー ファイル\Engine\light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

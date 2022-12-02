@@ -2,6 +2,10 @@
 
 #include "../Engine/math//Easing/Easing.h"
 
+//ライト動かすよう
+#include <sstream>
+#include <iomanip>
+
 using namespace std;
 using namespace DirectX;
 
@@ -20,6 +24,15 @@ void SampleScene::Application()
 void SampleScene::Initialize()
 {
 	BaseScene::Initialize();
+
+#pragma region 汎用初期化
+	//ライト生成
+	light = Light::Create();
+	//色設定
+	light->SetLightColor({1,1,1});
+	//3Dオブジェクト(.obj)にセット
+	ObjModelObject::SetLight(light);
+#pragma endregion 汎用初期化
 
 #pragma region _3D初期化
 	//obj = make_unique<SampleFbxObject>();
@@ -66,21 +79,35 @@ void SampleScene::Update()
 		camera->RotVector({0.f,XMConvertToRadians(-3.f), 0.f});
 	}
 
+	//ライト動かす
+	{
+		//光線方向初期値値
+		static XMVECTOR lightDir = {0,1,5,0};
+
+		if(input->Push(DIK_UP))	{lightDir.m128_f32[1] += 1.0f;}
+		else if(input->Push(DIK_DOWN))	{lightDir.m128_f32[1] -= 1.0f;}
+		if(input->Push(DIK_RIGHT))	{lightDir.m128_f32[0] += 1.0f;}
+		else if(input->Push(DIK_LEFT))	{lightDir.m128_f32[0] -= 1.0f;}
+
+		light->SetLightDir(lightDir);
+	}
+
 #pragma endregion 入力処理
 
 #pragma region _3D更新
 	/*Vector3 pos = Easing_Linear_Point2({0, 0, 300}, {0, -100, 300}, Time_OneWay(time, 2.f));
 	Vector3 pos = Easing_Linear_Point3({0, 0, 300}, {0, -50, 500}, {0, -100, 300}, Time_Loop(time, 2.f));
 	obj->SetPosition(pos);*/
-	/*Vector3 rot = obj->GetRotation();
-	rot.y += XMConvertToRadians(3.f);
-	obj->SetRotation(rot);*/
 	//obj->Update(camera);
 
 	obj2->Update(camera);
 
 	obj3_1->Update(camera);
 	obj3_2->Update(camera);
+
+	Vector3 rot = obj3_3->GetRotation();
+	rot.y += XMConvertToRadians(1.f);
+	obj3_3->SetRotation(rot);
 	obj3_3->Update(camera);
 	obj3_4->Update(camera);
 #pragma endregion _3D更新
@@ -88,6 +115,12 @@ void SampleScene::Update()
 #pragma region _2D更新
 	//sp->Update();
 #pragma endregion _2D更新
+
+#pragma region 汎用更新
+
+	light->Update();
+
+#pragma endregion 汎用更新
 
 	BaseScene::EndUpdate();
 }
@@ -136,6 +169,13 @@ void SampleScene::Finalize()
 #pragma region _2D解放
 	//sp->Finalize();
 #pragma endregion _2D解放
+
+#pragma region 汎用解放
+
+	delete light;
+	light =nullptr;
+
+#pragma endregion 汎用解放
 
 	BaseScene::Finalize();
 }
