@@ -167,7 +167,9 @@
     <ClCompile Include="Engine\base\TextureManager.cpp" />
     <ClCompile Include="Engine\base\Window.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
-    <ClCompile Include="Engine\light\Light.cpp" />
+    <ClCompile Include="Engine\light\DirectionalLight.cpp" />
+    <ClCompile Include="Engine\light\LightGroup.cpp" />
+    <ClCompile Include="Engine\light\PointLight.cpp" />
     <ClCompile Include="Engine\loader\FbxLoader.cpp" />
     <ClCompile Include="Engine\math\Easing\Easing.cpp" />
     <ClCompile Include="Engine\math\Vector\Vector2.cpp" />
@@ -201,7 +203,9 @@
     <ClInclude Include="Engine\base\TextureManager.h" />
     <ClInclude Include="Engine\base\Window.h" />
     <ClInclude Include="Engine\input\Input.h" />
-    <ClInclude Include="Engine\light\Light.h" />
+    <ClInclude Include="Engine\light\DirectionalLight.h" />
+    <ClInclude Include="Engine\light\LightGroup.h" />
+    <ClInclude Include="Engine\light\PointLight.h" />
     <ClInclude Include="Engine\loader\FbxLoader.h" />
     <ClInclude Include="Engine\math\Easing\Easing.h" />
     <ClInclude Include="Engine\math\Vector\Vector2.h" />

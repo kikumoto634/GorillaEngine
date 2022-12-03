@@ -27,7 +27,7 @@ void SampleScene::Initialize()
 
 #pragma region 汎用初期化
 	//ライト生成
-	light = Light::Create();
+	light = DirectionalLight::Create();
 	//色設定
 	light->SetLightColor({1,1,1});
 	//3Dオブジェクト(.obj)にセット

@@ -1,27 +1,27 @@
-#include "Light.h"
+#include "DirectionalLight.h"
 
-DirectXCommon* Light::dxCommon = nullptr;
+DirectXCommon* DirectionalLight::dxCommon = nullptr;
 
 using namespace DirectX;
 
-Light *Light::Create()
+DirectionalLight *DirectionalLight::Create()
 {
 	//3Dオブジェクトのインスタンス化
-	Light* instance = new Light();
+	DirectionalLight* instance = new DirectionalLight();
 	//初期化
 	instance->Initialize();
 	//生成したインスタンスを返す
 	return instance;
 }
 
-void Light::StaticInitialize(DirectXCommon* dxCommon)
+void DirectionalLight::StaticInitialize(DirectXCommon* dxCommon)
 {
-	assert(!Light::dxCommon);
+	assert(!DirectionalLight::dxCommon);
 	assert(dxCommon);
-	Light::dxCommon = dxCommon;
+	DirectionalLight::dxCommon = dxCommon;
 }
 
-void Light::Initialize()
+void DirectionalLight::Initialize()
 {
 	HRESULT result;
 	//定数バッファ生成
@@ -39,7 +39,7 @@ void Light::Initialize()
 	TransferConstBuffer();
 }
 
-void Light::Update()
+void DirectionalLight::Update()
 {
 	//値の更新があった時だけに定数バッファに転送する
 	if(IsDirty){
@@ -48,7 +48,7 @@ void Light::Update()
 	}
 }
 
-void Light::Draw(UINT rootParameterIndex)
+void DirectionalLight::Draw(UINT rootParameterIndex)
 {
 	//定数バッファビューをセット
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(
@@ -57,7 +57,7 @@ void Light::Draw(UINT rootParameterIndex)
 	);
 }
 
-void Light::TransferConstBuffer()
+void DirectionalLight::TransferConstBuffer()
 {
 	HRESULT result;
 	//定数バッファ転送
@@ -71,13 +71,13 @@ void Light::TransferConstBuffer()
 	}
 }
 
-void Light::SetLightDir(const DirectX::XMVECTOR &lightdir)
+void DirectionalLight::SetLightDir(const DirectX::XMVECTOR &lightdir)
 {
 	this->lightdir = XMVector3Normalize(lightdir);
 	IsDirty = true;
 }
 
-void Light::SetLightColor(const Vector3 lightcolor)
+void DirectionalLight::SetLightColor(const Vector3 lightcolor)
 {
 	this->lightcolor = lightcolor;
 	IsDirty = true;

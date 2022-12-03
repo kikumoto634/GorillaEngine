@@ -9,7 +9,7 @@
 #include "../math//Vector/Vector4.h"
 #include "../base/DirectXCommon.h"
 
-class Light
+class DirectionalLight
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -24,7 +24,7 @@ public:
 
 //ê√ìIÉÅÉìÉoä÷êî
 public:
-	static Light* Create();
+	static DirectionalLight* Create();
 
 	static void StaticInitialize(DirectXCommon* dxCommon);
 
@@ -37,6 +37,10 @@ public:
 	void Draw(UINT rootParameterIndex);
 
 	void TransferConstBuffer();
+
+	//Getter
+	const DirectX::XMVECTOR GetLightDir()	{return lightdir;}
+	const Vector3& GetLightColor()	{return lightcolor;}
 
 	//Setter
 	void SetLightDir(const DirectX::XMVECTOR& lightdir);

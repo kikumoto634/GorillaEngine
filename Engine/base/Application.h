@@ -15,7 +15,7 @@
 #include "../Engine/base/ObjModelManager.h"
 #include "../Engine/3D/ObjModelObject.h"
 
-#include "../light/Light.h"
+#include "../light/DirectionalLight.h"
 
 
 #include "BaseScene.h"
