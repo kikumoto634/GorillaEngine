@@ -8,16 +8,8 @@ VSOutput main(float4 pos : POSITION, float3 normal : NORMAL, float2 uv : TEXCOOR
 
 	VSOutput output;
 	output.svpos = mul(mul(viewproj,world),pos);
-
-	float3 ambient = m_ambient;
-	float3 diffuse = dot(lightv, wnormal.xyz) * m_diffuse;
-	const float shininess = 4.0f;
-	float3 eyedir = normalize(cameraPos - wpos.xyz);
-	float3 reffect = normalize(-lightv + 2 * dot(lightv, wnormal.xyz)*wnormal.xyz);
-	float3 specular = pow(saturate(dot(reffect, eyedir)),shininess)*m_specular;
-
-	output.color.rgb = (ambient + diffuse + specular)*lightcolor;
-	output.color.a = m_alpha;
+	output.worldpos = wpos;
+	output.normal = wnormal.xyz;
 	output.uv = uv;
 	return output;
 }
