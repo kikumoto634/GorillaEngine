@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseScene.h"
-#include "../Engine/light/DirectionalLight.h"
+#include "../Engine/light/LightGroup.h"
 
 #include "../Game/3D/SampleParticleObject/SampleParticleObject.h"
 #include "../Game/3D/SampleFbxObject/SampleFbxObject.h"
@@ -45,7 +45,10 @@ public:
 private:
 	float time = 0.f;
 
-	DirectionalLight* light = nullptr;
+	LightGroup* lightGroup = nullptr;
+	float pointLightPos[3] = {0,0,0};
+	float pointLightColor[3] = {1,1,1};
+	float pointLightAtten[3] = {0.3f,0.3f,0.1f};
 
 	std::unique_ptr<SampleFbxObject> obj;
 

@@ -7,7 +7,7 @@
 #include "../../camera/Camera.h"
 #include "../base/ObjModelManager.h"
 #include "../base/DirectXCommon.h"
-#include "../light/DirectionalLight.h"
+#include "../light/LightGroup.h"
 
 
 /// <summary>
@@ -35,7 +35,7 @@ public: // サブクラス
 		// パイプラインステートオブジェクト
 		ComPtr<ID3D12PipelineState> pipelinestate;
 		//ライト
-		DirectionalLight* light;
+		LightGroup* light;
 	};
 
 	// 定数バッファ用データ構造体
@@ -68,7 +68,7 @@ public: // 静的メンバ関数
 	static ObjModelObject* Create(ObjModelManager* model);
 
 	//Setter
-	static void SetLight(DirectionalLight* light)	{common->light = light;}
+	static void SetLight(LightGroup* light)	{common->light = light;}
 
 
 private: // 静的メンバ変数

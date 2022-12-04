@@ -234,12 +234,6 @@
     <ClCompile Include="Game\3D\SampleObjObject\SampleObjObject.cpp">
       <Filter>ソース ファイル\Game\3D\SampleObjObj</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\light\DirectionalLight.cpp">
-      <Filter>ソース ファイル\Engine\light</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\light\PointLight.cpp">
-      <Filter>ソース ファイル\Engine\light</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\light\LightGroup.cpp">
       <Filter>ソース ファイル\Engine\light</Filter>
     </ClCompile>

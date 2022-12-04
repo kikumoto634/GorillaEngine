@@ -20,31 +20,22 @@ public:
 	{
 		DirectX::XMVECTOR lightv;	//ライト向き
 		Vector3 lightcolor;			//ライト色
+		unsigned int active;
 	};
 
-//静的メンバ関数
-public:
-	static DirectionalLight* Create();
-
-	static void StaticInitialize(DirectXCommon* dxCommon);
 
 //メンバ関数
 public:
-	void Initialize();
-
-	void Update();
-
-	void Draw(UINT rootParameterIndex);
-
-	void TransferConstBuffer();
 
 	//Getter
-	const DirectX::XMVECTOR GetLightDir()	{return lightdir;}
-	const Vector3& GetLightColor()	{return lightcolor;}
+	inline const DirectX::XMVECTOR GetLightDir()	{return DirectX::XMVector3Normalize(lightdir);}
+	inline const Vector3& GetLightColor()	{return lightcolor;}
+	inline const bool& GetIsActive()	{return IsActive;}
 
 	//Setter
-	void SetLightDir(const DirectX::XMVECTOR& lightdir);
-	void SetLightColor(const Vector3 lightcolor);
+	inline void SetLightDir(const DirectX::XMVECTOR& lightdir)	{this->lightdir = lightdir;}
+	inline void SetLightColor(const Vector3 lightcolor)	{this->lightcolor = lightcolor;}
+	inline void SetIsActive(const bool IsActive)	{this->IsActive = IsActive;}
 
 //静的メンバ変数
 private:
@@ -52,13 +43,11 @@ private:
 
 //メンバ変数
 private:
-	//定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
 	//ライト光線方向
 	DirectX::XMVECTOR lightdir = {1,0,0,0};
 	//ライト色
 	Vector3 lightcolor = {1,1,1};
 	//ダーティフラグ
-	bool IsDirty = false;
+	bool IsActive = false;
 };
 

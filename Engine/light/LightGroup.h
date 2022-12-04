@@ -4,9 +4,13 @@
 
 class LightGroup
 {
+private: // エイリアス
+	// Microsoft::WRL::を省略
+	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 public:
 	//平行光源の数
-	static const int DirectionLightNum = 1;
+	static const int DirectionLightNum = 3;
 	//点光源の数
 	static const int PointLightNum = 3;
 
@@ -23,18 +27,76 @@ public:
 		PointLight::ConstBufferData pointLights[PointLightNum];
 	};
 
-//メンバ関数
+//静的メンバ関数
 public:
+	/// <summary>
+	/// 静的初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	static void StaticInitialize(ID3D12Device* device);
+
+	/// <summary>
+	/// インスタンス生成
+	/// </summary>
+	/// <returns>インスタンス</returns>
+	static LightGroup* Create();
+
+
+private: // 静的メンバ変数
+	// デバイス
+	static ID3D12Device* device;
+
+public: // メンバ関数
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize();
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
 	
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex);
+
+	/// <summary>
+	/// 定数バッファ転送
+	/// </summary>
+	void TransferConstBuffer();
+
+	/// <summary>
+	/// 標準のライト設定
+	/// </summary>
+	void DefaultLightSetting();
+
 	//Setter
-	void SetPointLightActive(int index, bool IsActive);
+	void SetAmbientColor(const Vector3& color);
+
+	void SetDirLightActive(int index, bool active);
+	void SetDirLightDir(int index, const DirectX::XMVECTOR& lightdir);
+	void SetDirLightColor(int index, const Vector3& lightcolor);
+
+	void SetPointLightActive(int index, bool active);
 	void SetPointLightPos(int index, const Vector3& lightpos);
 	void SetPointLightColor(int index, const Vector3& lightcolor);
 	void SetPointLightAtten(int index, const Vector3& lightAtten);
 
-//メンバ変数
-private:
-	//点光源の配列
-	PointLight pointLights[PointLightNum];
-};
+private: // メンバ変数
+	// 定数バッファ
+	ComPtr<ID3D12Resource> constBuff;
 
+	// 環境光の色
+	Vector3 ambientColor = { 1,1,1 };
+
+	// 平行光源の配列
+	DirectionalLight dirLights[DirectionLightNum];
+
+	// 点光源の配列
+	PointLight pointLights[PointLightNum];
+
+	// ダーティフラグ
+	bool dirty = false;
+};

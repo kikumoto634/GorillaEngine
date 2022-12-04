@@ -167,9 +167,7 @@
     <ClCompile Include="Engine\base\TextureManager.cpp" />
     <ClCompile Include="Engine\base\Window.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
-    <ClCompile Include="Engine\light\DirectionalLight.cpp" />
     <ClCompile Include="Engine\light\LightGroup.cpp" />
-    <ClCompile Include="Engine\light\PointLight.cpp" />
     <ClCompile Include="Engine\loader\FbxLoader.cpp" />
     <ClCompile Include="Engine\math\Easing\Easing.cpp" />
     <ClCompile Include="Engine\math\Vector\Vector2.cpp" />

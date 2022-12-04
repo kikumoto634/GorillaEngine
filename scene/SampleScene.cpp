@@ -26,12 +26,19 @@ void SampleScene::Initialize()
 	BaseScene::Initialize();
 
 #pragma region 汎用初期化
-	//ライト生成
-	light = DirectionalLight::Create();
+	lightGroup = LightGroup::Create();
 	//色設定
-	light->SetLightColor({1,1,1});
+	lightGroup->SetAmbientColor({1,1,1});
 	//3Dオブジェクト(.obj)にセット
-	ObjModelObject::SetLight(light);
+	ObjModelObject::SetLight(lightGroup);
+
+	lightGroup->SetDirLightActive(0, false);
+	lightGroup->SetDirLightActive(1, false);
+	lightGroup->SetDirLightActive(2, false);
+	lightGroup->SetPointLightActive(0, true);
+	pointLightPos[0] = 0.5f;
+	pointLightPos[1] = 1.0f;
+	pointLightPos[2] = 0.0f;
 #pragma endregion 汎用初期化
 
 #pragma region _3D初期化
@@ -79,19 +86,6 @@ void SampleScene::Update()
 		camera->RotVector({0.f,XMConvertToRadians(-3.f), 0.f});
 	}
 
-	//ライト動かす
-	{
-		//光線方向初期値値
-		static XMVECTOR lightDir = {0,1,5,0};
-
-		if(input->Push(DIK_UP))	{lightDir.m128_f32[1] += 1.0f;}
-		else if(input->Push(DIK_DOWN))	{lightDir.m128_f32[1] -= 1.0f;}
-		if(input->Push(DIK_RIGHT))	{lightDir.m128_f32[0] += 1.0f;}
-		else if(input->Push(DIK_LEFT))	{lightDir.m128_f32[0] -= 1.0f;}
-
-		light->SetLightDir(lightDir);
-	}
-
 #pragma endregion 入力処理
 
 #pragma region _3D更新
@@ -117,8 +111,12 @@ void SampleScene::Update()
 #pragma endregion _2D更新
 
 #pragma region 汎用更新
-
-	light->Update();
+	{
+		lightGroup->SetPointLightPos(0, Vector3{pointLightPos[0], pointLightPos[1], pointLightPos[2]});
+		lightGroup->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
+		lightGroup->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
+	}
+	lightGroup->Update();
 
 #pragma endregion 汎用更新
 
@@ -172,8 +170,8 @@ void SampleScene::Finalize()
 
 #pragma region 汎用解放
 
-	delete light;
-	light =nullptr;
+	delete lightGroup;
+	lightGroup = nullptr;
 
 #pragma endregion 汎用解放
 

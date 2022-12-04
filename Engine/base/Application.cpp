@@ -85,7 +85,7 @@ void Application::Initialize()
 	ObjModelObject::StaticInitialize(dxCommon);
 
 	//Light
-	DirectionalLight::StaticInitialize(dxCommon);
+	LightGroup::StaticInitialize(dxCommon->GetDevice());
 
 	scene->Initialize();
 }
