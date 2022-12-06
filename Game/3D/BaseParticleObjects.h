@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Camera.h"
+#include "../../camera/Camera.h"
 
 #include "../../Engine/3D/ParticleObject.h"
 

@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "SampleScene.h"
+#include "../../scene/SampleScene.h"
 
 Application* Application::app = nullptr;
 

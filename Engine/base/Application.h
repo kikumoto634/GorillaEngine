@@ -18,7 +18,7 @@
 #include "../light/DirectionalLight.h"
 
 
-#include "BaseScene.h"
+#include "../../scene/BaseScene.h"
 #include "../Engine/2D/Sprite.h"
 
 

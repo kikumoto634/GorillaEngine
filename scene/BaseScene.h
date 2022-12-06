@@ -2,7 +2,7 @@
 #include "../Engine/base/DirectXCommon.h"
 #include "../Engine/base/Window.h"
 #include "../Engine/input/Input.h"
-#include "Camera.h"
+#include "../camera/Camera.h"
 
 #ifdef _DEBUG
 #include "../Engine/debugProcess/DebugText.h"

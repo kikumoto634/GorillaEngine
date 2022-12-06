@@ -5,7 +5,7 @@
 #include "../Engine/base/DirectXCommon.h"
 #include "../Engine/base/ParticleManager.h"
 #include "../Engine/base/TextureManager.h"
-#include "Camera.h"
+#include "../../camera/Camera.h"
 #include "WorldTransform.h"
 
 /// <summary>
