@@ -46,17 +46,13 @@ private:
 	float time = 0.f;
 
 	LightGroup* lightGroup = nullptr;
-	/*float circleShadowDir[3] = { 0,-1,0 };
-	float circleShadowAtten[3] = { 0.5f,0.6f,0.0f };
-	float circleShadowFactorAngle[2] = { 0.0f, 0.5f };*/
-
 	float pointLightPos[3] = {0,0,0};
 	float pointLightColor[3] = {1,1,1};
 	float pointLightAtten[3] = {0.3f,0.3f,0.1f};
 
 	//std::unique_ptr<SampleFbxObject> obj;
 
-	//std::unique_ptr<SampleParticleObject> obj2;
+	std::unique_ptr<SampleParticleObject> obj2;
 
 	std::unique_ptr<SampleObjObject> obj3_1;
 	std::unique_ptr<SampleObjObject> obj3_2;

@@ -46,8 +46,8 @@ void SampleScene::Initialize()
 	//obj->Initialize("cube");
 	//obj->SetPosition({0, -50, 200});
 
-	//obj2 = make_unique<SampleParticleObject>();
-	//obj2->Initialize(1);
+	obj2 = make_unique<SampleParticleObject>();
+	obj2->Initialize(1);
 
 	obj3_1 = make_unique<SampleObjObject>();
 	obj3_1->Initialize("chr_sword");
@@ -60,7 +60,6 @@ void SampleScene::Initialize()
 	obj3_3 = make_unique<SampleObjObject>();
 	obj3_3->Initialize("sphere", true);
 	obj3_3->SetPosition({-1,0,0});
-
 
 	obj3_4 = make_unique<SampleObjObject>();
 	obj3_4->Initialize("skydome");
@@ -95,7 +94,7 @@ void SampleScene::Update()
 
 	//obj->Update(camera);
 
-	//obj2->Update(camera);
+	obj2->Update(camera);
 
 	Vector3 rot1 = obj3_1->GetRotation();
 	rot1.y += XMConvertToRadians(1.f);
@@ -118,10 +117,6 @@ void SampleScene::Update()
 
 #pragma region ”Ä—pXV
 	{
-		/*lightGroup->SetAmbientColor(Vector3{1,1,1});
-		lightGroup->SetDirLightDir(0, XMVECTOR{0,-1,0});
-		lightGroup->SetDirLightColor(0, Vector3{1,1,1});*/
-
 		lightGroup->SetPointLightPos(0, Vector3{pointLightPos[0], pointLightPos[1], pointLightPos[2]});
 		lightGroup->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
 		lightGroup->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
@@ -144,7 +139,7 @@ void SampleScene::Draw()
 #pragma region _3D•`‰æ
 	//obj->Draw();
 
-	//obj2->Draw();
+	obj2->Draw();
 
 	obj3_1->Draw();
 	obj3_2->Draw();
@@ -155,6 +150,12 @@ void SampleScene::Draw()
 
 #pragma region _2D_UI•`‰æ
 	Sprite::SetPipelineState();
+
+#ifdef _DEBUG
+	debugText->Printf(0,0,1.f,"Camera Target  X:%f, Y:%f, Z:%f", camera->GetTarget().x, camera->GetTarget().y, camera->GetTarget().z);
+	debugText->Printf(0,16,1.f,"Camera Eye  X:%f, Y:%f, Z:%f", camera->GetEye().x, camera->GetEye().y, camera->GetEye().z);
+#endif // _DEBUG
+
 
 #pragma endregion _2D_UI•`‰æ
 

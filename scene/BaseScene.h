@@ -4,6 +4,11 @@
 #include "../Engine/input/Input.h"
 #include "Camera.h"
 
+#ifdef _DEBUG
+#include "../Engine/debugProcess/DebugText.h"
+#endif // _DEBUG
+
+
 
 class BaseScene
 {
@@ -68,6 +73,10 @@ protected:
 
 	//ƒV[ƒ“‘JˆÚ
 	bool IsSceneChange = false;
+
+#ifdef _DEBUG
+	std::unique_ptr<DebugText> debugText;
+#endif // _DEBUG
 
 };
 

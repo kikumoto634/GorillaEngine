@@ -166,6 +166,7 @@
     <ClCompile Include="Engine\base\ParticleManager.cpp" />
     <ClCompile Include="Engine\base\TextureManager.cpp" />
     <ClCompile Include="Engine\base\Window.cpp" />
+    <ClCompile Include="Engine\debugProcess\DebugText.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
     <ClCompile Include="Engine\light\LightGroup.cpp" />
     <ClCompile Include="Engine\loader\FbxLoader.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Engine\base\ParticleManager.h" />
     <ClInclude Include="Engine\base\TextureManager.h" />
     <ClInclude Include="Engine\base\Window.h" />
+    <ClInclude Include="Engine\debugProcess\DebugText.h" />
     <ClInclude Include="Engine\input\Input.h" />
     <ClInclude Include="Engine\light\DirectionalLight.h" />
     <ClInclude Include="Engine\light\LightGroup.h" />

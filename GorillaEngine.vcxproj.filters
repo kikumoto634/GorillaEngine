@@ -139,6 +139,12 @@
     <Filter Include="ヘッダー ファイル\Engine\light">
       <UniqueIdentifier>{73c5446c-2f9a-4ac4-8d7e-cba68206dc02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\debug">
+      <UniqueIdentifier>{151054ae-f261-4dcb-bb3b-564e59f3b338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\debug">
+      <UniqueIdentifier>{d96c3c6b-9ff1-4f5c-8f22-9ad4e252726d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -236,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="Engine\light\LightGroup.cpp">
       <Filter>ソース ファイル\Engine\light</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\debugProcess\DebugText.cpp">
+      <Filter>ソース ファイル\Engine\debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -337,6 +346,9 @@
     </ClInclude>
     <ClInclude Include="Engine\light\LightGroup.h">
       <Filter>ヘッダー ファイル\Engine\light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\debugProcess\DebugText.h">
+      <Filter>ヘッダー ファイル\Engine\debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

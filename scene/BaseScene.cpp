@@ -21,6 +21,11 @@ void BaseScene::Initialize()
 
 	//ƒJƒƒ‰
 	camera->Initialize();
+
+#ifdef _DEBUG
+	debugText = std::make_unique<DebugText>();
+	debugText->Initialize(0);
+#endif // _DEBUG
 }
 
 void BaseScene::Update()
@@ -51,7 +56,9 @@ void BaseScene::Draw()
 
 void BaseScene::EndDraw()
 {
-
+#ifdef _DEBUG
+	debugText->DrawAll();
+#endif // _DEBUG
 }
 
 void BaseScene::Finalize()
