@@ -112,6 +112,10 @@ void SampleScene::Update()
 
 #pragma region ”Ä—pXV
 	{
+		/*lightGroup->SetAmbientColor(Vector3{1,1,1});
+		lightGroup->SetDirLightDir(0, XMVECTOR{0,-1,0});
+		lightGroup->SetDirLightColor(0, Vector3{1,1,1});*/
+
 		lightGroup->SetPointLightPos(0, Vector3{pointLightPos[0], pointLightPos[1], pointLightPos[2]});
 		lightGroup->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
 		lightGroup->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
