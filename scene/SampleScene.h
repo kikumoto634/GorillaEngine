@@ -54,9 +54,9 @@ private:
 	float pointLightColor[3] = {1,1,1};
 	float pointLightAtten[3] = {0.3f,0.3f,0.1f};
 
-	std::unique_ptr<SampleFbxObject> obj;
+	//std::unique_ptr<SampleFbxObject> obj;
 
-	std::unique_ptr<SampleParticleObject> obj2;
+	//std::unique_ptr<SampleParticleObject> obj2;
 
 	std::unique_ptr<SampleObjObject> obj3_1;
 	std::unique_ptr<SampleObjObject> obj3_2;
@@ -65,4 +65,3 @@ private:
 
 	//std::unique_ptr<SampleSprite> sp;
 };
-

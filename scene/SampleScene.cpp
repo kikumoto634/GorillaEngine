@@ -46,8 +46,8 @@ void SampleScene::Initialize()
 	//obj->Initialize("cube");
 	//obj->SetPosition({0, -50, 200});
 
-	obj2 = make_unique<SampleParticleObject>();
-	obj2->Initialize(1);
+	//obj2 = make_unique<SampleParticleObject>();
+	//obj2->Initialize(1);
 
 	obj3_1 = make_unique<SampleObjObject>();
 	obj3_1->Initialize("chr_sword");
@@ -92,17 +92,23 @@ void SampleScene::Update()
 	/*Vector3 pos = Easing_Linear_Point2({0, 0, 300}, {0, -100, 300}, Time_OneWay(time, 2.f));
 	Vector3 pos = Easing_Linear_Point3({0, 0, 300}, {0, -50, 500}, {0, -100, 300}, Time_Loop(time, 2.f));
 	obj->SetPosition(pos);*/
+
 	//obj->Update(camera);
 
-	obj2->Update(camera);
+	//obj2->Update(camera);
 
+	Vector3 rot1 = obj3_1->GetRotation();
+	rot1.y += XMConvertToRadians(1.f);
+	obj3_1->SetRotation(rot1);
 	obj3_1->Update(camera);
+
 	obj3_2->Update(camera);
 
-	Vector3 rot = obj3_3->GetRotation();
-	rot.y += XMConvertToRadians(1.f);
-	obj3_3->SetRotation(rot);
+	Vector3 rot2 = obj3_3->GetRotation();
+	rot2.y += XMConvertToRadians(1.f);
+	obj3_3->SetRotation(rot2);
 	obj3_3->Update(camera);
+
 	obj3_4->Update(camera);
 #pragma endregion _3DXV
 
@@ -138,7 +144,7 @@ void SampleScene::Draw()
 #pragma region _3D•`‰æ
 	//obj->Draw();
 
-	obj2->Draw();
+	//obj2->Draw();
 
 	obj3_1->Draw();
 	obj3_2->Draw();
@@ -160,7 +166,7 @@ void SampleScene::Finalize()
 #pragma region _3D‰ð•ú
 	//obj->Finalize();
 
-	obj2->Finalize();
+	//obj2->Finalize();
 
 	obj3_1->Finalize();
 	obj3_2->Finalize();
