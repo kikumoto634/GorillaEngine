@@ -37,7 +37,7 @@ public:
 		std::string textureFilename;	//テクスチャファイル
 		//コンストラクタ
 		Material(){
-			ambient = {0.3f, 0.3f, 0.3f};
+			ambient = {1.0f, 1.0f, 1.0f};
 			diffuse = {0.0f, 0.0f, 0.0f};
 			specular = {0.0f, 0.0f, 0.0f};
 			alpha = 1.0f;

@@ -246,6 +246,9 @@
     <ClCompile Include="Engine\debugProcess\DebugText.cpp">
       <Filter>ソース ファイル\Engine\debug</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\imguiManager.cpp">
+      <Filter>ソース ファイル\Engine\base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
@@ -349,6 +352,9 @@
     </ClInclude>
     <ClInclude Include="Engine\debugProcess\DebugText.h">
       <Filter>ヘッダー ファイル\Engine\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\imguiManager.h">
+      <Filter>ヘッダー ファイル\Engine\base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

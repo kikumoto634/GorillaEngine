@@ -52,7 +52,7 @@ private:
 
 	//std::unique_ptr<SampleFbxObject> obj;
 
-	std::unique_ptr<SampleParticleObject> obj2;
+	//std::unique_ptr<SampleParticleObject> obj2;
 
 	std::unique_ptr<SampleObjObject> obj3_1;
 	std::unique_ptr<SampleObjObject> obj3_2;

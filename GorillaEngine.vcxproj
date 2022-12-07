@@ -162,6 +162,7 @@
     <ClCompile Include="Engine\base\Application.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\FbxModelManager.cpp" />
+    <ClCompile Include="Engine\base\imguiManager.cpp" />
     <ClCompile Include="Engine\base\ObjModelManager.cpp" />
     <ClCompile Include="Engine\base\ParticleManager.cpp" />
     <ClCompile Include="Engine\base\TextureManager.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Engine\base\Application.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\FbxModelManager.h" />
+    <ClInclude Include="Engine\base\imguiManager.h" />
     <ClInclude Include="Engine\base\ObjModelManager.h" />
     <ClInclude Include="Engine\base\ParticleManager.h" />
     <ClInclude Include="Engine\base\TextureManager.h" />

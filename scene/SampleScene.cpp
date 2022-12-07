@@ -46,8 +46,8 @@ void SampleScene::Initialize()
 	//obj->Initialize("cube");
 	//obj->SetPosition({0, -50, 200});
 
-	obj2 = make_unique<SampleParticleObject>();
-	obj2->Initialize(1);
+	//obj2 = make_unique<SampleParticleObject>();
+	//obj2->Initialize(1);
 
 	obj3_1 = make_unique<SampleObjObject>();
 	obj3_1->Initialize("chr_sword");
@@ -94,7 +94,7 @@ void SampleScene::Update()
 
 	//obj->Update(camera);
 
-	obj2->Update(camera);
+	//obj2->Update(camera);
 
 	Vector3 rot1 = obj3_1->GetRotation();
 	rot1.y += XMConvertToRadians(1.f);
@@ -139,7 +139,7 @@ void SampleScene::Draw()
 #pragma region _3D•`‰æ
 	//obj->Draw();
 
-	obj2->Draw();
+	//obj2->Draw();
 
 	obj3_1->Draw();
 	obj3_2->Draw();
