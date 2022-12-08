@@ -70,12 +70,17 @@ void SampleScene::Initialize()
 	//sp = make_unique<SampleSprite>();
 	//sp->Initialize(0);
 #pragma endregion _2D‰Šú‰»
+
+#ifdef _DEBUG
+	imgui = new imguiManager();
+	imgui->Initialize(window, dxCommon);
+#endif // _DEBUG
+
 }
 
 void SampleScene::Update()
 {
 	BaseScene::Update();
-
 #pragma region “ü—Íˆ—
 
 	if(input->Push(DIK_A)){
@@ -154,6 +159,7 @@ void SampleScene::Draw()
 #ifdef _DEBUG
 	debugText->Printf(0,0,1.f,"Camera Target  X:%f, Y:%f, Z:%f", camera->GetTarget().x, camera->GetTarget().y, camera->GetTarget().z);
 	debugText->Printf(0,16,1.f,"Camera Eye  X:%f, Y:%f, Z:%f", camera->GetEye().x, camera->GetEye().y, camera->GetEye().z);
+
 #endif // _DEBUG
 
 
@@ -164,6 +170,10 @@ void SampleScene::Draw()
 
 void SampleScene::Finalize()
 {
+#ifdef _DEBUG
+	delete imgui;
+#endif // _DEBUG
+
 #pragma region _3D‰ð•ú
 	//obj->Finalize();
 

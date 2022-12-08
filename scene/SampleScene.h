@@ -9,6 +9,8 @@
 #include "../Game/2D/SampleSprite/SampleSprite.h"
 
 
+#include "../Engine/base/imguiManager.h"
+
 
 class SampleScene : public BaseScene
 {
@@ -60,4 +62,9 @@ private:
 	std::unique_ptr<SampleObjObject> obj3_4;
 
 	//std::unique_ptr<SampleSprite> sp;
+
+
+#ifdef _DEBUG
+	imguiManager* imgui;
+#endif // _DEBUG
 };

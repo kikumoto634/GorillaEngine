@@ -25,6 +25,7 @@ public:
 
 	ID3D12Device* GetDevice()		{return device.Get();}
 	ID3D12GraphicsCommandList* GetCommandList()		{return commandList.Get();}
+	size_t GetBackBuffersCount()	{return backBuffers.size();}
 
 private:
 	/// <summary>
