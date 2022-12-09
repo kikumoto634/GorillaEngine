@@ -74,6 +74,7 @@ void SampleScene::Initialize()
 #pragma region _2D初期化
 	sp = make_unique<SampleSprite>();
 	sp->Initialize(1);
+	sp->SetPosition({100,100});
 #pragma endregion _2D初期化
 
 #ifdef _DEBUG
@@ -144,20 +145,17 @@ void SampleScene::Update()
 	if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
 
-	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-
-	ImGui::ColorEdit4("Color", (float*)&my_color);
-
-	float samples[100];
-	for (int n = 0; n < 100; n++)
-		samples[n] = sinf(float(n * 0.2f + ImGui::GetTime() * 1.5f));
-	ImGui::PlotLines("Samples", samples, 100);
-
-	ImGui::TextColored(ImVec4(1,1,0,1), "Important Stuff");
-	ImGui::BeginChild("Scrolling");
-	for (int n = 0; n < 50; n++)
-		ImGui::Text("%04d: Some text", n);
-	ImGui::EndChild();
+	//ウィンドウサイズ
+	ImGui::SetNextWindowSize(ImVec2{500,100});
+	//ウィンドウ座標
+	ImGui::SetNextWindowPos(ImVec2{100,100});
+	//開始、タイトル名設定
+	ImGui::Begin("Demo");
+	Vector2 pos = sp->GetPosition();
+	ImGui::SliderFloat2("position", (float*)&pos, 0.0f, 1000.0f, "%.1f");
+	sp->SetPosition(pos);
+	//終了
+	ImGui::End();
 
 	imgui->End();
 #endif // _DEBUG

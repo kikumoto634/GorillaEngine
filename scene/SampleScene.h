@@ -68,10 +68,6 @@ private:
 #ifdef _DEBUG
 	imguiManager* imgui;
 
-	bool show_demo_window = true;
-	bool my_tool_active = true;
-
-	float f = 0.;
-	Vector4 my_color = {0,0,0,1};
+	bool show_demo_window = false;
 #endif // _DEBUG
 };
