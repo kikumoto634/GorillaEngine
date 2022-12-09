@@ -8,8 +8,9 @@
 
 #include "../Game/2D/SampleSprite/SampleSprite.h"
 
-
+#ifdef _DEBUG
 #include "../Engine/base/imguiManager.h"
+#endif // _DEBUG
 
 
 class SampleScene : public BaseScene
@@ -61,10 +62,16 @@ private:
 	std::unique_ptr<SampleObjObject> obj3_3;
 	std::unique_ptr<SampleObjObject> obj3_4;
 
-	//std::unique_ptr<SampleSprite> sp;
+	std::unique_ptr<SampleSprite> sp;
 
 
 #ifdef _DEBUG
 	imguiManager* imgui;
+
+	bool show_demo_window = true;
+	bool my_tool_active = true;
+
+	float f = 0.;
+	Vector4 my_color = {0,0,0,1};
 #endif // _DEBUG
 };

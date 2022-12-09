@@ -6,6 +6,11 @@
 #include <sstream>
 #include <iomanip>
 
+#ifdef _DEBUG
+#include <imgui.h>
+#endif // _DEBUG
+
+
 using namespace std;
 using namespace DirectX;
 
@@ -67,8 +72,8 @@ void SampleScene::Initialize()
 #pragma endregion _3D‰Šú‰»
 
 #pragma region _2D‰Šú‰»
-	//sp = make_unique<SampleSprite>();
-	//sp->Initialize(0);
+	sp = make_unique<SampleSprite>();
+	sp->Initialize(1);
 #pragma endregion _2D‰Šú‰»
 
 #ifdef _DEBUG
@@ -81,6 +86,11 @@ void SampleScene::Initialize()
 void SampleScene::Update()
 {
 	BaseScene::Update();
+
+#ifdef _DEBUG
+	imgui->Begin();
+#endif // _DEBUG
+
 #pragma region “ü—Íˆ—
 
 	if(input->Push(DIK_A)){
@@ -117,7 +127,7 @@ void SampleScene::Update()
 #pragma endregion _3DXV
 
 #pragma region _2DXV
-	//sp->Update();
+	sp->Update();
 #pragma endregion _2DXV
 
 #pragma region ”Ä—pXV
@@ -130,6 +140,28 @@ void SampleScene::Update()
 
 #pragma endregion ”Ä—pXV
 
+#ifdef _DEBUG
+	if (show_demo_window)
+            ImGui::ShowDemoWindow(&show_demo_window);
+
+	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+
+	ImGui::ColorEdit4("Color", (float*)&my_color);
+
+	float samples[100];
+	for (int n = 0; n < 100; n++)
+		samples[n] = sinf(float(n * 0.2f + ImGui::GetTime() * 1.5f));
+	ImGui::PlotLines("Samples", samples, 100);
+
+	ImGui::TextColored(ImVec4(1,1,0,1), "Important Stuff");
+	ImGui::BeginChild("Scrolling");
+	for (int n = 0; n < 50; n++)
+		ImGui::Text("%04d: Some text", n);
+	ImGui::EndChild();
+
+	imgui->End();
+#endif // _DEBUG
+
 	BaseScene::EndUpdate();
 }
 
@@ -138,7 +170,7 @@ void SampleScene::Draw()
 	BaseScene::Draw();
 
 #pragma region _2D_”wŒi•`‰æ
-	//sp->Draw();
+	
 #pragma endregion _2D_”wŒi•`‰æ
 
 #pragma region _3D•`‰æ
@@ -155,22 +187,25 @@ void SampleScene::Draw()
 
 #pragma region _2D_UI•`‰æ
 	Sprite::SetPipelineState();
+	sp->Draw();
 
 #ifdef _DEBUG
 	debugText->Printf(0,0,1.f,"Camera Target  X:%f, Y:%f, Z:%f", camera->GetTarget().x, camera->GetTarget().y, camera->GetTarget().z);
 	debugText->Printf(0,16,1.f,"Camera Eye  X:%f, Y:%f, Z:%f", camera->GetEye().x, camera->GetEye().y, camera->GetEye().z);
-
 #endif // _DEBUG
-
-
+	BaseScene::EndDraw();
 #pragma endregion _2D_UI•`‰æ
 
-	BaseScene::EndDraw();
+#ifdef _DEBUG
+	imgui->Draw();
+#endif // _DEBUG
+
 }
 
 void SampleScene::Finalize()
 {
 #ifdef _DEBUG
+	imgui->Finalize();
 	delete imgui;
 #endif // _DEBUG
 
@@ -186,7 +221,7 @@ void SampleScene::Finalize()
 #pragma endregion _3D‰ğ•ú
 
 #pragma region _2D‰ğ•ú
-	//sp->Finalize();
+	sp->Finalize();
 #pragma endregion _2D‰ğ•ú
 
 #pragma region ”Ä—p‰ğ•ú

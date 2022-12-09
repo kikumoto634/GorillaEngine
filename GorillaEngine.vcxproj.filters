@@ -399,5 +399,6 @@
     <None Include="Resources\shader\Obj.hlsli">
       <Filter>リソース ファイル\Obj</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

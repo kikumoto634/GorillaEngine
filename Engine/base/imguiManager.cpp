@@ -39,3 +39,34 @@ void imguiManager::Initialize(Window* winApp, DirectXCommon* dxCommon)
 	// 標準フォントを追加する
 	io.Fonts->AddFontDefault();
 }
+
+void imguiManager::Begin()
+{
+	//ImGuiフレーム開始
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+}
+
+void imguiManager::End()
+{
+	//描画前準備
+	ImGui::Render();
+}
+
+void imguiManager::Draw()
+{
+	ID3D12GraphicsCommandList* commandList = dxCommon->GetCommandList();
+	//デスクリプタヒープの配列をセットするコマンド
+	ID3D12DescriptorHeap* ppHeaps[] = {srvHeap.Get()};
+	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	//描画コマンド
+	 ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+}
+
+void imguiManager::Finalize()
+{
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+}

@@ -11,6 +11,18 @@ public:
 	//初期化
 	void Initialize(Window* winApp, DirectXCommon* dxCommon);
 
+	//ImGui受付開始
+	void Begin();
+
+	//ImGui受付終了
+	void End();
+
+	//描画
+	void Draw();
+
+	//後処理
+	void Finalize();
+
 private:
 	Window* winApp;
 	DirectXCommon* dxCommon;
