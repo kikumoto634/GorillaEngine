@@ -356,6 +356,9 @@
     <ClInclude Include="Engine\base\imguiManager.h">
       <Filter>ヘッダー ファイル\Engine\base</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\light\SpotLight.h">
+      <Filter>ヘッダー ファイル\Engine\light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">
@@ -399,6 +402,5 @@
     <None Include="Resources\shader\Obj.hlsli">
       <Filter>リソース ファイル\Obj</Filter>
     </None>
-    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

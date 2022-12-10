@@ -1,6 +1,7 @@
 #pragma once
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 class LightGroup
 {
@@ -13,6 +14,8 @@ public:
 	static const int DirectionLightNum = 3;
 	//点光源の数
 	static const int PointLightNum = 3;
+	//スポットライトの数
+	static const int SpotLightNum = 3;
 
 public:
 	//定数バッファ用データ構造体
@@ -25,6 +28,8 @@ public:
 		DirectionalLight::ConstBufferData dirLights[DirectionLightNum];
 		//点光源用
 		PointLight::ConstBufferData pointLights[PointLightNum];
+		//スポットライト用
+		SpotLight::ConstBufferData spotLights[SpotLightNum];
 	};
 
 //静的メンバ関数
@@ -75,14 +80,24 @@ public: // メンバ関数
 	//Setter
 	void SetAmbientColor(const Vector3& color);
 
+	//平行
 	void SetDirLightActive(int index, bool active);
 	void SetDirLightDir(int index, const DirectX::XMVECTOR& lightdir);
 	void SetDirLightColor(int index, const Vector3& lightcolor);
 
+	//点
 	void SetPointLightActive(int index, bool active);
 	void SetPointLightPos(int index, const Vector3& lightpos);
 	void SetPointLightColor(int index, const Vector3& lightcolor);
 	void SetPointLightAtten(int index, const Vector3& lightAtten);
+
+	//スポット
+	void SetSpotLightActive(int index, bool active);
+	void SetSpotLightDir(int index, const DirectX::XMVECTOR& lightdir);
+	void SetSpotLightPos(int index, const Vector3& lightpos);
+	void SetSpotLightColor(int index, const Vector3& lightcolor);
+	void SetSpotLightAtten(int index, const Vector3& lightAtten);
+	void SetSpotLightFactorAngleCos(int index, const Vector2& lightFactorAngleCos);
 
 private: // メンバ変数
 	// 定数バッファ
@@ -96,6 +111,9 @@ private: // メンバ変数
 
 	// 点光源の配列
 	PointLight pointLights[PointLightNum];
+
+	//スポットライトの配列
+	SpotLight spotLights[SpotLightNum];
 
 	// ダーティフラグ
 	bool dirty = false;

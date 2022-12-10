@@ -40,10 +40,10 @@ void SampleScene::Initialize()
 	lightGroup->SetDirLightActive(0, false);
 	lightGroup->SetDirLightActive(1, false);
 	lightGroup->SetDirLightActive(2, false);
-	lightGroup->SetPointLightActive(0, true);
-	pointLightPos[0] = 0.5f;
-	pointLightPos[1] = 1.0f;
-	pointLightPos[2] = 0.0f;
+	lightGroup->SetPointLightActive(0, false);
+	lightGroup->SetPointLightActive(1, false);
+	lightGroup->SetPointLightActive(2, false);
+	lightGroup->SetSpotLightActive(0, true);
 #pragma endregion 汎用初期化
 
 #pragma region _3D初期化
@@ -133,9 +133,11 @@ void SampleScene::Update()
 
 #pragma region 汎用更新
 	{
-		lightGroup->SetPointLightPos(0, Vector3{pointLightPos[0], pointLightPos[1], pointLightPos[2]});
-		lightGroup->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
-		lightGroup->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
+		lightGroup->SetSpotLightDir(0, DirectX::XMVECTOR({spotLightDir[0], spotLightDir[1], spotLightDir[2]}));
+		lightGroup->SetSpotLightPos(0, Vector3(spotLightPos[0], spotLightPos[1], spotLightPos[2]));
+		lightGroup->SetSpotLightColor(0, Vector3(spotLightColor[0], spotLightColor[1], spotLightColor[2]));
+		lightGroup->SetSpotLightAtten(0, Vector3(spotLightAtten[0], spotLightAtten[1], spotLightAtten[2]));
+		lightGroup->SetSpotLightFactorAngleCos(0, Vector2(spotLightFactorAngle[0], spotLightFactorAngle[1]));
 	}
 	lightGroup->Update();
 
@@ -151,9 +153,11 @@ void SampleScene::Update()
 	ImGui::SetNextWindowPos(ImVec2{0,0});
 	//開始、タイトル名設定
 	ImGui::Begin("Light");
-	ImGui::ColorEdit3("pointLightColor", pointLightColor);
-	ImGui::DragFloat3("pointLightPos", pointLightPos);
-	ImGui::DragFloat3("pointLightAtten", pointLightAtten);
+	ImGui::DragFloat3("spotLightDir", spotLightDir);
+	ImGui::ColorEdit3("spotLightColor", spotLightColor);
+	ImGui::DragFloat3("spotLightPos", spotLightPos);
+	ImGui::DragFloat3("spotLightAtten", spotLightAtten);
+	ImGui::DragFloat2("spotLightFactorAngle", spotLightFactorAngle);
 	//終了
 	ImGui::End();
 
