@@ -72,9 +72,9 @@ void SampleScene::Initialize()
 #pragma endregion _3D初期化
 
 #pragma region _2D初期化
-	sp = make_unique<SampleSprite>();
-	sp->Initialize(1);
-	sp->SetPosition({100,100});
+	//sp = make_unique<SampleSprite>();
+	//sp->Initialize(1);
+	//sp->SetPosition({100,100});
 #pragma endregion _2D初期化
 
 #ifdef _DEBUG
@@ -128,7 +128,7 @@ void SampleScene::Update()
 #pragma endregion _3D更新
 
 #pragma region _2D更新
-	sp->Update();
+	//sp->Update();
 #pragma endregion _2D更新
 
 #pragma region 汎用更新
@@ -146,14 +146,14 @@ void SampleScene::Update()
             ImGui::ShowDemoWindow(&show_demo_window);
 
 	//ウィンドウサイズ
-	ImGui::SetNextWindowSize(ImVec2{500,100});
+	ImGui::SetNextWindowSize(ImVec2{500,200});
 	//ウィンドウ座標
-	ImGui::SetNextWindowPos(ImVec2{100,100});
+	ImGui::SetNextWindowPos(ImVec2{0,0});
 	//開始、タイトル名設定
-	ImGui::Begin("Demo");
-	Vector2 pos = sp->GetPosition();
-	ImGui::SliderFloat2("position", (float*)&pos, 0.0f, 1000.0f, "%.1f");
-	sp->SetPosition(pos);
+	ImGui::Begin("Light");
+	ImGui::ColorEdit3("pointLightColor", pointLightColor);
+	ImGui::DragFloat3("pointLightPos", pointLightPos);
+	ImGui::DragFloat3("pointLightAtten", pointLightAtten);
 	//終了
 	ImGui::End();
 
@@ -185,7 +185,7 @@ void SampleScene::Draw()
 
 #pragma region _2D_UI描画
 	Sprite::SetPipelineState();
-	sp->Draw();
+	//sp->Draw();
 
 #ifdef _DEBUG
 	debugText->Printf(0,0,1.f,"Camera Target  X:%f, Y:%f, Z:%f", camera->GetTarget().x, camera->GetTarget().y, camera->GetTarget().z);
@@ -219,7 +219,7 @@ void SampleScene::Finalize()
 #pragma endregion _3D解放
 
 #pragma region _2D解放
-	sp->Finalize();
+	//sp->Finalize();
 #pragma endregion _2D解放
 
 #pragma region 汎用解放
