@@ -87,9 +87,11 @@ void SampleScene::Initialize()
 	//球の初期値を設定
 	sphere.center = XMVECTOR{0,2,0,1};
 	sphere.radius = 1.0f;
-	//平面の初期値を設定
-	plane.normal = XMVECTOR{0,1,0,0};
-	plane.distance = 0.0f;
+	//三角形の初期値を設定
+	triangle.p0 = XMVECTOR{-1.0f, 0.0f, -1.0f, 1.0f};//左手前
+	triangle.p1 = XMVECTOR{-1.0f, 0.0f, +1.0f, 1.0f};//左奥
+	triangle.p2 = XMVECTOR{+1.0f, 0.0f, -1.0f, 1.0f};//右手前
+	triangle.normal = XMVECTOR{0.0f, 1.0f, 0.0f, 0.0f};//上向き
 }
 
 void SampleScene::Update()
@@ -231,10 +233,12 @@ void SampleScene::Draw()
 	debugText->Printf(0,16,1.f,"Camera Eye  X:%f, Y:%f, Z:%f", camera->GetEye().x, camera->GetEye().y, camera->GetEye().z);
 
 	debugText->Printf(0, 48, 1.f, "Sphere(X:%f, Y:%f, Z:%f)", sphere.center.m128_f32[0], sphere.center.m128_f32[1], sphere.center.m128_f32[2]);
-	//球と平面の当たり判定
-	bool hit = Collision::CheckSphere2Plane(sphere, plane);
+	//球と三角形の当たり判定
+	XMVECTOR inter;
+	bool hit = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
 	if(hit){
 		debugText->Print("Hit", 0, 64, 1.0f);
+		debugText->Printf(0, 80, 1.0f, "(X:%f, Y:%f, Z:%f)", inter.m128_f32[0], inter.m128_f32[1], inter.m128_f32[2]);
 	}
 
 #endif // _DEBUG

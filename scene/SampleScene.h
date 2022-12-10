@@ -74,8 +74,8 @@ private:
 
 	//“–‚½‚è”»’è ‹…
 	Sphere sphere;
-	//“–‚½‚è”»’è •½–Ê
-	Plane plane;
+	//“–‚½‚è”»’è ŽOŠpŒ`
+	Triangle triangle;
 
 #ifdef _DEBUG
 	imguiManager* imgui;
