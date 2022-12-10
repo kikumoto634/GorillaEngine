@@ -2,7 +2,7 @@
 
 newmtl palette
 illum 1
-Ka 0.000 0.000 0.000
+Ka 0.800 0.800 0.800
 Kd 1.000 1.000 1.000
 Ks 1.000 1.000 1.000
 map_Kd chr_sword.png

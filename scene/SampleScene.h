@@ -8,6 +8,8 @@
 
 #include "../Game/2D/SampleSprite/SampleSprite.h"
 
+#include "../Game/Collision/CollisionPrimitive.h"
+
 #ifdef _DEBUG
 #include "../Engine/base/imguiManager.h"
 #endif // _DEBUG
@@ -50,11 +52,13 @@ private:
 
 	LightGroup* lightGroup = nullptr;
 
+	//丸影
 	float circleShadowDir[3] = { 0,-1,0 };
 	float circleShadowAtten[3] = { 0.5f,0.6f,0.0f };
 	float circleShadowFactorAngle[2] = { 0.0f, 0.5f };
 
-	float fighterPos[3] = { 1, 0.0f, 0 };
+	//プレイヤー座標、丸影
+	Vector3 fighterPos = { 1, 0.0f, 0 };
 
 	//std::unique_ptr<SampleFbxObject> obj;
 
@@ -67,6 +71,11 @@ private:
 
 	//std::unique_ptr<SampleSprite> sp;
 
+
+	//当たり判定 球
+	Sphere sphere;
+	//当たり判定 平面
+	Plane plane;
 
 #ifdef _DEBUG
 	imguiManager* imgui;

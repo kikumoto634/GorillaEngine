@@ -64,9 +64,6 @@
     <Filter Include="ヘッダー ファイル\Engine\3D">
       <UniqueIdentifier>{58f5526e-9fa5-4de1-b022-c60c30afcfb0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\math">
-      <UniqueIdentifier>{70446899-e34a-4634-8bad-dbeb53b3a492}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Engine\input">
       <UniqueIdentifier>{fb4c1ad2-5415-4cc5-99a9-7e3fd0a71bd6}</UniqueIdentifier>
     </Filter>
@@ -103,26 +100,11 @@
     <Filter Include="ヘッダー ファイル\Game\2D\SampleSp">
       <UniqueIdentifier>{b9ed47f6-925a-4393-94c5-5bd4141d0491}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\math\Vector">
-      <UniqueIdentifier>{db74bb4f-71b6-4558-994f-451d10b17b01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\math\Easing">
-      <UniqueIdentifier>{6b0e4025-daeb-4bcd-a2e8-d2034dfc62a8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Game\3D\SampleParticleObj">
       <UniqueIdentifier>{c31ad653-486c-4240-950c-aa93eb114f0a}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Game\3D\SampleParticleObj">
       <UniqueIdentifier>{31a5dfa9-d5f4-4906-8525-09d9ef837058}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\math">
-      <UniqueIdentifier>{a249e385-bd10-49d9-acbc-3e9402d6505a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\math\Vector">
-      <UniqueIdentifier>{eb765e86-4d56-47b4-867f-62711b5a4426}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\math\Easing">
-      <UniqueIdentifier>{58f3fda8-68f6-4077-8f5a-622afe7f52e3}</UniqueIdentifier>
     </Filter>
     <Filter Include="リソース ファイル\Obj">
       <UniqueIdentifier>{64f7312d-974c-4d51-8c15-3186ca7f85ab}</UniqueIdentifier>
@@ -144,6 +126,30 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\Engine\debug">
       <UniqueIdentifier>{d96c3c6b-9ff1-4f5c-8f22-9ad4e252726d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Collision">
+      <UniqueIdentifier>{ed55e1b5-df43-439c-91b9-e4f1cecb5398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\Collision">
+      <UniqueIdentifier>{7a66ea4d-af22-4827-b1df-89c30e9f5083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\math">
+      <UniqueIdentifier>{70446899-e34a-4634-8bad-dbeb53b3a492}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\math\Vector">
+      <UniqueIdentifier>{db74bb4f-71b6-4558-994f-451d10b17b01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\math\Easing">
+      <UniqueIdentifier>{6b0e4025-daeb-4bcd-a2e8-d2034dfc62a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\math">
+      <UniqueIdentifier>{a249e385-bd10-49d9-acbc-3e9402d6505a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\math\Vector">
+      <UniqueIdentifier>{eb765e86-4d56-47b4-867f-62711b5a4426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\math\Easing">
+      <UniqueIdentifier>{58f3fda8-68f6-4077-8f5a-622afe7f52e3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -211,16 +217,16 @@
       <Filter>ソース ファイル\Game\2D\SampleSp</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Vector\Vector2.cpp">
-      <Filter>ソース ファイル\Game\math\Vector</Filter>
+      <Filter>ソース ファイル\Engine\math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Vector\Vector3.cpp">
-      <Filter>ソース ファイル\Game\math\Vector</Filter>
+      <Filter>ソース ファイル\Engine\math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Vector\Vector4.cpp">
-      <Filter>ソース ファイル\Game\math\Vector</Filter>
+      <Filter>ソース ファイル\Engine\math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Easing\Easing.cpp">
-      <Filter>ソース ファイル\Game\math\Easing</Filter>
+      <Filter>ソース ファイル\Engine\math\Easing</Filter>
     </ClCompile>
     <ClCompile Include="Game\3D\BaseParticleObjects.cpp">
       <Filter>ソース ファイル\Game\3D</Filter>
@@ -248,6 +254,9 @@
     </ClCompile>
     <ClCompile Include="Engine\base\imguiManager.cpp">
       <Filter>ソース ファイル\Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Collision\Collision.cpp">
+      <Filter>ソース ファイル\Game\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -361,6 +370,12 @@
     </ClInclude>
     <ClInclude Include="Engine\light\CircleShadow.h">
       <Filter>ヘッダー ファイル\Engine\light</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionPrimitive.h">
+      <Filter>ヘッダー ファイル\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\Collision.h">
+      <Filter>ヘッダー ファイル\Game\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

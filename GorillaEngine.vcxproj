@@ -183,6 +183,7 @@
     <ClCompile Include="Game\3D\SampleFbxObject\SampleFbxObject.cpp" />
     <ClCompile Include="Game\3D\SampleObjObject\SampleObjObject.cpp" />
     <ClCompile Include="Game\3D\SampleParticleObject\SampleParticleObject.cpp" />
+    <ClCompile Include="Game\Collision\Collision.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scene\BaseScene.cpp" />
     <ClCompile Include="scene\SampleScene.cpp" />
@@ -223,6 +224,8 @@
     <ClInclude Include="Game\3D\SampleFbxObject\SampleFbxObject.h" />
     <ClInclude Include="Game\3D\SampleGeometryObject\SampleParticleObject.h" />
     <ClInclude Include="Game\3D\SampleObjObject\SampleObjObject.h" />
+    <ClInclude Include="Game\Collision\Collision.h" />
+    <ClInclude Include="Game\Collision\CollisionPrimitive.h" />
     <ClInclude Include="scene\BaseScene.h" />
     <ClInclude Include="scene\SampleScene.h" />
   </ItemGroup>

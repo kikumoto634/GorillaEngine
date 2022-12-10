@@ -2,7 +2,8 @@
 
 #include "../Engine/math//Easing/Easing.h"
 
-//ライト動かすよう
+#include "../Game/Collision/Collision.h"
+
 #include <sstream>
 #include <iomanip>
 
@@ -37,10 +38,11 @@ void SampleScene::Initialize()
 	//3Dオブジェクト(.obj)にセット
 	ObjModelObject::SetLight(lightGroup);
 
-	lightGroup->SetDirLightActive(0, true);
-	lightGroup->SetDirLightActive(1, true);
-	lightGroup->SetDirLightActive(2, true);
+	lightGroup->SetDirLightActive(0, false);
+	lightGroup->SetDirLightActive(1, false);
+	lightGroup->SetDirLightActive(2, false);
 
+	//丸影
 	lightGroup->SetCircleShadowActive(0, true);
 
 #pragma endregion 汎用初期化
@@ -55,7 +57,7 @@ void SampleScene::Initialize()
 
 	obj3_1 = make_unique<SampleObjObject>();
 	obj3_1->Initialize("chr_sword");
-	obj3_1->SetPosition(Vector3{fighterPos[0], fighterPos[1], fighterPos[2]});
+	obj3_1->SetPosition(fighterPos);
 
 	obj3_2 = make_unique<SampleObjObject>();
 	obj3_2->Initialize("ground");
@@ -81,6 +83,13 @@ void SampleScene::Initialize()
 	imgui->Initialize(window, dxCommon);
 #endif // _DEBUG
 
+
+	//球の初期値を設定
+	sphere.center = XMVECTOR{0,2,0,1};
+	sphere.radius = 1.0f;
+	//平面の初期値を設定
+	plane.normal = XMVECTOR{0,1,0,0};
+	plane.distance = 0.0f;
 }
 
 void SampleScene::Update()
@@ -107,6 +116,17 @@ void SampleScene::Update()
 		camera->RotVector({XMConvertToRadians(3.f), 0.f, 0.f});
 	}
 
+	// 球移動
+	{
+		XMVECTOR moveY = XMVectorSet(0, 0.01f, 0, 0);
+		if (input->Push(DIK_I)) { sphere.center += moveY; }
+		else if (input->Push(DIK_K)) { sphere.center -= moveY; }
+
+		XMVECTOR moveX = XMVectorSet(0.01f, 0, 0, 0);
+		if (input->Push(DIK_L)) { sphere.center += moveX; }
+		else if (input->Push(DIK_J)) { sphere.center -= moveX; }
+	}
+
 #pragma endregion 入力処理
 
 #pragma region _3D更新
@@ -118,7 +138,7 @@ void SampleScene::Update()
 
 	//obj2->Update(camera);
 
-	obj3_1->SetPosition(Vector3{fighterPos[0], fighterPos[1], fighterPos[2]});
+	obj3_1->SetPosition(fighterPos);
 	obj3_1->Update(camera);
 
 	obj3_2->Update(camera);
@@ -137,10 +157,13 @@ void SampleScene::Update()
 
 #pragma region 汎用更新
 	{
+		//丸影
 		lightGroup->SetCircleShadowDir(0, DirectX::XMVECTOR({circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0}));
-		lightGroup->SetCircleShadowCasterPos(0, Vector3(fighterPos[0], fighterPos[1], fighterPos[2]));
 		lightGroup->SetCircleShadowAtten(0, Vector3(circleShadowAtten[0], circleShadowAtten[1], circleShadowAtten[2]));
 		lightGroup->SetCircleShadowFactorAngle(0, Vector2(circleShadowFactorAngle[0], circleShadowFactorAngle[1]));
+
+		//プレイヤー、丸影座標
+		lightGroup->SetCircleShadowCasterPos(0, fighterPos);
 	}
 	lightGroup->Update();
 
@@ -151,15 +174,25 @@ void SampleScene::Update()
             ImGui::ShowDemoWindow(&show_demo_window);
 
 	//ウィンドウサイズ
-	ImGui::SetNextWindowSize(ImVec2{500,200});
+	ImGui::SetNextWindowSize(ImVec2{500,55});
+	//ウィンドウ座標
+	ImGui::SetNextWindowPos(ImVec2{0,130});
+	//開始、タイトル名設定
+	ImGui::Begin("PlayerPos && SpotLightPos && CircleShadowPos");
+	ImGui::SetNextWindowPos(ImVec2{0,0});
+	ImGui::DragFloat3("circlePos", (float*)&fighterPos, 0.1f);
+	//終了
+	ImGui::End();
+
+	//ウィンドウサイズ
+	ImGui::SetNextWindowSize(ImVec2{500,100});
 	//ウィンドウ座標
 	ImGui::SetNextWindowPos(ImVec2{0,0});
 	//開始、タイトル名設定
-	ImGui::Begin("Light");
+	ImGui::Begin("CircleShadow");
 	ImGui::DragFloat3("circleShadowDir", circleShadowDir, 0.1f);
 	ImGui::DragFloat3("circleShadowAtten", circleShadowAtten, 0.1f);
 	ImGui::DragFloat2("circleShadowFactorAngle", circleShadowFactorAngle, 0.1f);
-	ImGui::DragFloat3("circlePos", fighterPos, 0.1f);
 	//終了
 	ImGui::End();
 
@@ -196,6 +229,14 @@ void SampleScene::Draw()
 #ifdef _DEBUG
 	debugText->Printf(0,0,1.f,"Camera Target  X:%f, Y:%f, Z:%f", camera->GetTarget().x, camera->GetTarget().y, camera->GetTarget().z);
 	debugText->Printf(0,16,1.f,"Camera Eye  X:%f, Y:%f, Z:%f", camera->GetEye().x, camera->GetEye().y, camera->GetEye().z);
+
+	debugText->Printf(0, 48, 1.f, "Sphere(X:%f, Y:%f, Z:%f)", sphere.center.m128_f32[0], sphere.center.m128_f32[1], sphere.center.m128_f32[2]);
+	//球と平面の当たり判定
+	bool hit = Collision::CheckSphere2Plane(sphere, plane);
+	if(hit){
+		debugText->Print("Hit", 0, 64, 1.0f);
+	}
+
 #endif // _DEBUG
 	BaseScene::EndDraw();
 #pragma endregion _2D_UI描画
