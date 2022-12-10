@@ -37,13 +37,12 @@ void SampleScene::Initialize()
 	//3Dオブジェクト(.obj)にセット
 	ObjModelObject::SetLight(lightGroup);
 
-	lightGroup->SetDirLightActive(0, false);
-	lightGroup->SetDirLightActive(1, false);
-	lightGroup->SetDirLightActive(2, false);
-	lightGroup->SetPointLightActive(0, false);
-	lightGroup->SetPointLightActive(1, false);
-	lightGroup->SetPointLightActive(2, false);
-	lightGroup->SetSpotLightActive(0, true);
+	lightGroup->SetDirLightActive(0, true);
+	lightGroup->SetDirLightActive(1, true);
+	lightGroup->SetDirLightActive(2, true);
+
+	lightGroup->SetCircleShadowActive(0, true);
+
 #pragma endregion 汎用初期化
 
 #pragma region _3D初期化
@@ -56,7 +55,7 @@ void SampleScene::Initialize()
 
 	obj3_1 = make_unique<SampleObjObject>();
 	obj3_1->Initialize("chr_sword");
-	obj3_1->SetPosition({1,0,0});
+	obj3_1->SetPosition(Vector3{fighterPos[0], fighterPos[1], fighterPos[2]});
 
 	obj3_2 = make_unique<SampleObjObject>();
 	obj3_2->Initialize("ground");
@@ -101,6 +100,13 @@ void SampleScene::Update()
 		camera->RotVector({0.f,XMConvertToRadians(-3.f), 0.f});
 	}
 
+	if(input->Push(DIK_W)){
+		camera->RotVector({XMConvertToRadians(-3.f), 0.f, 0.f});
+	}
+	else if(input->Push(DIK_S)){
+		camera->RotVector({XMConvertToRadians(3.f), 0.f, 0.f});
+	}
+
 #pragma endregion 入力処理
 
 #pragma region _3D更新
@@ -112,9 +118,7 @@ void SampleScene::Update()
 
 	//obj2->Update(camera);
 
-	Vector3 rot1 = obj3_1->GetRotation();
-	rot1.y += XMConvertToRadians(1.f);
-	obj3_1->SetRotation(rot1);
+	obj3_1->SetPosition(Vector3{fighterPos[0], fighterPos[1], fighterPos[2]});
 	obj3_1->Update(camera);
 
 	obj3_2->Update(camera);
@@ -133,11 +137,10 @@ void SampleScene::Update()
 
 #pragma region 汎用更新
 	{
-		lightGroup->SetSpotLightDir(0, DirectX::XMVECTOR({spotLightDir[0], spotLightDir[1], spotLightDir[2]}));
-		lightGroup->SetSpotLightPos(0, Vector3(spotLightPos[0], spotLightPos[1], spotLightPos[2]));
-		lightGroup->SetSpotLightColor(0, Vector3(spotLightColor[0], spotLightColor[1], spotLightColor[2]));
-		lightGroup->SetSpotLightAtten(0, Vector3(spotLightAtten[0], spotLightAtten[1], spotLightAtten[2]));
-		lightGroup->SetSpotLightFactorAngleCos(0, Vector2(spotLightFactorAngle[0], spotLightFactorAngle[1]));
+		lightGroup->SetCircleShadowDir(0, DirectX::XMVECTOR({circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0}));
+		lightGroup->SetCircleShadowCasterPos(0, Vector3(fighterPos[0], fighterPos[1], fighterPos[2]));
+		lightGroup->SetCircleShadowAtten(0, Vector3(circleShadowAtten[0], circleShadowAtten[1], circleShadowAtten[2]));
+		lightGroup->SetCircleShadowFactorAngle(0, Vector2(circleShadowFactorAngle[0], circleShadowFactorAngle[1]));
 	}
 	lightGroup->Update();
 
@@ -153,11 +156,10 @@ void SampleScene::Update()
 	ImGui::SetNextWindowPos(ImVec2{0,0});
 	//開始、タイトル名設定
 	ImGui::Begin("Light");
-	ImGui::DragFloat3("spotLightDir", spotLightDir);
-	ImGui::ColorEdit3("spotLightColor", spotLightColor);
-	ImGui::DragFloat3("spotLightPos", spotLightPos);
-	ImGui::DragFloat3("spotLightAtten", spotLightAtten);
-	ImGui::DragFloat2("spotLightFactorAngle", spotLightFactorAngle);
+	ImGui::DragFloat3("circleShadowDir", circleShadowDir, 0.1f);
+	ImGui::DragFloat3("circleShadowAtten", circleShadowAtten, 0.1f);
+	ImGui::DragFloat2("circleShadowFactorAngle", circleShadowFactorAngle, 0.1f);
+	ImGui::DragFloat3("circlePos", fighterPos, 0.1f);
 	//終了
 	ImGui::End();
 

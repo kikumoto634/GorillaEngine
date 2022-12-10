@@ -39,11 +39,15 @@ public:
 	inline bool GetActive()	{return active;}
 
 	//Setter
-	inline void SetLightDir(const DirectX::XMVECTOR& lightdir)	{this->lightdir = lightdir;}
+	inline void SetLightDir(const DirectX::XMVECTOR& lightdir)	{this->lightdir = DirectX::XMVector3Normalize(lightdir);}
 	inline void SetLightPos(const Vector3& lightpos)	{this->lightpos = lightpos;}
 	inline void SetLightColor(const Vector3& lightcolor)	{this->lightcolor = lightcolor;}
 	inline void SetLightAtten(const Vector3& lightAtten)	{this->lightAtten = lightAtten;}
-	inline void SetLightFactorAngleCos(const Vector2& lightfactoranglecos)	{this->lightFactorAngleCos = lightfactoranglecos;}
+	inline void SetLightFactorAngleCos(const Vector2& lightfactoranglecos)	
+	{
+		this->lightFactorAngleCos.x = cosf(DirectX::XMConvertToRadians(lightfactoranglecos.x));
+		this->lightFactorAngleCos.y = cosf(DirectX::XMConvertToRadians(lightfactoranglecos.y));
+	}
 	inline void SetActive(bool active)	{this->active = active;}
 
 //ƒƒ“ƒo•Ï”

@@ -359,6 +359,9 @@
     <ClInclude Include="Engine\light\SpotLight.h">
       <Filter>ヘッダー ファイル\Engine\light</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\light\CircleShadow.h">
+      <Filter>ヘッダー ファイル\Engine\light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">

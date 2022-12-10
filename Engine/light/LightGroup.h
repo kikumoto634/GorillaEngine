@@ -2,6 +2,7 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "CircleShadow.h"
 
 class LightGroup
 {
@@ -16,6 +17,8 @@ public:
 	static const int PointLightNum = 3;
 	//スポットライトの数
 	static const int SpotLightNum = 3;
+	//丸影の数
+	static const int CircleShadowNum = 1;
 
 public:
 	//定数バッファ用データ構造体
@@ -30,6 +33,8 @@ public:
 		PointLight::ConstBufferData pointLights[PointLightNum];
 		//スポットライト用
 		SpotLight::ConstBufferData spotLights[SpotLightNum];
+		//丸影用
+		CircleShadow::ConstBufferData circleShadows[CircleShadowNum];
 	};
 
 //静的メンバ関数
@@ -99,6 +104,14 @@ public: // メンバ関数
 	void SetSpotLightAtten(int index, const Vector3& lightAtten);
 	void SetSpotLightFactorAngleCos(int index, const Vector2& lightFactorAngleCos);
 
+	//丸影
+	void SetCircleShadowActive(int index, bool active);
+	void SetCircleShadowCasterPos(int index, const Vector3& casterPos);
+	void SetCircleShadowDir(int index, const DirectX::XMVECTOR& lightdir);
+	void SetCircleShadowDistanceCasterLight(int index, float distanceCasterLight);
+	void SetCircleShadowAtten(int index, const Vector3& lightAtten);
+	void SetCircleShadowFactorAngle(int index, const Vector2& lightFactorAngle);
+
 private: // メンバ変数
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuff;
@@ -114,6 +127,9 @@ private: // メンバ変数
 
 	//スポットライトの配列
 	SpotLight spotLights[SpotLightNum];
+
+	//丸影の配列
+	CircleShadow circleShadows[CircleShadowNum];
 
 	// ダーティフラグ
 	bool dirty = false;

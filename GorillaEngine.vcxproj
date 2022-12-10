@@ -205,6 +205,7 @@
     <ClInclude Include="Engine\base\Window.h" />
     <ClInclude Include="Engine\debugProcess\DebugText.h" />
     <ClInclude Include="Engine\input\Input.h" />
+    <ClInclude Include="Engine\light\CircleShadow.h" />
     <ClInclude Include="Engine\light\DirectionalLight.h" />
     <ClInclude Include="Engine\light\LightGroup.h" />
     <ClInclude Include="Engine\light\PointLight.h" />
