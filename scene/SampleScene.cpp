@@ -84,9 +84,11 @@ void SampleScene::Initialize()
 #endif // _DEBUG
 
 
-	//球の初期値を設定
-	sphere.center = XMVECTOR{0,2,0,1};
-	sphere.radius = 1.0f;
+	//三角形の初期値を設定
+	triangle.p0 = XMVECTOR{-1.0f, 0.0f, -1.0f, 1.0f};//左手前
+	triangle.p1 = XMVECTOR{-1.0f, 0.0f, +1.0f, 1.0f};//左奥
+	triangle.p2 = XMVECTOR{+1.0f, 0.0f, -1.0f, 1.0f};//右手前
+	triangle.normal = XMVECTOR{0.0f, 1.0f, 0.0f, 0.0f};//上向き
 	//レイの初期値を設定
 	ray.start = XMVECTOR{0,1,0,1};	//原点やや上
 	ray.dir = XMVECTOR{0,-1,0,0};	//下向き
@@ -235,7 +237,7 @@ void SampleScene::Draw()
 	//球と三角形の当たり判定
 	XMVECTOR inter;
 	float distance;
-	bool hit = Collision::CheckRay2Sphere(ray, sphere, &distance, &inter);
+	bool hit = Collision::CheckRay2Triangle(ray, triangle, &distance, &inter);
 	if(hit){
 		debugText->Print("Hit", 0, 96, 1.0f);
 		debugText->Printf(0, 112, 1.0f, "(X:%f, Y:%f, Z:%f)", inter.m128_f32[0], inter.m128_f32[1], inter.m128_f32[2]);
