@@ -72,8 +72,8 @@ private:
 	//std::unique_ptr<SampleSprite> sp;
 
 
-	//“–‚½‚è”»’è •½–Ê
-	Plane plane;
+	//“–‚½‚è”»’è ‹…
+	Sphere sphere;
 	//“–‚½‚è”»’è ƒŒƒC
 	Ray ray;
 

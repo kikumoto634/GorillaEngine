@@ -258,6 +258,9 @@
     <ClCompile Include="Game\Collision\Collision.cpp">
       <Filter>ソース ファイル\Game\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Collision\CollisionPrimitive.cpp">
+      <Filter>ソース ファイル\Game\Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">

@@ -84,9 +84,9 @@ void SampleScene::Initialize()
 #endif // _DEBUG
 
 
-	//平面の初期値を設定
-	plane.normal = XMVECTOR{0,1,0,0};
-	plane.distance = 0.0f;
+	//球の初期値を設定
+	sphere.center = XMVECTOR{0,2,0,1};
+	sphere.radius = 1.0f;
 	//レイの初期値を設定
 	ray.start = XMVECTOR{0,1,0,1};	//原点やや上
 	ray.dir = XMVECTOR{0,-1,0,0};	//下向き
@@ -118,7 +118,7 @@ void SampleScene::Update()
 
 	// 平面移動
 	{
-		XMVECTOR moveZ = XMVectorSet(0, 0, 1.01f, 0);
+		XMVECTOR moveZ = XMVectorSet(0, 0, 0.01f, 0);
 		if (input->Push(DIK_I)) { ray.start += moveZ; }
 		else if (input->Push(DIK_K)) { ray.start -= moveZ; }
 
@@ -235,7 +235,7 @@ void SampleScene::Draw()
 	//球と三角形の当たり判定
 	XMVECTOR inter;
 	float distance;
-	bool hit = Collision::CheckRay2Plane(ray, plane, &distance, &inter);
+	bool hit = Collision::CheckRay2Sphere(ray, sphere, &distance, &inter);
 	if(hit){
 		debugText->Print("Hit", 0, 96, 1.0f);
 		debugText->Printf(0, 112, 1.0f, "(X:%f, Y:%f, Z:%f)", inter.m128_f32[0], inter.m128_f32[1], inter.m128_f32[2]);
