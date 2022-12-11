@@ -10,6 +10,15 @@ class Collision
 public:
 
 	/// <summary>
+	/// ‹…‚Æ‹…‚Ì“–‚½‚è”»’è
+	/// </summary>
+	/// <param name="sphere1">‹…</param>
+	/// <param name="sphere2">‹…</param>
+	/// <param name="inter">Œğ“_</param>
+	/// <returns>Œğ·‚µ‚Ä‚¢‚é‚©”Û‚©</returns>
+	static bool CheckSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2, DirectX::XMVECTOR* inter = nullptr);
+
+	/// <summary>
 	/// ‹…‚Æ•½–Ê‚Ì“–‚½‚è”»’è
 	/// </summary>
 	/// <param name="sphere">‹…</param>

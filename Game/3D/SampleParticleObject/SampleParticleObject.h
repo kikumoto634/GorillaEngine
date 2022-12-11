@@ -26,5 +26,7 @@ public:
 	/// Œãˆ—
 	/// </summary>
 	void Finalize() override;
+
+	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale);
 };
 

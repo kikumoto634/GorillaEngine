@@ -25,3 +25,4 @@ void SampleObjObject::Finalize()
 {
 	BaseObjObject::Finalize();
 }
+

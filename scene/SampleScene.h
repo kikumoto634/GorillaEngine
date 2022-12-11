@@ -6,9 +6,12 @@
 #include "../Game/3D/SampleFbxObject/SampleFbxObject.h"
 #include "../Game/3D/SampleObjObject/SampleObjObject.h"
 
+#include "../Game/3D/Player/Player.h"
+
 #include "../Game/2D/SampleSprite/SampleSprite.h"
 
 #include "../Game/Collision/CollisionPrimitive.h"
+#include "../Game/Collision/CollisionManager.h"
 
 #ifdef _DEBUG
 #include "../Engine/base/imguiManager.h"
@@ -50,6 +53,7 @@ public:
 private:
 	float time = 0.f;
 
+	//ライト
 	LightGroup* lightGroup = nullptr;
 
 	//丸影
@@ -57,26 +61,14 @@ private:
 	float circleShadowAtten[3] = { 0.5f,0.6f,0.0f };
 	float circleShadowFactorAngle[2] = { 0.0f, 0.5f };
 
-	//プレイヤー座標、丸影
-	Vector3 fighterPos = { 1, 0.0f, 0 };
+	//衝突マネージャー
+	CollisionManager* collisionManager = nullptr;
 
-	//std::unique_ptr<SampleFbxObject> obj;
-
-	//std::unique_ptr<SampleParticleObject> obj2;
-
-	std::unique_ptr<SampleObjObject> obj3_1;
+	//3Dオブジェクト
+	std::unique_ptr<Player> player;
 	std::unique_ptr<SampleObjObject> obj3_2;
 	std::unique_ptr<SampleObjObject> obj3_3;
 	std::unique_ptr<SampleObjObject> obj3_4;
-
-	//std::unique_ptr<SampleSprite> sp;
-
-
-	//当たり判定 三角形
-	Triangle triangle;
-	//当たり判定 レイ
-	Ray ray;
-
 #ifdef _DEBUG
 	imguiManager* imgui;
 

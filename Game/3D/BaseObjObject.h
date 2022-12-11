@@ -3,9 +3,25 @@
 #include "../../Engine/3D/ObjModelObject.h"
 #include "../../Engine/base/ObjModelManager.h"
 
+#include "../Collision/CollisionInfo.h"
+
+
+class BaseCollider;
+
 class BaseObjObject
 {
-	public:
+public:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	BaseObjObject() = default;
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	virtual ~BaseObjObject();
+
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -28,18 +44,34 @@ class BaseObjObject
 	/// </summary>
 	virtual void Finalize();
 
+	/// <summary>
+	/// 衝突時コールバック関数
+	/// </summary>
+	/// <param name="info">衝突情報</param>
+	virtual void OnCollision(const CollisionInfo& info){};
+
 	//Getter
 	const Vector3& GetPosition()	{return world.translation;}
 	const Vector3& GetRotation()	{return world.rotation;}
-
+	const WorldTransform& GetmatWorld()	{return world;}
+	const ObjModelObject* GetObjObject()	{return object;}
 
 	//Setter
 	void SetPosition(const Vector3& position)	{world.translation = position;}
 	void SetRotation(const Vector3& rotation)	{world.rotation = rotation;}
+	void SetCollider(BaseCollider* collider);
+	void SetObject(ObjModelObject* object)	{this->object = object;}
+
 protected:
+	//クラス名(デバック用)
+	const char* name = nullptr;
+
 	ObjModelManager* model;
 	ObjModelObject* object;
 	WorldTransform world;
+
+	//コライダー
+	BaseCollider* collider = nullptr;
 
 	Camera* camera = nullptr;
 };

@@ -2,6 +2,22 @@
 
 using namespace DirectX;
 
+bool Collision::CheckSphere2Sphere(const Sphere &sphere1, const Sphere &sphere2, DirectX::XMVECTOR *inter)
+{
+	float distX = (sphere2.center.m128_f32[0]-sphere1.center.m128_f32[0]) * (sphere2.center.m128_f32[0]-sphere1.center.m128_f32[0]);
+	float distY = (sphere2.center.m128_f32[1]-sphere1.center.m128_f32[1]) * (sphere2.center.m128_f32[1]-sphere1.center.m128_f32[1]);
+	float distZ = (sphere2.center.m128_f32[2]-sphere1.center.m128_f32[2]) * (sphere2.center.m128_f32[2]-sphere1.center.m128_f32[2]);
+	//球1と球2の距離
+	float dist = distX + distY + distZ;
+
+	//半径の合計
+	float radius = (sphere1.radius + sphere2.radius) * (sphere1.radius + sphere2.radius);
+
+	if(dist > radius)	{return false;}
+
+	return true;
+}
+
 bool Collision::CheckSphere2Plane(const Sphere &sphere, const Plane &plane, DirectX::XMVECTOR *inter)
 {
 	//座標系の原点から球の中心座標への距離

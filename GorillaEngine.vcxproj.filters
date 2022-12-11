@@ -151,6 +151,12 @@
     <Filter Include="ソース ファイル\Engine\math\Easing">
       <UniqueIdentifier>{58f3fda8-68f6-4077-8f5a-622afe7f52e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\3D\Player">
+      <UniqueIdentifier>{5949d41d-9305-416f-9905-588970eaa92f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\3D\Player">
+      <UniqueIdentifier>{4f988093-55cc-4672-ab67-28950aae695c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -261,6 +267,15 @@
     <ClCompile Include="Game\Collision\CollisionPrimitive.cpp">
       <Filter>ソース ファイル\Game\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Collision\SphereCollider.cpp">
+      <Filter>ソース ファイル\Game\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Collision\CollisionManager.cpp">
+      <Filter>ソース ファイル\Game\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\3D\Player\Player.cpp">
+      <Filter>ソース ファイル\Game\3D\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
@@ -338,9 +353,6 @@
     <ClInclude Include="Game\3D\BaseParticleObjects.h">
       <Filter>ヘッダー ファイル\Game\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Game\3D\SampleGeometryObject\SampleParticleObject.h">
-      <Filter>ヘッダー ファイル\Game\3D\SampleParticleObj</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3D\ObjModelObject.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
@@ -379,6 +391,27 @@
     </ClInclude>
     <ClInclude Include="Game\Collision\Collision.h">
       <Filter>ヘッダー ファイル\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionTypes.h">
+      <Filter>ヘッダー ファイル\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\BaseCollider.h">
+      <Filter>ヘッダー ファイル\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionInfo.h">
+      <Filter>ヘッダー ファイル\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\SphereCollider.h">
+      <Filter>ヘッダー ファイル\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionManager.h">
+      <Filter>ヘッダー ファイル\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\3D\Player\Player.h">
+      <Filter>ヘッダー ファイル\Game\3D\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\3D\SampleParticleObject\SampleParticleObject.h">
+      <Filter>ヘッダー ファイル\Game\3D\SampleParticleObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
