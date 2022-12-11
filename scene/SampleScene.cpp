@@ -84,14 +84,12 @@ void SampleScene::Initialize()
 #endif // _DEBUG
 
 
-	//球の初期値を設定
-	sphere.center = XMVECTOR{0,2,0,1};
-	sphere.radius = 1.0f;
-	//三角形の初期値を設定
-	triangle.p0 = XMVECTOR{-1.0f, 0.0f, -1.0f, 1.0f};//左手前
-	triangle.p1 = XMVECTOR{-1.0f, 0.0f, +1.0f, 1.0f};//左奥
-	triangle.p2 = XMVECTOR{+1.0f, 0.0f, -1.0f, 1.0f};//右手前
-	triangle.normal = XMVECTOR{0.0f, 1.0f, 0.0f, 0.0f};//上向き
+	//平面の初期値を設定
+	plane.normal = XMVECTOR{0,1,0,0};
+	plane.distance = 0.0f;
+	//レイの初期値を設定
+	ray.start = XMVECTOR{0,1,0,1};	//原点やや上
+	ray.dir = XMVECTOR{0,-1,0,0};	//下向き
 }
 
 void SampleScene::Update()
@@ -118,15 +116,15 @@ void SampleScene::Update()
 		camera->RotVector({XMConvertToRadians(3.f), 0.f, 0.f});
 	}
 
-	// 球移動
+	// 平面移動
 	{
-		XMVECTOR moveY = XMVectorSet(0, 0.01f, 0, 0);
-		if (input->Push(DIK_I)) { sphere.center += moveY; }
-		else if (input->Push(DIK_K)) { sphere.center -= moveY; }
+		XMVECTOR moveZ = XMVectorSet(0, 0, 1.01f, 0);
+		if (input->Push(DIK_I)) { ray.start += moveZ; }
+		else if (input->Push(DIK_K)) { ray.start -= moveZ; }
 
 		XMVECTOR moveX = XMVectorSet(0.01f, 0, 0, 0);
-		if (input->Push(DIK_L)) { sphere.center += moveX; }
-		else if (input->Push(DIK_J)) { sphere.center -= moveX; }
+		if (input->Push(DIK_L)) { ray.start += moveX; }
+		else if (input->Push(DIK_J)) { ray.start -= moveX; }
 	}
 
 #pragma endregion 入力処理
@@ -232,13 +230,15 @@ void SampleScene::Draw()
 	debugText->Printf(0,0,1.f,"Camera Target  X:%f, Y:%f, Z:%f", camera->GetTarget().x, camera->GetTarget().y, camera->GetTarget().z);
 	debugText->Printf(0,16,1.f,"Camera Eye  X:%f, Y:%f, Z:%f", camera->GetEye().x, camera->GetEye().y, camera->GetEye().z);
 
-	debugText->Printf(0, 48, 1.f, "Sphere(X:%f, Y:%f, Z:%f)", sphere.center.m128_f32[0], sphere.center.m128_f32[1], sphere.center.m128_f32[2]);
+	debugText->Printf(0, 48, 1.f, "Ray.Start(X:%f, Y:%f, Z:%f)", ray.start.m128_f32[0], ray.start.m128_f32[1], ray.start.m128_f32[2]);
+	debugText->Printf(0, 64, 1.f, "Ray.Dir(X:%f, Y:%f, Z:%f)", ray.dir.m128_f32[0], ray.dir.m128_f32[1], ray.dir.m128_f32[2]);
 	//球と三角形の当たり判定
 	XMVECTOR inter;
-	bool hit = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
+	float distance;
+	bool hit = Collision::CheckRay2Plane(ray, plane, &distance, &inter);
 	if(hit){
-		debugText->Print("Hit", 0, 64, 1.0f);
-		debugText->Printf(0, 80, 1.0f, "(X:%f, Y:%f, Z:%f)", inter.m128_f32[0], inter.m128_f32[1], inter.m128_f32[2]);
+		debugText->Print("Hit", 0, 96, 1.0f);
+		debugText->Printf(0, 112, 1.0f, "(X:%f, Y:%f, Z:%f)", inter.m128_f32[0], inter.m128_f32[1], inter.m128_f32[2]);
 	}
 
 #endif // _DEBUG

@@ -72,10 +72,10 @@ private:
 	//std::unique_ptr<SampleSprite> sp;
 
 
-	//“–‚½‚è”»’è ‹…
-	Sphere sphere;
-	//“–‚½‚è”»’è ŽOŠpŒ`
-	Triangle triangle;
+	//“–‚½‚è”»’è •½–Ê
+	Plane plane;
+	//“–‚½‚è”»’è ƒŒƒC
+	Ray ray;
 
 #ifdef _DEBUG
 	imguiManager* imgui;
