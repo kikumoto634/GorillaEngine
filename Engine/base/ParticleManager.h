@@ -65,7 +65,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(DirectXCommon* dxCommon, UINT texNumber = 0);
+	void Initialize(DirectXCommon* dxCommon);
 
 	/// <summary>
 	/// 更新
@@ -86,7 +86,7 @@ public:
 	/// <param name="accel">加速度</param>
 	/// <param name="start_scale">開始時スケール</param>
 	/// <param name="end_scale">終了時スケール</param>
-	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale);
+	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale, UINT texNumber = 1);
 
 	//Get
 	int GetMaxObjectCount()	{return maxObjectCount;}

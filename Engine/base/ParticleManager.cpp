@@ -12,11 +12,10 @@ ParticleManager *ParticleManager::GetInstance()
 	return &instance;
 }
 
-void ParticleManager::Initialize(DirectXCommon* dxCommon, UINT texNumber)
+void ParticleManager::Initialize(DirectXCommon* dxCommon)
 {
 	HRESULT result;
 	this->dxCommon = dxCommon;
-	this->texNumber = texNumber;
 
 	InitializeGraphicsPipeline();
 	InitializeDescriptorHeap();
@@ -162,8 +161,11 @@ void ParticleManager::Draw()
 #pragma endregion
 }
 
-void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale)
+void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale, UINT texNumber)
 {
+	//テクスチャ変更
+	this->texNumber = texNumber;
+
 	//リストに要素を追加
 	particle.emplace_front();
 	//追加した要素の参照
