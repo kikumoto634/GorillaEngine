@@ -2,7 +2,7 @@
 
 #include "CollisionTypes.h"
 #include "CollisionInfo.h"
-#include "../3D/BaseObjObject.h"
+#include "../../3D/BaseObjObject.h"
 
 /// <summary>
 /// コライダー基底クラス

@@ -3,7 +3,7 @@
 #include "../../Engine/3D/ObjModelObject.h"
 #include "../../Engine/base/ObjModelManager.h"
 
-#include "../Collision/CollisionInfo.h"
+#include "../Collision/CollisionSystem/CollisionInfo.h"
 
 
 class BaseCollider;

@@ -1,6 +1,6 @@
 #include "BaseObjObject.h"
-#include "../Collision/BaseCollider.h"
-#include "../Collision/CollisionManager.h"
+#include "../Collision/CollisionSystem/BaseCollider.h"
+#include "../Collision/CollisionSystem/CollisionManager.h"
 
 BaseObjObject::~BaseObjObject()
 {

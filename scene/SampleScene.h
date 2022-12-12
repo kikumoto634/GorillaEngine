@@ -10,8 +10,8 @@
 
 #include "../Game/2D/SampleSprite/SampleSprite.h"
 
-#include "../Game/Collision/CollisionPrimitive.h"
-#include "../Game/Collision/CollisionManager.h"
+#include "../Game/Collision/CollisionSystem/CollisionPrimitive.h"
+#include "../Game/Collision/CollisionSystem/CollisionManager.h"
 
 #ifdef _DEBUG
 #include "../Engine/base/imguiManager.h"

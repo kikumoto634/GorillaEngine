@@ -151,6 +151,12 @@
     <Filter Include="ヘッダー ファイル\Game\3D\Player">
       <UniqueIdentifier>{4f988093-55cc-4672-ab67-28950aae695c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\Collision\CollisionSystem">
+      <UniqueIdentifier>{a30e288a-a45b-4ebf-aa6b-672dfa094c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Collision\CollisionSystem">
+      <UniqueIdentifier>{2fa0169a-8427-49bb-a175-5cfa3eac42f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -246,20 +252,20 @@
     <ClCompile Include="Engine\base\imguiManager.cpp">
       <Filter>ソース ファイル\Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Collision\Collision.cpp">
-      <Filter>ソース ファイル\Game\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Collision\CollisionPrimitive.cpp">
-      <Filter>ソース ファイル\Game\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Collision\SphereCollider.cpp">
-      <Filter>ソース ファイル\Game\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Collision\CollisionManager.cpp">
       <Filter>ソース ファイル\Game\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Game\3D\Player\Player.cpp">
       <Filter>ソース ファイル\Game\3D\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Collision\CollisionSystem\Collision.cpp">
+      <Filter>ソース ファイル\Game\Collision\CollisionSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Collision\CollisionSystem\CollisionManager.cpp">
+      <Filter>ソース ファイル\Game\Collision\CollisionSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Collision\CollisionSystem\CollisionPrimitive.cpp">
+      <Filter>ソース ファイル\Game\Collision\CollisionSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -365,29 +371,26 @@
     <ClInclude Include="Engine\light\CircleShadow.h">
       <Filter>ヘッダー ファイル\Engine\light</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Collision\CollisionPrimitive.h">
-      <Filter>ヘッダー ファイル\Game\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Collision\Collision.h">
-      <Filter>ヘッダー ファイル\Game\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Collision\CollisionTypes.h">
-      <Filter>ヘッダー ファイル\Game\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Collision\BaseCollider.h">
-      <Filter>ヘッダー ファイル\Game\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Collision\CollisionInfo.h">
-      <Filter>ヘッダー ファイル\Game\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Collision\SphereCollider.h">
-      <Filter>ヘッダー ファイル\Game\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Collision\CollisionManager.h">
       <Filter>ヘッダー ファイル\Game\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Game\3D\Player\Player.h">
       <Filter>ヘッダー ファイル\Game\3D\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionSystem\Collision.h">
+      <Filter>ヘッダー ファイル\Game\Collision\CollisionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionSystem\CollisionInfo.h">
+      <Filter>ヘッダー ファイル\Game\Collision\CollisionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionSystem\CollisionManager.h">
+      <Filter>ヘッダー ファイル\Game\Collision\CollisionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionSystem\CollisionPrimitive.h">
+      <Filter>ヘッダー ファイル\Game\Collision\CollisionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionSystem\CollisionTypes.h">
+      <Filter>ヘッダー ファイル\Game\Collision\CollisionSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
