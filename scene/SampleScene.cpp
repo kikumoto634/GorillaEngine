@@ -143,6 +143,34 @@ void SampleScene::Update()
 	}
 	lightGroup->Update();
 
+
+	//レイ当たり判定
+	Ray ray;
+	ray.start = {10.0f, 0.5f, 0.0f, 1};
+	ray.dir = {-1,0,0,0};
+	RaycastHit raycastHit;
+
+	if(collisionManager->Raycast(ray, &raycastHit)){
+		debugText->Print("RaycastHit", 0.0f, 32.0f);
+		debugText->Printf(0.f, 48.f, 1.f, "hitPos (X:%f, Y:%f, Z:%f)", raycastHit.inter.m128_f32[0], raycastHit.inter.m128_f32[1], raycastHit.inter.m128_f32[2]);
+		//衝突点にパーティクルを発生させる
+		for(int i = 0; i < 1; i++){
+			Vector3 pos{};
+			pos.x = raycastHit.inter.m128_f32[0];
+			pos.y = raycastHit.inter.m128_f32[1];
+			pos.z = raycastHit.inter.m128_f32[2];
+		
+			const float md_vel = 0.1f;
+			Vector3 vel{};
+			vel.x = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
+			vel.y = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
+			vel.z = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
+
+			//ParticleManager::GetInstance()->Add(10, pos, vel, Vector3{0,0,0}, 0.0f, 1.0f);
+		}
+	}
+
+
 	//すべての衝突をチェック
 	collisionManager->CheckAllCollisions();
 

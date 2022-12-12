@@ -71,8 +71,8 @@ void Player::OnCollision(const CollisionInfo &info)
 	//衝突点にパーティクル発生
 	for(int i = 0; i < 1; i++){
 		Vector3 pos{};
-		pos.x = 0.f;
-		pos.y = 0.f;
+		pos.x = info.inter.m128_f32[0];
+		pos.y = info.inter.m128_f32[1];
 		pos.z = info.inter.m128_f32[2];
 		
 		const float md_vel = 0.1f;

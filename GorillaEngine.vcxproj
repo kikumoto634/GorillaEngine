@@ -228,6 +228,7 @@
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionManager.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionPrimitive.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionTypes.h" />
+    <ClInclude Include="Game\Collision\RaycastHit.h" />
     <ClInclude Include="Game\Collision\SphereCollider.h" />
     <ClInclude Include="scene\BaseScene.h" />
     <ClInclude Include="scene\SampleScene.h" />

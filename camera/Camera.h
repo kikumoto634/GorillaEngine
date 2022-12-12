@@ -69,7 +69,7 @@ private:
 
 protected:
 	ViewProjection view;
-	float distance = 10.f;	//ƒJƒƒ‰‚Ì‹——£
+	float distance = 20.f;	//ƒJƒƒ‰‚Ì‹——£
 
 	//‰ñ“]s—ñ
 	XMMATRIX matRot = DirectX::XMMatrixIdentity();
