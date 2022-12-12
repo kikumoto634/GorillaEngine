@@ -40,15 +40,18 @@ void SampleScene::Initialize()
 	//3Dオブジェクト(.obj)にセット
 	ObjModelObject::SetLight(lightGroup);
 
-	lightGroup->SetDirLightActive(0, false);
-	lightGroup->SetDirLightActive(1, false);
-	lightGroup->SetDirLightActive(2, false);
+	lightGroup->SetDirLightActive(0, true);
+	lightGroup->SetDirLightActive(1, true);
+	lightGroup->SetDirLightActive(2, true);
 
 	//丸影
 	lightGroup->SetCircleShadowActive(0, true);
 
 	//衝突マネージャー
 	collisionManager = CollisionManager::GetInstance();
+
+	//パーティクル
+	particle = ParticleManager::GetInstance();
 
 #pragma endregion 汎用初期化
 
@@ -105,6 +108,11 @@ void SampleScene::Update()
 	else if(input->Push(DIK_S)){
 		camera->RotVector({XMConvertToRadians(3.f), 0.f, 0.f});
 	}
+
+	if(input->Push(DIK_SPACE)){
+		CreateParticles();
+	}
+
 #pragma endregion 入力処理
 
 #pragma region _3D更新
@@ -137,6 +145,9 @@ void SampleScene::Update()
 
 	//すべての衝突をチェック
 	collisionManager->CheckAllCollisions();
+
+	//パーティクル
+	particle->Update(player->GetmatWorld(), camera);
 
 #pragma endregion 汎用更新
 
@@ -188,8 +199,7 @@ void SampleScene::Draw()
 	obj3_4->Draw();
 
 #pragma region パーティクル
-	player->Draw2D();
-
+	particle->Draw();
 #pragma endregion パーティクル
 
 #pragma endregion _3D描画
@@ -237,4 +247,29 @@ void SampleScene::Finalize()
 #pragma endregion 汎用解放
 
 	BaseScene::Finalize();
+}
+
+void SampleScene::CreateParticles()
+{
+	for (int i = 0; i < 10; i++) {
+		// X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos = 10.0f;
+		Vector3 pos{};
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+		const float rnd_vel = 0.1f;
+		Vector3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+		Vector3 acc{};
+		const float rnd_acc = 0.001f;
+		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		// 追加
+		particle->Add(60, pos, vel, acc, 1.0f, 0.0f);
+	}
 }

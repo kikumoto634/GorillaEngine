@@ -1,6 +1,5 @@
 #pragma once
 #include "../BaseObjObject.h"
-#include "../SampleParticleObject/SampleParticleObject.h"
 
 class Player : public BaseObjObject
 {
@@ -24,12 +23,6 @@ public:
 	void Draw3D();
 
 	/// <summary>
-	/// 2D•`‰æ
-	/// </summary>
-	/// <returns></returns>
-	void Draw2D();
-
-	/// <summary>
 	/// Œãˆ—
 	/// </summary>
 	void Finalize() override;
@@ -39,8 +32,5 @@ public:
 	/// </summary>
 	/// <param name="info">Õ“Ëî•ñ</param>
 	void OnCollision(const CollisionInfo& info) override;
-
-private:
-	std::unique_ptr<SampleParticleObject> particle;
 };
 

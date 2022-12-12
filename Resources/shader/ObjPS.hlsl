@@ -29,12 +29,11 @@ float4 main(VSOutput input) : SV_TARGET
 			float3 specular = pow(saturate(dot(reflect, eyedir)), shiness) * m_specular;
 			// 全て加算する
 			shadecolor.rgb += (diffuse + specular) * dirLights[i].lightcolor;
-			shadecolor.a = m_alpha;
 		}
 	}
 
 	// 点光源
-	for (int i = 0; i < POINTLIGHT_NUM; i++) {
+	for (i = 0; i < POINTLIGHT_NUM; i++) {
 		if (pointLights[i].active) {
 			// ライトへのベクトル
 			float3 lightv = pointLights[i].lightpos - input.worldpos.xyz;
@@ -58,7 +57,7 @@ float4 main(VSOutput input) : SV_TARGET
 	}
 
 	//スポットライト
-	for(int i = 0; i < SPOTLIGHT_NUM; i++){
+	for(i = 0; i < SPOTLIGHT_NUM; i++){
 		if(spotLights[i].active){
 			//ライトへの方向ベクトル
 			float3 lightv = spotLights[i].lightpos - input.worldpos.xyz;
@@ -87,7 +86,7 @@ float4 main(VSOutput input) : SV_TARGET
 	}
 
 	//丸影
-	for(int i = 0; i < CIRCLESHADOW_NUM; i++){
+	for(i = 0; i < CIRCLESHADOW_NUM; i++){
 		if(circleShadows[i].active){
 			//オブジェクト表面からキャスターへのベクトル
 			float3 casterv = circleShadows[i].casterPos - input.worldpos.xyz;

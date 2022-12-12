@@ -6,7 +6,6 @@
 
 
 #include "ParticleManager.h"
-#include "../Engine/3D/ParticleObject.h"
 
 #include "../Engine/loader/FbxLoader.h"
 #include "FbxModelManager.h"

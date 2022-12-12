@@ -2,9 +2,9 @@
 #include "BaseScene.h"
 #include "../Engine/light/LightGroup.h"
 
-#include "../Game/3D/SampleParticleObject/SampleParticleObject.h"
 #include "../Game/3D/SampleFbxObject/SampleFbxObject.h"
 #include "../Game/3D/SampleObjObject/SampleObjObject.h"
+#include "../Engine/base/ParticleManager.h"
 
 #include "../Game/3D/Player/Player.h"
 
@@ -50,6 +50,8 @@ public:
 	/// </summary>
 	void Finalize() override;
 
+	void CreateParticles();
+
 private:
 	float time = 0.f;
 
@@ -63,6 +65,9 @@ private:
 
 	//衝突マネージャー
 	CollisionManager* collisionManager = nullptr;
+
+	//パーティクル
+	ParticleManager* particle = nullptr;
 
 	//3Dオブジェクト
 	std::unique_ptr<Player> player;

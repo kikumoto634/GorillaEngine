@@ -3,10 +3,15 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <DirectXMath.h>
+#include <DirectXTex.h>
 #include <forward_list>
 
 #include "../Engine/math/Vector/Vector2.h"
 #include "../Engine/math/Vector/Vector3.h"
+#include "../Engine/base/DirectXCommon.h"
+#include "../Engine/base/TextureManager.h"
+#include "../../camera/Camera.h"
+#include "../3D/WorldTransform.h"
 
 class ParticleManager
 {
@@ -22,6 +27,12 @@ public:
 	struct VertexPos{
 		Vector3 pos;
 		float scale;
+	};
+
+	//定数バッファ用データ構造体(3D変換行列
+	struct ConstBufferData{
+		DirectX::XMMATRIX mat;	//3D変換行列
+		DirectX::XMMATRIX matBillboard;	//ビルボード行列
 	};
 
 	//パーティクル粒
@@ -52,14 +63,19 @@ public:
 
 public:
 	/// <summary>
-	/// バッファ生成
+	/// 初期化
 	/// </summary>
-	void CreateBuffer();
+	void Initialize(DirectXCommon* dxCommon, UINT texNumber = 0);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update(WorldTransform worldTransform, Camera* camera);
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
 
 	/// <summary>
 	/// パーティクル追加
@@ -82,6 +98,29 @@ public:
 	UINT GetParticle()	{return (UINT)std::distance(particle.begin(), particle.end());}
 
 private:
+	/// <summary>
+	/// グラフィックパイプライン初期化
+	/// </summary>
+	void InitializeGraphicsPipeline();
+
+	/// <summary>
+	/// デストラクタヒープ初期化
+	/// </summary>
+	void InitializeDescriptorHeap();
+
+private:
+	//DirectXCommon
+	DirectXCommon* dxCommon = nullptr;
+
+	//パイプラインステートオブジェクト
+	ComPtr<ID3D12PipelineState> pipelineState;
+	//ルートシグネチャ
+	ComPtr<ID3D12RootSignature> rootSignature;
+	//デスクリプタヒープ(定数バッファビュー用)
+	ComPtr<ID3D12DescriptorHeap> basicDescHeap;
+
+	TextureManager* textureManager;
+
 	//頂点バッファ
 	ComPtr<ID3D12Resource> vertBuffer;
 	//頂点マップ
@@ -92,7 +131,17 @@ private:
 	//頂点データ
 	VertexPos vertices[vertexCount];
 
+	//定数バッファ(行列)
+	ComPtr<ID3D12Resource> constBuffer;
+	//マッピング用ポインタ
+	ConstBufferData* constMap = nullptr;
+
 	//パーティクル配列
 	std::forward_list<Particle> particle;
+
+	//テクスチャデータ
+	UINT texNumber = 0;
+
+	XMFLOAT4 color = {1,1,1,1};
 };
 

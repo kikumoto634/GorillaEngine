@@ -100,12 +100,6 @@
     <Filter Include="ヘッダー ファイル\Game\2D\SampleSp">
       <UniqueIdentifier>{b9ed47f6-925a-4393-94c5-5bd4141d0491}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\SampleParticleObj">
-      <UniqueIdentifier>{c31ad653-486c-4240-950c-aa93eb114f0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\SampleParticleObj">
-      <UniqueIdentifier>{31a5dfa9-d5f4-4906-8525-09d9ef837058}</UniqueIdentifier>
-    </Filter>
     <Filter Include="リソース ファイル\Obj">
       <UniqueIdentifier>{64f7312d-974c-4d51-8c15-3186ca7f85ab}</UniqueIdentifier>
     </Filter>
@@ -180,9 +174,6 @@
     <ClCompile Include="Engine\3D\FbxModelObject.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\ParticleObject.cpp">
-      <Filter>ソース ファイル\Engine\3D</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3D\ViewProjection.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
@@ -233,12 +224,6 @@
     </ClCompile>
     <ClCompile Include="Engine\math\Easing\Easing.cpp">
       <Filter>ソース ファイル\Engine\math\Easing</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\BaseParticleObjects.cpp">
-      <Filter>ソース ファイル\Game\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\SampleParticleObject\SampleParticleObject.cpp">
-      <Filter>ソース ファイル\Game\3D\SampleParticleObj</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\ObjModelObject.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
@@ -293,9 +278,6 @@
     <ClInclude Include="Engine\3D\FbxModelObject.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\ParticleObject.h">
-      <Filter>ヘッダー ファイル\Engine\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3D\ViewProjection.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
@@ -348,9 +330,6 @@
       <Filter>ヘッダー ファイル\Engine\math\Easing</Filter>
     </ClInclude>
     <ClInclude Include="Game\3D\BaseFbxObjects.h">
-      <Filter>ヘッダー ファイル\Game\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\BaseParticleObjects.h">
       <Filter>ヘッダー ファイル\Game\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\ObjModelObject.h">
@@ -409,9 +388,6 @@
     </ClInclude>
     <ClInclude Include="Game\3D\Player\Player.h">
       <Filter>ヘッダー ファイル\Game\3D\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\SampleParticleObject\SampleParticleObject.h">
-      <Filter>ヘッダー ファイル\Game\3D\SampleParticleObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

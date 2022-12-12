@@ -4,16 +4,20 @@ using namespace DirectX;
 
 bool Collision::CheckSphere2Sphere(const Sphere &sphere1, const Sphere &sphere2, DirectX::XMVECTOR *inter)
 {
-	float distX = (sphere2.center.m128_f32[0]-sphere1.center.m128_f32[0]) * (sphere2.center.m128_f32[0]-sphere1.center.m128_f32[0]);
-	float distY = (sphere2.center.m128_f32[1]-sphere1.center.m128_f32[1]) * (sphere2.center.m128_f32[1]-sphere1.center.m128_f32[1]);
-	float distZ = (sphere2.center.m128_f32[2]-sphere1.center.m128_f32[2]) * (sphere2.center.m128_f32[2]-sphere1.center.m128_f32[2]);
-	//‹…1‚Æ‹…2‚Ì‹——£
-	float dist = distX + distY + distZ;
+	// ’†S“_‚Ì‹——£‚Ì‚Qæ <= ”¼Œa‚Ì˜a‚Ì‚Qæ@‚È‚çŒğ·
+	float dist = XMVector3LengthSq(sphere1.center - sphere2.center).m128_f32[0];
 
-	//”¼Œa‚Ì‡Œv
-	float radius = (sphere1.radius + sphere2.radius) * (sphere1.radius + sphere2.radius);
+	float radius = sphere1.radius + sphere2.radius;
+	radius *= radius;
+
 
 	if(dist > radius)	{return false;}
+
+	if(inter){
+		//A‚Ì”¼Œa‚ª0‚ÌAÀ•W‚ÍB‚Ì’†SAB‚Ì”¼Œa‚ª0‚ÌÀ•W‚ÍA‚Ì’†S‚Æ‚È‚é
+		float t = sphere2.radius / (sphere1.radius + sphere2.radius);
+		*inter = XMVectorLerp(sphere1.center, sphere2.center, t);
+	}
 
 	return true;
 }

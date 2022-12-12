@@ -72,10 +72,6 @@ void Application::Initialize()
 	//スプライト静的初期化
 	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
 	
-	//Geometry
-	ParticleManager::GetInstance()->CreateBuffer();
-	ParticleObject::StaticInitialize(dxCommon);
-	
 	//FBX
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 	FbxModelObject::StaticInitialize(dxCommon);
@@ -86,6 +82,9 @@ void Application::Initialize()
 
 	//Light
 	LightGroup::StaticInitialize(dxCommon->GetDevice());
+
+	// パーティクルマネージャ初期化
+	ParticleManager::GetInstance()->Initialize(dxCommon, 1);
 
 	scene->Initialize();
 }
@@ -113,7 +112,6 @@ void Application::Finalize()
 	ObjModelObject::StaticFinalize();
 	FbxModelObject::StaticFinalize();
 	FbxLoader::GetInstance()->Finalize();
-	ParticleObject::StaticFinalize();
 	Sprite::StaticFinalize();
 
 	scene->Finalize();

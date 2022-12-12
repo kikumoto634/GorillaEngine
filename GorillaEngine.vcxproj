@@ -156,7 +156,6 @@
     <ClCompile Include="Engine\2D\Sprite.cpp" />
     <ClCompile Include="Engine\3D\FbxModelObject.cpp" />
     <ClCompile Include="Engine\3D\ObjModelObject.cpp" />
-    <ClCompile Include="Engine\3D\ParticleObject.cpp" />
     <ClCompile Include="Engine\3D\ViewProjection.cpp" />
     <ClCompile Include="Engine\3D\WorldTransform.cpp" />
     <ClCompile Include="Engine\base\Application.cpp" />
@@ -179,11 +178,9 @@
     <ClCompile Include="Game\2D\SampleSprite\SampleSprite.cpp" />
     <ClCompile Include="Game\3D\BaseFbxObjects.cpp" />
     <ClCompile Include="Game\3D\BaseObjObject.cpp" />
-    <ClCompile Include="Game\3D\BaseParticleObjects.cpp" />
     <ClCompile Include="Game\3D\Player\Player.cpp" />
     <ClCompile Include="Game\3D\SampleFbxObject\SampleFbxObject.cpp" />
     <ClCompile Include="Game\3D\SampleObjObject\SampleObjObject.cpp" />
-    <ClCompile Include="Game\3D\SampleParticleObject\SampleParticleObject.cpp" />
     <ClCompile Include="Game\Collision\Collision.cpp" />
     <ClCompile Include="Game\Collision\CollisionManager.cpp" />
     <ClCompile Include="Game\Collision\CollisionPrimitive.cpp" />
@@ -197,7 +194,6 @@
     <ClInclude Include="Engine\2D\Sprite.h" />
     <ClInclude Include="Engine\3D\FbxModelObject.h" />
     <ClInclude Include="Engine\3D\ObjModelObject.h" />
-    <ClInclude Include="Engine\3D\ParticleObject.h" />
     <ClInclude Include="Engine\3D\ViewProjection.h" />
     <ClInclude Include="Engine\3D\WorldTransform.h" />
     <ClInclude Include="Engine\base\Application.h" />
@@ -224,11 +220,9 @@
     <ClInclude Include="Game\2D\SampleSprite\SampleSprite.h" />
     <ClInclude Include="Game\3D\BaseFbxObjects.h" />
     <ClInclude Include="Game\3D\BaseObjObject.h" />
-    <ClInclude Include="Game\3D\BaseParticleObjects.h" />
     <ClInclude Include="Game\3D\Player\Player.h" />
     <ClInclude Include="Game\3D\SampleFbxObject\SampleFbxObject.h" />
     <ClInclude Include="Game\3D\SampleObjObject\SampleObjObject.h" />
-    <ClInclude Include="Game\3D\SampleParticleObject\SampleParticleObject.h" />
     <ClInclude Include="Game\Collision\BaseCollider.h" />
     <ClInclude Include="Game\Collision\Collision.h" />
     <ClInclude Include="Game\Collision\CollisionInfo.h" />
