@@ -52,6 +52,7 @@ void SampleScene::Initialize()
 
 	//パーティクル
 	particle = ParticleManager::GetInstance();
+	particleWorld.Initialize();
 
 #pragma endregion 汎用初期化
 
@@ -175,7 +176,8 @@ void SampleScene::Update()
 	collisionManager->CheckAllCollisions();
 
 	//パーティクル
-	particle->Update(player->GetmatWorld(), camera);
+	particle->Update(particleWorld, camera);
+	particleWorld.UpdateMatrix();
 
 #pragma endregion 汎用更新
 

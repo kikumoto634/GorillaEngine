@@ -68,6 +68,7 @@ private:
 
 	//パーティクル
 	ParticleManager* particle = nullptr;
+	WorldTransform particleWorld = {};
 
 	//3Dオブジェクト
 	std::unique_ptr<Player> player;
