@@ -75,7 +75,7 @@ void Player::OnCollision(const CollisionInfo &info)
 		pos.y = info.inter.m128_f32[1];
 		pos.z = info.inter.m128_f32[2];
 		
-		const float md_vel = 0.5f;
+		const float md_vel = 0.1f;
 		Vector3 vel{};
 		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
 		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
