@@ -274,6 +274,8 @@ void SampleScene::Finalize()
 	delete lightGroup;
 	lightGroup = nullptr;
 
+	particleWorld = {};
+
 #pragma endregion ”Ä—p‰ð•ú
 
 	BaseScene::Finalize();
