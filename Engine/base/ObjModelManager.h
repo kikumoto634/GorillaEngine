@@ -46,7 +46,19 @@ public:
 	void Draw(ID3D12GraphicsCommandList* commandList);
 
 	//Getter
+	
+	/// <summary>
+	/// マテリアル取得
+	/// </summary>
+	/// <returns></returns>
 	Material GetMaterial()	{return material;}
+
+	/// <summary>
+	/// メッシュコンテナ取得
+	/// </summary>
+	/// <returns>マッシュコンテナ</returns>
+	inline const std::vector<ObjModelMesh*>& GetMeshes() {return meshs;}
+
 private:
 
 	/// <summary>

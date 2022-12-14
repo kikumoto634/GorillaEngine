@@ -7,5 +7,6 @@ enum CollisionShapeType
 {
 	SHAPE_UNKNOWN = -1,	//–¢Ý’è
 
-	COLLIDIONSHAPE_SPHERE,	//‹…
+	COLLISIONSHAPE_SPHERE,	//‹…
+	COLLISIONSHAPE_MESH,	//ƒƒbƒVƒ…
 };

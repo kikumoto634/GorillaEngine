@@ -27,7 +27,7 @@ bool CollisionManager::Raycast(const Ray &ray, RaycastHit *hitinfo, float maxDis
 	for(; it != colliders.end(); ++it){
 		BaseCollider* colA = *it;
 		//‹…‚Ìê‡
-		if(colA->GetShapeType() == COLLIDIONSHAPE_SPHERE){
+		if(colA->GetShapeType() == COLLISIONSHAPE_SPHERE){
 			Sphere* sphere = dynamic_cast<Sphere*>(colA);
 			float tempDistance;
 			XMVECTOR tempinter;
@@ -70,8 +70,8 @@ void CollisionManager::CheckAllCollisions()
 			BaseCollider* colB = *itB;
 
 			//‚Æ‚à‚É‹…
-			if(colA->GetShapeType() == COLLIDIONSHAPE_SPHERE &&
-				colB->GetShapeType() == COLLIDIONSHAPE_SPHERE){
+			if(colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
+				colB->GetShapeType() == COLLISIONSHAPE_SPHERE){
 				Sphere* SphereA = dynamic_cast<Sphere*>(colA);
 				Sphere* SphereB = dynamic_cast<Sphere*>(colB);
 				DirectX::XMVECTOR inter;

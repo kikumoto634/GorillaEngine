@@ -20,7 +20,7 @@ public:
 		radius(radius)
 	{
 		//球形状をセット
-		shapeType = COLLIDIONSHAPE_SPHERE;
+		shapeType = COLLISIONSHAPE_SPHERE;
 	}
 
 	/// <summary>

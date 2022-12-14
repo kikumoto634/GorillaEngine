@@ -67,6 +67,14 @@ public: // 静的メンバ関数
 	/// <returns></returns>
 	static ObjModelObject* Create(ObjModelManager* model);
 
+	//Getter
+
+	/// <summary>
+	/// モデル取得
+	/// </summary>
+	/// <returns>モデル</returns>
+	inline ObjModelManager* GetModel()	{return model;}
+
 	//Setter
 	static void SetLight(LightGroup* light)	{common->light = light;}
 

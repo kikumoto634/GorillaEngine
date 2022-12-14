@@ -72,6 +72,7 @@ public:
 	/// </summary>
 	void CalculateSmoothedVertexNormals();
 
+
 	//Getter
 
 	/// <summary>
@@ -91,6 +92,18 @@ public:
 	/// </summary>
 	/// <returns>インデックスバッファ</returns>
 	const D3D12_INDEX_BUFFER_VIEW& GetIBView() { return ibView; }
+
+	/// <summary>
+	/// 頂点配列を取得
+	/// </summary>
+	/// <returns>頂点配列</returns>
+	inline const std::vector<VertexPosNormalUv>& GetVertices() {return vertices;}
+
+	/// <summary>
+	/// インデックス配列を取得
+	/// </summary>
+	/// <returns>インデックス配列</returns>
+	inline const std::vector<unsigned short>& GetIndices() {return indices;}
 
 
 private:
