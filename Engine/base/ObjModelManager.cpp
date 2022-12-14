@@ -15,10 +15,16 @@ DirectXCommon* ObjModelManager::dxCommon = nullptr;
 void ObjModelManager::StaticInitialize(DirectXCommon* dxCommon_)
 {
 	dxCommon = dxCommon_;
+
+	ObjModelMesh::StaticInitialize(dxCommon);
 }
 
 ObjModelManager::~ObjModelManager()
 {
+	for(auto& m : meshs){
+		delete m;
+	}
+	meshs.clear();
 }
 
 void ObjModelManager::CreateModel(std::string filePath, bool smmothing)
@@ -33,6 +39,30 @@ void ObjModelManager::CreateModel(std::string filePath, bool smmothing)
 	result = dxCommon->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));//生成
 	assert(SUCCEEDED(result));
 
+
+	LoadModel(filePath, smmothing);
+
+	for(auto& m : meshs){
+		m->CreateBuffers();
+	}
+}
+
+void ObjModelManager::Draw(ID3D12GraphicsCommandList* commandList)
+{
+	// デスクリプタヒープの配列
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
+	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	// シェーダリソースビューをセット
+	 commandList->SetGraphicsRootDescriptorTable(2, descHeap->GetGPUDescriptorHandleForHeapStart());
+	
+	 for(auto& m : meshs){
+		m->Draw(commandList);
+	 }
+}
+
+void ObjModelManager::LoadModel(const std::string &filePath, bool smmothing)
+{
 	//ファイルストリーム
 	ifstream file;
 	int indexCountTex = 0;
@@ -41,10 +71,13 @@ void ObjModelManager::CreateModel(std::string filePath, bool smmothing)
 	const string modelname = filePath;
 	const string filename = modelname + ".obj";
 	const string directoryPath = "Resources/" + modelname + "/";
-	//LoadTexture("Resources/", "white1x1.png");
 	file.open(directoryPath + filename);
 	//ファイルオープン失敗
 	assert(file.fill());
+
+	// メッシュ生成
+	meshs.emplace_back(new ObjModelMesh);
+	ObjModelMesh* mesh = meshs.back();
 
 	vector<Vector3> positions;
 	vector<Vector3> normals;
@@ -59,7 +92,7 @@ void ObjModelManager::CreateModel(std::string filePath, bool smmothing)
 		{
 			if(modelname.size() > 0)
 			{
-				CalculateSmoothedVertexNormals();
+				mesh->CalculateSmoothedVertexNormals();
 				indexCountTex = 0;
 			}
 			// グループ名読み込み
@@ -87,28 +120,28 @@ void ObjModelManager::CreateModel(std::string filePath, bool smmothing)
 				index_stream.seekg(1, ios_base::cur);
 				index_stream >> indexNormal;
 
-				VertexPosNormalUv vertex{};
+				ObjModelMesh::VertexPosNormalUv vertex{};
 				vertex.pos = positions[indexPosition - 1];
 				vertex.normal = normals[indexNormal - 1];
 				vertex.uv = texcoords[indexTexcoord - 1];
-				vertices.emplace_back(vertex);
+				mesh->AddVertex(vertex);
 
 				//エッジ平滑化用のデータ追加
 				if(smmothing)
 				{
 					//vキー(座標データ)の番号と、すべて合成した頂点のインデックスをセットで登録する
-					AddSmmpthData(indexPosition, (unsigned short)GetVertexCount() - 1);
+					mesh->AddSmmpthData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
 				}
 
 				// インデックスデータの追加
 				if (faceIndexCount >= 3) {
 					// 四角形ポリゴンの4点目なので、
 					// 四角形の0,1,2,3の内 2,3,0で三角形を構築する
-					indices.emplace_back(indexCountTex - 1);
-					indices.emplace_back(indexCountTex);
-					indices.emplace_back(indexCountTex - 3);
+					mesh->AddIndex(indexCountTex - 1);
+					mesh->AddIndex(indexCountTex);
+					mesh->AddIndex(indexCountTex - 3);
 				} else {
-					indices.emplace_back(indexCountTex);
+					mesh->AddIndex(indexCountTex);
 				}
 				indexCountTex++;
 				faceIndexCount++;
@@ -139,96 +172,7 @@ void ObjModelManager::CreateModel(std::string filePath, bool smmothing)
 
 	//頂点法線の平均によるエッジの平滑化
 	if(smmothing){
-		CalculateSmoothedVertexNormals();
-	}
-
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv)*vertices.size());
-
-	// ヒーププロパティ
-	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// リソース設定
-	CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
-
-	// 頂点バッファ生成
-	result = dxCommon->GetDevice()->CreateCommittedResource(
-		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&vertBuff));
-	assert(SUCCEEDED(result));
-
-	// 頂点バッファへのデータ転送
-	VertexPosNormalUv* vertMap = nullptr;
-	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
-	if (SUCCEEDED(result)) {
-		copy(vertices.begin(), vertices.end(), vertMap);
-		vertBuff->Unmap(0, nullptr);
-	}
-
-	// 頂点バッファビューの作成
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-	vbView.SizeInBytes = sizeVB;
-	vbView.StrideInBytes = sizeof(vertices[0]);
-
-	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short)*indices.size());
-	// リソース設定
-	resourceDesc.Width = sizeIB;
-
-	// インデックスバッファ生成
-	result = dxCommon->GetDevice()->CreateCommittedResource(
-		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&indexBuff));
-
-	// インデックスバッファへのデータ転送
-	unsigned short* indexMap = nullptr;
-	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
-	if (SUCCEEDED(result)) {
-		copy(indices.begin(), indices.end(), indexMap);
-		indexBuff->Unmap(0, nullptr);
-	}
-
-	// インデックスバッファビューの作成
-	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
-	ibView.Format = DXGI_FORMAT_R16_UINT;
-	ibView.SizeInBytes = sizeIB;
-}
-
-void ObjModelManager::Draw(ID3D12GraphicsCommandList* commandList)
-{
-	// 頂点バッファの設定
-	commandList->IASetVertexBuffers(0, 1, &vbView);
-	// インデックスバッファの設定
-	commandList->IASetIndexBuffer(&ibView);
-
-	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
-	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-	// シェーダリソースビューをセット
-	 commandList->SetGraphicsRootDescriptorTable(2, descHeap->GetGPUDescriptorHandleForHeapStart());
-	// 描画コマンド
-	commandList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
-}
-
-void ObjModelManager::AddSmmpthData(unsigned short indexPosition, unsigned short indexVertex)
-{
-	smoothData[indexPosition].emplace_back(indexVertex);
-}
-
-void ObjModelManager::CalculateSmoothedVertexNormals()
-{
-	auto it = smoothData.begin();
-	for(; it != smoothData.end(); ++it){
-		//各面用の共通頂点コレクション
-		std::vector<unsigned short>& v = it->second;
-		//全頂点の法線を平均化する
-		XMVECTOR normal = {};
-		for(unsigned short index : v){
-			normal += XMVectorSet(vertices[index].normal.x, vertices[index].normal.y, vertices[index].normal.z,0);
-		}
-		normal = XMVector3Normalize(normal/(float)v.size());
-		//共通法線を使用するすべての頂点データに書き込む
-		for(unsigned short index : v){
-			vertices[index].normal = {normal.m128_f32[0], normal.m128_f32[1], normal.m128_f32[2]};
-		}
+		mesh->CalculateSmoothedVertexNormals();
 	}
 }
 

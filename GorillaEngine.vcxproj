@@ -163,6 +163,7 @@
     <ClCompile Include="Engine\base\FbxModelManager.cpp" />
     <ClCompile Include="Engine\base\imguiManager.cpp" />
     <ClCompile Include="Engine\base\ObjModelManager.cpp" />
+    <ClCompile Include="Engine\base\ObjModelMesh.cpp" />
     <ClCompile Include="Engine\base\ParticleManager.cpp" />
     <ClCompile Include="Engine\base\TextureManager.cpp" />
     <ClCompile Include="Engine\base\Window.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="Engine\base\FbxModelManager.h" />
     <ClInclude Include="Engine\base\imguiManager.h" />
     <ClInclude Include="Engine\base\ObjModelManager.h" />
+    <ClInclude Include="Engine\base\ObjModelMesh.h" />
     <ClInclude Include="Engine\base\ParticleManager.h" />
     <ClInclude Include="Engine\base\TextureManager.h" />
     <ClInclude Include="Engine\base\Window.h" />

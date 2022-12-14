@@ -267,6 +267,9 @@
     <ClCompile Include="Game\Collision\CollisionSystem\CollisionPrimitive.cpp">
       <Filter>ソース ファイル\Game\Collision\CollisionSystem</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\ObjModelMesh.cpp">
+      <Filter>ソース ファイル\Engine\base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
@@ -394,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="Game\Collision\RaycastHit.h">
       <Filter>ヘッダー ファイル\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\ObjModelMesh.h">
+      <Filter>ヘッダー ファイル\Engine\base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
