@@ -185,6 +185,7 @@
     <ClCompile Include="Game\Collision\CollisionSystem\Collision.cpp" />
     <ClCompile Include="Game\Collision\CollisionSystem\CollisionManager.cpp" />
     <ClCompile Include="Game\Collision\CollisionSystem\CollisionPrimitive.cpp" />
+    <ClCompile Include="Game\Collision\MeshCollider.cpp" />
     <ClCompile Include="Game\Collision\SphereCollider.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scene\BaseScene.cpp" />
@@ -225,11 +226,13 @@
     <ClInclude Include="Game\3D\Player\Player.h" />
     <ClInclude Include="Game\3D\SampleFbxObject\SampleFbxObject.h" />
     <ClInclude Include="Game\3D\SampleObjObject\SampleObjObject.h" />
+    <ClInclude Include="Game\Collision\CollisionSystem\BaseCollider.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\Collision.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionInfo.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionManager.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionPrimitive.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionTypes.h" />
+    <ClInclude Include="Game\Collision\MeshCollider.h" />
     <ClInclude Include="Game\Collision\RaycastHit.h" />
     <ClInclude Include="Game\Collision\SphereCollider.h" />
     <ClInclude Include="scene\BaseScene.h" />
