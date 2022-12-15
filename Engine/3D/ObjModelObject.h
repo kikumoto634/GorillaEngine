@@ -78,6 +78,9 @@ public: // 静的メンバ関数
 	//Setter
 	static void SetLight(LightGroup* light)	{common->light = light;}
 
+	//Setter
+	inline void SetModel(ObjModelManager* model){this->model = model;}
+
 
 private: // 静的メンバ変数
 	static CommonObj* common;

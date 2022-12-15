@@ -156,6 +156,7 @@
     <ClCompile Include="Engine\2D\Sprite.cpp" />
     <ClCompile Include="Engine\3D\FbxModelObject.cpp" />
     <ClCompile Include="Engine\3D\ObjModelObject.cpp" />
+    <ClCompile Include="Engine\3D\TouchableObject.cpp" />
     <ClCompile Include="Engine\3D\ViewProjection.cpp" />
     <ClCompile Include="Engine\3D\WorldTransform.cpp" />
     <ClCompile Include="Engine\base\Application.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Engine\2D\Sprite.h" />
     <ClInclude Include="Engine\3D\FbxModelObject.h" />
     <ClInclude Include="Engine\3D\ObjModelObject.h" />
+    <ClInclude Include="Engine\3D\TouchableObject.h" />
     <ClInclude Include="Engine\3D\ViewProjection.h" />
     <ClInclude Include="Engine\3D\WorldTransform.h" />
     <ClInclude Include="Engine\base\Application.h" />

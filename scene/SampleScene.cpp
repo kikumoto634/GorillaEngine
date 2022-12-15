@@ -4,6 +4,7 @@
 
 #include "../Game/Collision/CollisionSystem/Collision.h"
 #include "../Game/Collision/SphereCollider.h"
+#include "../Game/Collision/MeshCollider.h"
 
 #include <sstream>
 #include <iomanip>
@@ -62,9 +63,9 @@ void SampleScene::Initialize()
 	player->Initialize("chr_sword");
 	player->SetPosition({1, 0, 0});
 
-	obj3_2 = make_unique<SampleObjObject>();
-	obj3_2->Initialize("ground");
-	obj3_2->SetPosition({0,-1,0});
+	ground = make_unique<TouchableObject>();
+	ground->Initialize("ground");
+	ground->SetPosition({0,-1,0});
 
 	obj3_3 = make_unique<SampleObjObject>();
 	obj3_3->Initialize("sphere", true);
@@ -119,7 +120,7 @@ void SampleScene::Update()
 #pragma region _3DXV
 	player->Update(camera);
 
-	obj3_2->Update(camera);
+	ground->Update(camera);
 	Vector3 rot2 = obj3_3->GetRotation();
 	rot2.y += XMConvertToRadians(1.f);
 	obj3_3->SetRotation(rot2);
@@ -148,7 +149,7 @@ void SampleScene::Update()
 	//ƒŒƒC“–‚½‚è”»’è
 	Ray ray;
 	ray.start = {10.0f, 0.5f, 0.0f, 1};
-	ray.dir = {-1,0,0,0};
+	ray.dir = {0,-1,0,0};
 	RaycastHit raycastHit;
 
 	if(collisionManager->Raycast(ray, &raycastHit)){
@@ -167,7 +168,7 @@ void SampleScene::Update()
 			vel.y = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
 			vel.z = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
 
-			ParticleManager::GetInstance()->Add(10, pos, vel, Vector3{0,0,0}, 0.0f, 1.0f);
+			//ParticleManager::GetInstance()->Add(10, pos, vel, Vector3{0,0,0}, 0.0f, 1.0f);
 		}
 	}
 
@@ -224,7 +225,7 @@ void SampleScene::Draw()
 
 #pragma region _3D•`‰æ
 	player->Draw();
-	obj3_2->Draw();
+	ground->Draw();
 	obj3_3->Draw();
 	obj3_4->Draw();
 
@@ -260,7 +261,7 @@ void SampleScene::Finalize()
 
 #pragma region _3D‰ð•ú
 	player->Finalize();
-	obj3_2->Finalize();
+	ground->Finalize();
 	obj3_3->Finalize();
 	obj3_4->Finalize();
 #pragma endregion _3D‰ð•ú

@@ -1,6 +1,7 @@
 #include "CollisionManager.h"
 #include "BaseCollider.h"
 #include "Collision.h"
+#include "../MeshCollider.h"
 
 using namespace DirectX;
 
@@ -41,6 +42,19 @@ bool CollisionManager::Raycast(const Ray &ray, RaycastHit *hitinfo, float maxDis
 			inter = tempinter;
 			it_hit = it;
 		}
+		else if(colA->GetShapeType() == COLLISIONSHAPE_MESH){
+			MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
+
+			float tempDistance;
+			DirectX::XMVECTOR tempInter;
+			if(!meshCollider->CheckCollisionRay(ray, &tempDistance, &tempInter)) continue;
+			if(tempDistance >= distance) continue;
+
+			result = true;
+			distance = tempDistance;
+			inter = tempInter;
+			it_hit = it;
+		}
 	}
 
 	//ÅI“I‚É‚È‚É‚©‚É“–‚½‚Á‚Ä‚¢‚½‚çŒ‹‰Ê‚ğ‘‚«‚İ
@@ -76,6 +90,26 @@ void CollisionManager::CheckAllCollisions()
 				Sphere* SphereB = dynamic_cast<Sphere*>(colB);
 				DirectX::XMVECTOR inter;
 				if(Collision::CheckSphere2Sphere(*SphereA, *SphereB, &inter)){
+					colA->OnCollision(CollisionInfo(colB->GetObjObject(), colB, inter));
+					colB->OnCollision(CollisionInfo(colA->GetObjObject(), colA, inter));
+				}
+			}
+			else if(colA->GetShapeType() == COLLISIONSHAPE_MESH && 
+				colB->GetShapeType() == COLLISIONSHAPE_MESH){
+				MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
+				Sphere* sphere = dynamic_cast<Sphere*>(colB);
+				DirectX::XMVECTOR inter;
+				if(meshCollider->CheckCollisionSphere(*sphere, &inter)){
+					colA->OnCollision(CollisionInfo(colB->GetObjObject(), colB, inter));
+					colB->OnCollision(CollisionInfo(colA->GetObjObject(), colA, inter));
+				}
+			}
+			else if(colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
+				colB->GetShapeType() == COLLISIONSHAPE_MESH){
+				MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colB);
+				Sphere* sphere = dynamic_cast<Sphere*>(colA);
+				DirectX::XMVECTOR inter;
+				if(meshCollider->CheckCollisionSphere(*sphere, &inter)){
 					colA->OnCollision(CollisionInfo(colB->GetObjObject(), colB, inter));
 					colB->OnCollision(CollisionInfo(colA->GetObjObject(), colA, inter));
 				}

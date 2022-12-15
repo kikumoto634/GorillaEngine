@@ -61,6 +61,7 @@ public:
 	void SetRotation(const Vector3& rotation)	{world.rotation = rotation;}
 	void SetCollider(BaseCollider* collider);
 	void SetObject(ObjModelObject* object)	{this->object = object;}
+	void SetModel(ObjModelManager* model)	{this->model = model;}
 
 protected:
 	//クラス名(デバック用)

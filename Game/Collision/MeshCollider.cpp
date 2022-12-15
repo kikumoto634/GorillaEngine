@@ -15,7 +15,7 @@ void MeshCollider::ConstructTriangles(ObjModelManager *model)
 	std::vector<ObjModelMesh*>::const_iterator it = meshes.cbegin();
 	for(; it != meshes.cend(); ++it){
 		//インデックスは、三角形の数*3個あるので、そこからメッシュ内の三角形の数を逆算する
-		size_t triangleNum = ;
+		size_t triangleNum = (*it)->GetIndices().size()/3;
 		triangle.resize(triangle.size() + triangleNum);
 		//全三角形について順に処理
 		for(int i = 0; i < triangleNum; i++){

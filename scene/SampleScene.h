@@ -5,6 +5,7 @@
 #include "../Game/3D/SampleFbxObject/SampleFbxObject.h"
 #include "../Game/3D/SampleObjObject/SampleObjObject.h"
 #include "../Engine/base/ParticleManager.h"
+#include "../Engine/3D/TouchableObject.h"
 
 #include "../Game/3D/Player/Player.h"
 
@@ -72,7 +73,7 @@ private:
 
 	//3Dオブジェクト
 	std::unique_ptr<Player> player;
-	std::unique_ptr<SampleObjObject> obj3_2;
+	std::unique_ptr<TouchableObject> ground;
 	std::unique_ptr<SampleObjObject> obj3_3;
 	std::unique_ptr<SampleObjObject> obj3_4;
 #ifdef _DEBUG

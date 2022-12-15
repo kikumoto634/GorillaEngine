@@ -273,6 +273,9 @@
     <ClCompile Include="Game\Collision\MeshCollider.cpp">
       <Filter>ソース ファイル\Game\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\3D\TouchableObject.cpp">
+      <Filter>ソース ファイル\Engine\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
@@ -409,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="Game\Collision\CollisionSystem\BaseCollider.h">
       <Filter>ヘッダー ファイル\Game\Collision\CollisionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\TouchableObject.h">
+      <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
