@@ -170,7 +170,7 @@ void SampleScene::Update()
 			vel.y = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
 			vel.z = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
 
-			//ParticleManager::GetInstance()->Add(10, pos, vel, Vector3{0,0,0}, 0.0f, 1.0f);
+			ParticleManager::GetInstance()->Add(10, pos, vel, Vector3{0,0,0}, 0.0f, 1.0f);
 		}
 	}
 

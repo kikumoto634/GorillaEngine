@@ -62,7 +62,6 @@ bool MeshCollider::CheckCollisionSphere(const Sphere &sphere, DirectX::XMVECTOR 
 				const XMMATRIX& matWorld = GetObjObject()->GetmatWorld().matWorld;
 				//ワールド座標系での交点を得る
 				*inter = XMVector3Transform(*inter, matWorld);
-				*inter = XMVector3Transform(*inter, matWorld);
 			}
 			return true;
 		}

@@ -95,7 +95,7 @@ void CollisionManager::CheckAllCollisions()
 				}
 			}
 			else if(colA->GetShapeType() == COLLISIONSHAPE_MESH && 
-				colB->GetShapeType() == COLLISIONSHAPE_MESH){
+				colB->GetShapeType() == COLLISIONSHAPE_SPHERE){
 				MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
 				Sphere* sphere = dynamic_cast<Sphere*>(colB);
 				DirectX::XMVECTOR inter;
