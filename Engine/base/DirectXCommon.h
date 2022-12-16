@@ -6,6 +6,9 @@
 #include <wrl.h>
 #include <d3dx12.h>
 
+#include <chrono>
+#include <thread>
+
 #include "Window.h"
 
 /// <summary>
@@ -39,6 +42,9 @@ private:
 	HRESULT CreateDSV();
 	HRESULT CreateFence();
 
+	void InitializeFixFPS();
+	void UpdateFixFPS();
+
 private:
 	Window* window = nullptr;
 
@@ -69,5 +75,8 @@ private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvH;
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH;
+
+	// ‹L˜^ŽžŠÔ(FPSŒÅ’è—p)
+    std::chrono::steady_clock::time_point reference_;
 };
 

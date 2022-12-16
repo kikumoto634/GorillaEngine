@@ -1,6 +1,8 @@
 #include "Window.h"
 #include <imgui_impl_win32.h>
 
+#pragma comment(lib, "winmm.lib")
+
 wchar_t Window::kWindowClassName[] = L"DirectXGame";
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -60,6 +62,9 @@ void Window::Create(const std::string& name, const int width, const int height)
 	);
 	//ウィンドウを表示状態にする
 	ShowWindow(hwnd, SW_SHOW);
+
+	// システムタイマーの分解能を上げる
+    timeBeginPeriod(1);
 }
 
 void Window::Finalize()
