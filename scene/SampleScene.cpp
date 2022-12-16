@@ -153,8 +153,10 @@ void SampleScene::Update()
 	RaycastHit raycastHit;
 
 	if(collisionManager->Raycast(ray, &raycastHit)){
+#ifdef _DEBUG
 		debugText->Print("RaycastHit", 0.0f, 32.0f);
 		debugText->Printf(0.f, 48.f, 1.f, "hitPos (X:%f, Y:%f, Z:%f)", raycastHit.inter.m128_f32[0], raycastHit.inter.m128_f32[1], raycastHit.inter.m128_f32[2]);
+#endif // _DEBUG
 		//衝突点にパーティクルを発生させる
 		for(int i = 0; i < 1; i++){
 			Vector3 pos{};

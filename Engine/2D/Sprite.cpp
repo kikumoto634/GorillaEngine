@@ -313,9 +313,9 @@ void Sprite::Common::InitializeGraphicsPipeline(const std::string& directoryPath
 	HRESULT result;
 
 	///頂点シェーダーfileの読み込みとコンパイル
-	ComPtr<ID3DBlob> vsBlob ;			//頂点シェーダーオブジェクト
-	ComPtr<ID3DBlob> psBlob ;			//ピクセルシェーダーオブジェクト
-	ComPtr<ID3DBlob> errorBlob ;		//エラーオブジェクト
+	ID3DBlob* vsBlob ;			//頂点シェーダーオブジェクト
+	ID3DBlob* psBlob ;			//ピクセルシェーダーオブジェクト
+	ID3DBlob* errorBlob ;		//エラーオブジェクト
 
 	std::string fullPathVS = directoryPath + "/SpriteVS.hlsl";
 	wchar_t wFullPathVS[256];
@@ -419,8 +419,8 @@ void Sprite::Common::InitializeGraphicsPipeline(const std::string& directoryPath
 	//グラフィックスパイプライン設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	//シェーダー設定
-	pipelineDesc.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	pipelineDesc.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+	pipelineDesc.VS = CD3DX12_SHADER_BYTECODE(vsBlob);
+	pipelineDesc.PS = CD3DX12_SHADER_BYTECODE(psBlob);
 	
 	//サンプルマスク設定
 	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;	//標準設定
@@ -465,7 +465,7 @@ void Sprite::Common::InitializeGraphicsPipeline(const std::string& directoryPath
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	rootSignatureDesc.Init_1_0(_countof(rootParam), rootParam,1, &samplerDesc,D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 	//シリアライズ
-	ComPtr<ID3DBlob> rootSigBlob;
+	ID3DBlob* rootSigBlob;
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob,&errorBlob);
 	assert(SUCCEEDED(result));
 	result = dxCommon->GetDevice()->CreateRootSignature(0,rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),IID_PPV_ARGS(&common->rootsignature));
