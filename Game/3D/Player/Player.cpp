@@ -34,21 +34,20 @@ void Player::Update(Camera *camera)
 
 	// ˆÚ“®ƒxƒNƒgƒ‹‚ðYŽ²Žü‚è‚ÌŠp“x‚Å‰ñ“]
     XMVECTOR move = { 0,0,0.1f,0 };
-    XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(world.rotation.y));
+    XMMATRIX matRot = XMMatrixRotationY(world.rotation.y);
     move = XMVector3TransformNormal(move, matRot);
 
 	//Œü‚¢‚Ä‚¢‚é•ûŒü‚ÉˆÚ“®
 	if(input->Push(DIK_DOWN)){
-		world.translation.x -= move.m128_f32[0];
-		world.translation.y -= move.m128_f32[1];
-		world.translation.z -= move.m128_f32[2];
+		world.translation.x -= move.m128_f32[0]*4.f;
+		world.translation.y -= move.m128_f32[1]*4.f;
+		world.translation.z -= move.m128_f32[2]*4.f;
 	}
 	else if(input->Push(DIK_UP)){
-		world.translation.x += move.m128_f32[0];
-		world.translation.y += move.m128_f32[1];
-		world.translation.z += move.m128_f32[2];
+		world.translation.x += move.m128_f32[0]*4.f;
+		world.translation.y += move.m128_f32[1]*4.f;
+		world.translation.z += move.m128_f32[2]*4.f;
 	}
-
 
 	this->camera = camera;
 
