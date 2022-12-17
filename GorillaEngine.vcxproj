@@ -183,8 +183,12 @@
     <ClCompile Include="Game\3D\Player\Player.cpp" />
     <ClCompile Include="Game\3D\SampleFbxObject\SampleFbxObject.cpp" />
     <ClCompile Include="Game\3D\SampleObjObject\SampleObjObject.cpp" />
-    <ClCompile Include="Game\Collision\CollisionSystem\Collision.cpp" />
-    <ClCompile Include="Game\Collision\CollisionSystem\CollisionManager.cpp" />
+    <ClCompile Include="Game\Collision\CollisionSystem\Collision.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</Optimization>
+    </ClCompile>
+    <ClCompile Include="Game\Collision\CollisionSystem\CollisionManager.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</Optimization>
+    </ClCompile>
     <ClCompile Include="Game\Collision\CollisionSystem\CollisionPrimitive.cpp" />
     <ClCompile Include="Game\Collision\MeshCollider.cpp" />
     <ClCompile Include="Game\Collision\SphereCollider.cpp" />

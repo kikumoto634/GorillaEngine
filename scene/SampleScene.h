@@ -72,10 +72,27 @@ private:
 	WorldTransform particleWorld = {};
 
 	//3Dオブジェクト
+
+	//player
 	std::unique_ptr<Player> player;
-	std::unique_ptr<TouchableObject> ground;
-	std::unique_ptr<SampleObjObject> obj3_3;
-	std::unique_ptr<SampleObjObject> obj3_4;
+
+	//Plane
+	static const int DIV_NUM = 10;
+	static const int Plane_Size = 2;
+	std::unique_ptr<TouchableObject> plane[DIV_NUM][DIV_NUM];
+
+	//box
+	std::unique_ptr<TouchableObject> box;
+
+	//pyramid
+	std::unique_ptr<TouchableObject> pyramid;
+	
+	//sphere
+	std::unique_ptr<SampleObjObject> sphere;
+
+	//skydome
+	std::unique_ptr<SampleObjObject> skydome;
+
 #ifdef _DEBUG
 	imguiManager* imgui;
 

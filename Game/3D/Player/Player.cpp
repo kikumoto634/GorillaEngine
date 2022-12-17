@@ -177,25 +177,6 @@ void Player::Finalize()
 
 void Player::OnCollision(const CollisionInfo &info)
 {
-	//衝突点にパーティクル発生
-	for(int i = 0; i < 1; i++){
-		Vector3 pos{};
-		pos.x = info.inter.m128_f32[0];
-		pos.y = info.inter.m128_f32[1];
-		pos.z = info.inter.m128_f32[2];
-		
-		const float md_vel = 0.1f;
-		Vector3 vel{};
-		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
-		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
-		vel.z = (float)rand() / RAND_MAX * md_vel - md_vel/2.0f;
 
-		Vector3 acc{};
-		acc.x = 0.f;
-		acc.y = 0.f;
-		acc.z = 0.f;
-
-		ParticleManager::GetInstance()->Add(10, pos, vel, acc, 0.0f, 1.0f, 2);
-	}
 }
 
