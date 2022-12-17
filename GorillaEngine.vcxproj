@@ -235,6 +235,7 @@
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionManager.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionPrimitive.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionTypes.h" />
+    <ClInclude Include="Game\Collision\CollisionSystem\QueryCallback.h" />
     <ClInclude Include="Game\Collision\MeshCollider.h" />
     <ClInclude Include="Game\Collision\RaycastHit.h" />
     <ClInclude Include="Game\Collision\SphereCollider.h" />

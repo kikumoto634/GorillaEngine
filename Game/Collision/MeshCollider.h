@@ -34,7 +34,7 @@ public:
 	/// <param name="sphere">球</param>
 	/// <param name="inter">交点(出力用)</param>
 	/// <returns>交差しているか否か</returns>
-	bool CheckCollisionSphere(const Sphere& sphere, DirectX::XMVECTOR* inter = nullptr);
+	bool CheckCollisionSphere(const Sphere& sphere, DirectX::XMVECTOR* inter = nullptr, DirectX::XMVECTOR* reject = nullptr);
 
 	/// <summary>
 	/// レイとの当たり判定

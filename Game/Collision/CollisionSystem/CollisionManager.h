@@ -1,6 +1,7 @@
 #pragma once
 #include "CollisionPrimitive.h"
 #include "../RaycastHit.h"
+#include "QueryCallback.h"
 
 #include <d3d12.h>
 #include <forward_list>
@@ -56,6 +57,14 @@ public:
 	/// すべての衝突チェック
 	/// </summary>
 	void CheckAllCollisions();
+
+	/// <summary>
+	/// 球による衝突全検索
+	/// </summary>
+	/// <param name="sphere">球</param>
+	/// <param name="callback">衝突時コールバック</param>
+	/// <param name="attribute">対象の衝突属性</param>
+	void QuerySphere(const Sphere& sphere, QueryCallback* callback, unsigned short attribute = (unsigned short)0xffffffff);
 
 private:
 	CollisionManager() = default;

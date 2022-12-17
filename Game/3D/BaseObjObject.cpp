@@ -54,6 +54,8 @@ void BaseObjObject::SetCollider(BaseCollider *collider)
 	this->collider = collider;
 	//コリジョンマネージャーに登録
 	CollisionManager::GetInstance()->AddCollider(collider);
+	//行列の更新
+	world.UpdateMatrix();
 	//コライダーを更新しておく
 	collider->Update();
 }

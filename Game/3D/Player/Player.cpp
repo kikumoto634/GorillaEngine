@@ -8,6 +8,37 @@
 
 using namespace DirectX;
 
+class PlayerQueryCallback : public QueryCallback
+{
+public:
+	PlayerQueryCallback(Sphere* sphere): sphere(sphere){};
+
+	//衝突時コールバック関数
+	bool OnQueryHit(const QueryHit& info){
+		//ワールドの上方向
+		const XMVECTOR up = {0,1,0,0};
+		//排斥方向
+		XMVECTOR rejectDir = XMVector3Normalize(info.reject);
+		//上方向と排斥方向の角度差のコサイン値
+		float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
+
+		//地面判定閾値角度
+		const float threshold = cosf(XMConvertToRadians(30.0f));	//30度以上勾配だと壁として認識する
+		//角度差によって天井または地面と判定される場合を除いて
+		if(-threshold < cos && cos < threshold){
+			//球を排斥(押し出す)
+			sphere->center += info.reject;
+			move += info.reject;
+		}
+		return true;
+	}
+
+	//クエリ―に使用する球
+	Sphere* sphere = nullptr;
+	//排斥による移動量(累積地)
+	DirectX::XMVECTOR move = {};
+};
+
 Player::~Player()
 {
 	Finalize();
@@ -76,13 +107,26 @@ void Player::Update(Camera *camera)
 		fallV = {0,jumpVYFist, 0};
 	}
 
-	//行列、カメラ更新
-	BaseObjObject::Update(this->camera);
-
-
 	//球コライダー取得
 	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
 	assert(sphereCollider);
+
+
+	//クエリ―コサインの関数オブジェクト
+	PlayerQueryCallback callback(sphereCollider);
+	//球と地形の交差を全検査
+	CollisionManager::GetInstance()->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
+	//交差による排斥分動かす
+	world.translation.x += callback.move.m128_f32[0];
+	world.translation.y += callback.move.m128_f32[1];
+	world.translation.z += callback.move.m128_f32[2];
+
+
+	//行列、カメラ更新
+	BaseObjObject::Update(this->camera);
+	//コライダー更新
+	collider->Update();
+
 
 	//球の上端から球の下端までの例キャスト用レイを準備
 	Ray ray;

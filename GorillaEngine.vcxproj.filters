@@ -419,6 +419,9 @@
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionAttribute.h">
       <Filter>ヘッダー ファイル\Game\Collision\CollisionSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionSystem\QueryCallback.h">
+      <Filter>ヘッダー ファイル\Game\Collision\CollisionSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">

@@ -16,7 +16,7 @@ public:
 	/// <param name="sphere2">球</param>
 	/// <param name="inter">交点</param>
 	/// <returns>交差しているか否か</returns>
-	static bool CheckSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2, DirectX::XMVECTOR* inter = nullptr);
+	static bool CheckSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2, DirectX::XMVECTOR* inter = nullptr, DirectX::XMVECTOR* reject = nullptr);
 
 	/// <summary>
 	/// 球と平面の当たり判定
@@ -42,7 +42,7 @@ public:
 	/// <param name="triagnle">三角形</param>
 	/// <param name="inter">交点</param>
 	/// <returns>交差しているか否か</returns>
-	static bool CheckSphere2Triangle(const Sphere& sphere, const Triangle& triagnle, DirectX::XMVECTOR* inter = nullptr);
+	static bool CheckSphere2Triangle(const Sphere& sphere, const Triangle& triagnle, DirectX::XMVECTOR* inter = nullptr, DirectX::XMVECTOR* reject = nullptr);
 
 
 

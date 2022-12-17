@@ -2,7 +2,7 @@
 
 using namespace DirectX;
 
-bool Collision::CheckSphere2Sphere(const Sphere &sphere1, const Sphere &sphere2, DirectX::XMVECTOR *inter)
+bool Collision::CheckSphere2Sphere(const Sphere &sphere1, const Sphere &sphere2, DirectX::XMVECTOR *inter, DirectX::XMVECTOR* reject)
 {
 	// 中心点の距離の２乗 <= 半径の和の２乗　なら交差
 	float dist = XMVector3LengthSq(sphere1.center - sphere2.center).m128_f32[0];
@@ -17,6 +17,12 @@ bool Collision::CheckSphere2Sphere(const Sphere &sphere1, const Sphere &sphere2,
 		//Aの半径が0の時、座標はBの中心、Bの半径が0の時座標はAの中心となる
 		float t = sphere2.radius / (sphere1.radius + sphere2.radius);
 		*inter = XMVectorLerp(sphere1.center, sphere2.center, t);
+	}
+	//押し出すベクトルを計算
+	if(reject){
+		float rejectLen = sphere1.radius + sphere2.radius - sqrtf(dist);
+		*reject = XMVector3Normalize(sphere1.center - sphere2.center);
+		*reject *= rejectLen;
 	}
 
 	return true;
@@ -121,7 +127,7 @@ void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR &point, const Tr
 	*closest = triangle.p0 + p0_p1 * v + p0_p2 * w;
 }
 
-bool Collision::CheckSphere2Triangle(const Sphere &sphere, const Triangle &triagnle, DirectX::XMVECTOR *inter)
+bool Collision::CheckSphere2Triangle(const Sphere &sphere, const Triangle &triagnle, DirectX::XMVECTOR *inter, DirectX::XMVECTOR* reject)
 {
 	XMVECTOR p;
 
@@ -141,6 +147,14 @@ bool Collision::CheckSphere2Triangle(const Sphere &sphere, const Triangle &triag
 		//三角形上の最近接点pを疑似交点とする
 		*inter = p;
 	}
+	//押し出すベクトルを計算
+	if(reject){
+		float ds = XMVector3Dot(sphere.center, triagnle.normal).m128_f32[0];
+		float dt = XMVector3Dot(triagnle.p0, triagnle.normal).m128_f32[0];
+		float rejectLen = dt - ds + sphere.radius;
+		*reject = triagnle.normal * rejectLen;
+	}
+
 	return true;
 }
 
