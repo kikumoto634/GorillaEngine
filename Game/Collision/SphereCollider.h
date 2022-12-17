@@ -28,6 +28,13 @@ public:
 	/// </summary>
 	void Update() override;
 
+
+	//Getter
+	inline const XMVECTOR& GetOffset()	{return offset;}
+	inline float GetRadius()	{return radius;}
+
+	//Setter
+	inline void SetOffset(const XMVECTOR& offset)	{this->offset = offset;}
 	inline void SetRadius(float radius)	{this->radius = radius;}
 
 private:

@@ -32,5 +32,11 @@ public:
 	/// </summary>
 	/// <param name="info">衝突情報</param>
 	void OnCollision(const CollisionInfo& info) override;
+
+private:
+	//接地フラグ
+	bool IsGround = true;
+	//落下ベクトル
+	Vector3 fallV;
 };
 

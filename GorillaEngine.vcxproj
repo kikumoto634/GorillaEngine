@@ -230,6 +230,7 @@
     <ClInclude Include="Game\3D\SampleObjObject\SampleObjObject.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\BaseCollider.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\Collision.h" />
+    <ClInclude Include="Game\Collision\CollisionSystem\CollisionAttribute.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionInfo.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionManager.h" />
     <ClInclude Include="Game\Collision\CollisionSystem\CollisionPrimitive.h" />

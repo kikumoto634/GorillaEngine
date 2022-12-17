@@ -34,7 +34,17 @@ public:
 	}
 
 	/// <summary>
-	/// レイキャスト
+	/// レイキャスト(属性あり)
+	/// </summary>
+	/// <param name="ray">レイ</param>
+	/// <param name="attribute">対象の衝突属性</param>
+	/// <param name="hitinfo">衝突情報</param>
+	/// <param name="maxDistance">最大距離</param>
+	/// <returns>レイが任意のコライダーと交わる場合true, それ以外はfalse</returns>
+	bool Raycast(const Ray& ray, unsigned short attribute, RaycastHit* hitinfo = nullptr, float maxDistance = D3D12_FLOAT32_MAX);
+
+	/// <summary>
+	/// レイキャスト(属性なし)
 	/// </summary>
 	/// <param name="ray">レイ</param>
 	/// <param name="hitinfo">衝突情報</param>

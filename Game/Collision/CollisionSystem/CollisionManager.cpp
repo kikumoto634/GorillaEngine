@@ -11,7 +11,7 @@ CollisionManager *CollisionManager::GetInstance()
 	return &instance;
 }
 
-bool CollisionManager::Raycast(const Ray &ray, RaycastHit *hitinfo, float maxDistance)
+bool CollisionManager::Raycast(const Ray &ray, unsigned short attribute, RaycastHit *hitinfo, float maxDistance)
 {
 	bool result = false;
 	//走査用のイテレータ
@@ -27,7 +27,13 @@ bool CollisionManager::Raycast(const Ray &ray, RaycastHit *hitinfo, float maxDis
 	it = colliders.begin();
 	for(; it != colliders.end(); ++it){
 		BaseCollider* colA = *it;
-		//球の場合
+
+		//属性が合わなければスキップ
+		if (!(colA->attribute & attribute)) {
+			continue;
+		}
+
+		//球コライダーの場合
 		if(colA->GetShapeType() == COLLISIONSHAPE_SPHERE){
 			Sphere* sphere = dynamic_cast<Sphere*>(colA);
 			float tempDistance;
@@ -66,6 +72,12 @@ bool CollisionManager::Raycast(const Ray &ray, RaycastHit *hitinfo, float maxDis
 	}
 
 	return result;
+}
+
+bool CollisionManager::Raycast(const Ray &ray, RaycastHit *hitinfo, float maxDistance)
+{
+	//全属性有効にして属性版を実行
+	return Raycast(ray, 0xffff, hitinfo, maxDistance);
 }
 
 void CollisionManager::CheckAllCollisions()

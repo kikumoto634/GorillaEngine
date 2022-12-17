@@ -416,6 +416,9 @@
     <ClInclude Include="Engine\3D\TouchableObject.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionSystem\CollisionAttribute.h">
+      <Filter>ヘッダー ファイル\Game\Collision\CollisionSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">
