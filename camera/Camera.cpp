@@ -8,9 +8,9 @@ Camera *Camera::GetInstance()
 	return &instance;
 }
 
-void Camera::Initialize()
+void Camera::Initialize(Window* window)
 {
-	window = Window::GetInstance();
+	this->window = window;
 
 	//ƒJƒƒ‰
 	view.eye = {0, 0, -distance};
@@ -24,6 +24,7 @@ void Camera::Initialize()
 
 void Camera::Update()
 {
+	Shake();
 	view.matViewProjection = view.matView * view.matProjection;
 
 	view.UpdateViewMatrix();
@@ -35,6 +36,7 @@ void Camera::MoveEyeVeector(Vector3 move)
 	Vector3 eye_= GetEye();
 	eye_ += move;
 	SetEye(eye_);
+	view.UpdateViewMatrix();
 }
 
 void Camera::MoveVector(Vector3 move)
@@ -45,6 +47,7 @@ void Camera::MoveVector(Vector3 move)
 	target_ += move;
 	SetEye(eye_);
 	SetTarget(target_);
+	view.UpdateViewMatrix();
 }
 
 void Camera::RotVector(Vector3 rot)
@@ -73,6 +76,48 @@ void Camera::RotVector(Vector3 rot)
 		{target.x + vTargetEye.m128_f32[0], target.y + vTargetEye.m128_f32[1],
 		target.z + vTargetEye.m128_f32[2]});
 	SetUp({vUp.m128_f32[0], vUp.m128_f32[1], vUp.m128_f32[2]});
+	view.UpdateViewMatrix();
+}
+
+void Camera::ShakeStart(int MaxFrame)
+{
+	ShakeFrame = MaxFrame;
+
+	if(!IsShake){
+		saveTarget = view.target;
+		saveEye = view.eye;
+	}
+
+	IsShake = true;
+}
+
+void Camera::Reset()
+{
+	//ƒJƒƒ‰
+	RotVector({XMConvertToRadians(60.f), 0.f, 0.f});
+	view.UpdateViewMatrix();
+}
+
+void Camera::Shake()
+{
+	if(!IsShake) return;
+
+	if(frame >= ShakeFrame){
+		view.target = saveTarget;
+		view.eye = saveEye;
+		frame = 0;
+		IsShake = false;
+		return;
+	}
+
+	view.target = saveTarget;
+	view.eye = saveEye;
+
+	Vector3 temp = {static_cast<float>(rand()%2-1),static_cast<float>(rand()%2-1),static_cast<float>(rand()%2-1)};
+	MoveVector(temp);
+
+	frame++;
+	view.UpdateViewMatrix();
 }
 
 

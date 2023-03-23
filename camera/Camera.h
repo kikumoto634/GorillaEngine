@@ -20,7 +20,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(Window* window);
 
 	/// <summary>
 	/// 更新
@@ -45,6 +45,10 @@ public:
 	/// <param name="rot">回転量</param>
 	void RotVector(Vector3 rot);
 
+	void ShakeStart(int MaxFrame = 5);
+
+	void Reset();
+
 	//getter
 	const XMMATRIX& GetMatProjection()	{return view.matProjection;}
 	const XMMATRIX& GetMatView()	{return view.matView;}
@@ -64,14 +68,26 @@ public:
 	void SetDistance(const float& distance)	{this->distance = distance; }
 
 private:
+	void Shake();
+
+private:
 	//アスペクト用
 	Window* window;
 
-protected:
+public:
 	ViewProjection view;
+protected:
 	float distance = 20.f;	//カメラの距離
 
 	//回転行列
 	XMMATRIX matRot = DirectX::XMMatrixIdentity();
+
+	//シェイク
+	bool IsShake = false;
+	int shakePower = 1;
+	int ShakeFrame = 5;
+	int frame = 0;
+	Vector3 saveTarget{};
+	Vector3 saveEye{};
 };
 

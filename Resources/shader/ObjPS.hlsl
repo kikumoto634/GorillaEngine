@@ -5,7 +5,7 @@ SamplerState smp : register(s0);      // 0番スロットに設定されたサ�
 
 float4 main(VSOutput input) : SV_TARGET
 {
-	float4 texcolor = tex.Sample(smp, input.uv);
+	float4 texcolor = float4(tex.Sample(smp, input.uv));
 
 	////光沢度
 	const float shiness = 4.0f;
@@ -112,5 +112,6 @@ float4 main(VSOutput input) : SV_TARGET
 		}
 	}
 
-	return shadecolor * texcolor;
+	return (shadecolor * texcolor) * color;
+	//return texcolor;
 }

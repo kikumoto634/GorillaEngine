@@ -157,6 +157,12 @@
     <Filter Include="ヘッダー ファイル\Game\Collision\CollisionSystem">
       <UniqueIdentifier>{2fa0169a-8427-49bb-a175-5cfa3eac42f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\scene">
+      <UniqueIdentifier>{ea0c2e6a-eeb5-4a70-863d-694ea605650f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\scene">
+      <UniqueIdentifier>{6ec8ed56-16be-4b19-ab65-f665a1c108e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -164,12 +170,6 @@
     </ClCompile>
     <ClCompile Include="camera\Camera.cpp">
       <Filter>ソース ファイル\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\BaseScene.cpp">
-      <Filter>ソース ファイル\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\SampleScene.cpp">
-      <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
     <ClCompile Include="Game\3D\BaseFbxObjects.cpp">
       <Filter>ソース ファイル\Game\3D</Filter>
@@ -276,16 +276,19 @@
     <ClCompile Include="Engine\3D\TouchableObject.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\scene\SceneManager.cpp">
+      <Filter>ソース ファイル\Engine\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\BaseScene.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\SampleScene.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h">
       <Filter>ヘッダー ファイル\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\BaseScene.h">
-      <Filter>ヘッダー ファイル\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\SampleScene.h">
-      <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\Sprite.h">
       <Filter>ヘッダー ファイル\Engine\2D</Filter>
@@ -421,6 +424,15 @@
     </ClInclude>
     <ClInclude Include="Game\Collision\CollisionSystem\QueryCallback.h">
       <Filter>ヘッダー ファイル\Game\Collision\CollisionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\SceneManager.h">
+      <Filter>ヘッダー ファイル\Engine\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\BaseScene.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\SampleScene.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

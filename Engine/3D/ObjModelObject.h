@@ -44,6 +44,8 @@ public: // サブクラス
 		XMMATRIX viewproj;		//ビュープロジェクション
 		XMMATRIX world;			//ワールド
 		Vector3 cameraPos;		//カメラ座標
+		float pad1;
+		Vector4 color;
 	};
 	struct ConstBufferDataB1
 	{
@@ -80,6 +82,7 @@ public: // 静的メンバ関数
 
 	//Setter
 	inline void SetModel(ObjModelManager* model){this->model = model;}
+	inline void SetColor(Vector4 _color)	{this->color = _color;}
 
 
 private: // 静的メンバ変数
@@ -108,7 +111,8 @@ private: // メンバ変数
 
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 	ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
-	// 色
-	Vector4 color = { 1,1,1,1 };
+
+	//色
+	Vector4 color = {1.0f,1.0f,1.0f, 1.0f};
 };
 

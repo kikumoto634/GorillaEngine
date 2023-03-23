@@ -91,13 +91,16 @@ void ObjModelObject::Update(WorldTransform world, Camera* camera)
 	// 定数バッファへデータ転送
 	ConstBufferDataB0* constMapB0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMapB0);
+	assert(SUCCEEDED(result));
 	constMapB0->viewproj = matViewProjection;
 	constMapB0->world = world.matWorld;
 	constMapB0->cameraPos = cameraPos;
+	constMapB0->color = color;
 	constBuffB0->Unmap(0, nullptr);
 
 	ConstBufferDataB1* constMapB1 = nullptr;
 	result = constBuffB1->Map(0, nullptr, (void**)&constMapB1);
+	assert(SUCCEEDED(result));
 	constMapB1->ambient = model->GetMaterial().ambient;
 	constMapB1->diffuse = model->GetMaterial().diffuse;
 	constMapB1->specular = model->GetMaterial().specular;
@@ -244,7 +247,7 @@ void ObjModelObject::CommonObj::InitializeGraphicsPipeline()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[4];
+	CD3DX12_ROOT_PARAMETER rootparams[4] = {};
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);

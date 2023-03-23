@@ -3,6 +3,7 @@ cbuffer cbuff0 : register(b0)
 	matrix viewproj;
 	matrix world;
 	float3 cameraPos;
+	float4 color;
 };
 
 cbuffer cbuff1 : register(b1)
@@ -12,7 +13,6 @@ cbuffer cbuff1 : register(b1)
 	float3 m_specular : packoffset(c2);	//スペキュラ係数
 	float m_alpha : packoffset(c2.w);
 };
-
 
 //平行光源の数
 static const int DIRECTIONALLIGHT_NUM = 3;

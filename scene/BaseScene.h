@@ -4,11 +4,18 @@
 #include "../Engine/input/Input.h"
 #include "../camera/Camera.h"
 
+//#include "SceneManager.h"
+
 #ifdef _DEBUG
 #include "../Engine/debugProcess/DebugText.h"
+#include "../Engine/base/imguiManager.h"
+
+#include <imgui.h>
 #endif // _DEBUG
 
 
+//前方宣言
+class SceneManager;
 
 class BaseScene
 {
@@ -35,29 +42,33 @@ public:
 	virtual void Update();
 
 	/// <summary>
-	/// 後更新
-	/// </summary>
-	void EndUpdate();
-
-	/// <summary>
 	/// 描画
 	/// </summary>
 	virtual void Draw();
-
-	/// <summary>
-	/// 後描画
-	/// </summary>
-	void EndDraw();
 
 	/// <summary>
 	/// 後処理
 	/// </summary>
 	virtual void Finalize();
 
-	//Getter
-	bool GetIsSceneChange()	{return IsSceneChange;}
-	//Reset
-	void ResetIsSceneChange()	{IsSceneChange = false;}
+	//シーン遷移
+	virtual void NextSceneChange();
+
+	/// <summary>
+	/// 後更新
+	/// </summary>
+	void EndUpdate();
+
+#ifdef _DEBUG
+	void SetDebugText(DebugText* text)	{this->debugText = text;}
+	void SetImGui(imguiManager* imgui)	{this->imgui = imgui;}
+
+	DebugText* GetDebugText()	{return debugText;}
+	imguiManager* GetImGui()	{return imgui;}
+#endif // _DEBUG
+
+	//Setter
+	void SetSceneManager(SceneManager* lsceneManager)	{sceneManager = lsceneManager;}
 
 //メンバ変数
 protected:
@@ -71,11 +82,15 @@ protected:
 	Input* input = nullptr;
 	Camera* camera = nullptr;
 
-	//シーン遷移
-	bool IsSceneChange = false;
+	//借り物
+	//シーンマネージャー
+	SceneManager* sceneManager = nullptr;
 
 #ifdef _DEBUG
-	std::unique_ptr<DebugText> debugText;
+	//借り物
+	DebugText* debugText = nullptr;
+	imguiManager* imgui = nullptr;
+	bool show_demo_window = false;
 #endif // _DEBUG
 
 };
