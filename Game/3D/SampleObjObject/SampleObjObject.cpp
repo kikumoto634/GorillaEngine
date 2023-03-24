@@ -8,6 +8,8 @@ SampleObjObject::~SampleObjObject()
 void SampleObjObject::Initialize(std::string filePath, bool IsSmoothing)
 {
 	BaseObjObject::Initialize(filePath, IsSmoothing);
+
+	object->SetLightMask(1);
 }
 
 void SampleObjObject::Update(Camera *camera)

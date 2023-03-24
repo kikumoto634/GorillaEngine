@@ -46,6 +46,7 @@ public: // サブクラス
 		Vector3 cameraPos;		//カメラ座標
 		float pad1;
 		Vector4 color;
+		int mask;		//ライティングを当てるか
 	};
 	struct ConstBufferDataB1
 	{
@@ -83,7 +84,7 @@ public: // 静的メンバ関数
 	//Setter
 	inline void SetModel(ObjModelManager* model){this->model = model;}
 	inline void SetColor(Vector4 _color)	{this->color = _color;}
-
+	inline void SetLightMask(int maskValue) {this->mask = maskValue;}
 
 private: // 静的メンバ変数
 	static CommonObj* common;
@@ -114,5 +115,8 @@ private: // メンバ変数
 
 	//色
 	Vector4 color = {1.0f,1.0f,1.0f, 1.0f};
+
+	//ライティングマスク
+	int mask = 0;
 };
 

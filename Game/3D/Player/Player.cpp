@@ -55,6 +55,9 @@ void Player::Initialize(std::string filePath, bool IsSmoothing)
 
 	//“–‚½‚è”»’è‘®«
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
+
+	//LightMask
+	object->SetLightMask(1);
 }
 
 void Player::Update(Camera *camera)
