@@ -1,8 +1,6 @@
 #pragma once
 #include "BaseScene.h"
 
-#include "../Engine/light/LightGroup.h"
-
 #include "../Engine/3D/TouchableObject.h"
 
 #include "../Game/3D/Player/Player.h"
@@ -51,16 +49,6 @@ public:
 	void NextSceneChange() override;
 
 private:
-    float time = 0.f;
-
-    //Light
-    LightGroup* lightGroup = nullptr;
-
-    //Shadow
-    float circleShadowDir[3] = { 0,-1,0 };
-    float circleShadowAtten[3] = { 0.5f,0.6f,0.0f };
-    float circleShadowFactorAngle[2] = { 0.0f, 0.5f };
-
     //Collision
     CollisionManager* collisionManager = nullptr;
 
@@ -83,7 +71,7 @@ private:
 
 #ifdef _DEBUG
 	//カメラ移動、回転変更フラグ
-	bool IsCameraMovementChange = true;
+	bool IsCameraMovementChange = false;
 #endif // _DEBUG
 };
 

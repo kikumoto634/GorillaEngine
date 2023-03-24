@@ -25,6 +25,10 @@ void BaseScene::Initialize()
 	//Skydome
 	skydome = make_unique<SampleObjObject>();
     skydome->Initialize("skydome");
+
+	//Light
+	lightObject = make_unique<Lighting>();
+	lightObject->Initialize();
 }
 
 void BaseScene::Update()
@@ -60,6 +64,8 @@ void BaseScene::Draw()
 void BaseScene::Finalize()
 {
 	skydome->Finalize();
+
+	lightObject->Finalize();
 }
 
 void BaseScene::NextSceneChange()
@@ -71,5 +77,8 @@ void BaseScene::EndUpdate()
 #pragma region 汎用機能更新
 	//カメラ
 	camera->Update();
+
+	//Light
+	lightObject->Update();
 #pragma endregion
 }

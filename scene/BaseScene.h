@@ -6,6 +6,8 @@
 
 #include "../Game/3D/SampleObjObject/SampleObjObject.h"
 
+#include "../Game/Light/Lighting.h"
+
 #ifdef _DEBUG
 #include "../Engine/debugProcess/DebugText.h"
 #include "../Engine/base/imguiManager.h"
@@ -89,6 +91,9 @@ protected:
 
 	//skydome
     std::unique_ptr<SampleObjObject> skydome;
+
+	//Light
+	std::unique_ptr<Lighting> lightObject;
 
 #ifdef _DEBUG
 	//�؂蕨

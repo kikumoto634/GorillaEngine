@@ -163,6 +163,12 @@
     <Filter Include="ソース ファイル\Engine\scene">
       <UniqueIdentifier>{6ec8ed56-16be-4b19-ab65-f665a1c108e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\Light">
+      <UniqueIdentifier>{7b48f12a-e30c-40bb-8a9c-576b09709a54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Light">
+      <UniqueIdentifier>{adc1561d-4dcd-4207-baaa-c4ce6c25ded4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -284,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="scene\SampleScene.cpp">
       <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Light\Lighting.cpp">
+      <Filter>ソース ファイル\Game\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +442,9 @@
     </ClInclude>
     <ClInclude Include="scene\SampleScene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Light\Lighting.h">
+      <Filter>ヘッダー ファイル\Game\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

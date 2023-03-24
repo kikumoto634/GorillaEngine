@@ -29,20 +29,6 @@ void SampleScene::Initialize()
     BaseScene::Initialize();
 
 #pragma region Common
-    //Light
-    lightGroup = LightGroup::Create();
-    //LightColor
-    lightGroup->SetAmbientColor({1,1,1});
-    //LightSetting
-    ObjModelObject::SetLight(lightGroup);
-
-    lightGroup->SetDirLightActive(0, true);
-    lightGroup->SetDirLightActive(1, true);
-    lightGroup->SetDirLightActive(2, true);
-
-    //CircleShadow
-    lightGroup->SetCircleShadowActive(0, true);
-
     //Collision
     collisionManager = CollisionManager::GetInstance();
 
@@ -119,6 +105,7 @@ void SampleScene::Update()
 
 #pragma region _3DObject
     player->Update(camera);
+    lightObject->SetPlayerShadow(player->GetPosition());
 
     for(int i = 0; i < DIV_NUM; i++){
         for(int j = 0; j < DIV_NUM; j++){
@@ -138,17 +125,6 @@ void SampleScene::Update()
 #pragma endregion _2DObject
 
 #pragma region Common
-    {
-        //DirLightPositionSetting
-        lightGroup->SetCircleShadowDir(0, DirectX::XMVECTOR({circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0}));
-        lightGroup->SetCircleShadowAtten(0, Vector3(circleShadowAtten[0], circleShadowAtten[1], circleShadowAtten[2]));
-        lightGroup->SetCircleShadowFactorAngle(0, Vector2(circleShadowFactorAngle[0], circleShadowFactorAngle[1]));
-
-        //CirclePositionSetting
-        lightGroup->SetCircleShadowCasterPos(0, player->GetPosition());
-    }
-    lightGroup->Update();
-
 
     //Collsiion
     collisionManager->CheckAllCollisions();
@@ -159,7 +135,7 @@ void SampleScene::Update()
 #ifdef _DEBUG
     {
 		//座標
-		ImGui::SetNextWindowPos(ImVec2{0,100});
+		ImGui::SetNextWindowPos(ImVec2{980,100});
 		//サイズ
 		ImGui::SetNextWindowSize(ImVec2{300,150});
 		ImGui::Begin("Debug");
@@ -176,19 +152,9 @@ void SampleScene::Update()
     {
         ImGui::SetNextWindowPos(ImVec2{0,250});
         ImGui::SetNextWindowSize(ImVec2{500,55});
-        ImGui::Begin("PlayerPos && SpotLightPos && CircleShadowPos");
+        ImGui::Begin("PlayerPos");
         ImGui::SetNextWindowPos(ImVec2{0,0});
         ImGui::DragFloat3("circlePos", (float*)&player->GetPosition(), 0.1f);
-        ImGui::End();
-    }
-
-    {
-        ImGui::SetNextWindowPos(ImVec2{0,310});
-        ImGui::SetNextWindowSize(ImVec2{500,100});
-        ImGui::Begin("CircleShadow");
-        ImGui::DragFloat3("circleShadowDir", circleShadowDir, 0.1f);
-        ImGui::DragFloat3("circleShadowAtten", circleShadowAtten, 0.1f);
-        ImGui::DragFloat2("circleShadowFactorAngle", circleShadowFactorAngle, 0.1f);
         ImGui::End();
     }
 #endif // _DEBUG
@@ -241,8 +207,7 @@ void SampleScene::Finalize()
 #pragma endregion _2DObject
 
 #pragma region Common
-    delete lightGroup;
-    lightGroup = nullptr;
+    
 #pragma endregion Common
 
     BaseScene::Finalize();
