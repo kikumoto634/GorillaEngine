@@ -76,9 +76,6 @@ void SampleScene::Initialize()
     sphere->SetPosition({-1,0,0});
     sphere->SetCollider(new SphereCollider);
 
-    skydome = make_unique<SampleObjObject>();
-    skydome->Initialize("skydome");
-
 #pragma endregion _3DObject
 
 #pragma region _2DObject
@@ -134,8 +131,6 @@ void SampleScene::Update()
     pyramid->Update(camera);
 
     sphere->Update(camera);
-
-    skydome->Update(camera);
 #pragma endregion _3DObject
 
 #pragma region _2DObject
@@ -214,7 +209,6 @@ void SampleScene::Draw()
     box->Draw();
     pyramid->Draw();
     sphere->Draw();
-    skydome->Draw();
 
     Sprite::SetPipelineState();
     UIDraw();
@@ -240,7 +234,6 @@ void SampleScene::Finalize()
     box->Finalize();
     pyramid->Finalize();
     sphere->Finalize();
-    skydome->Finalize();
 #pragma endregion _3DObject
 
 #pragma region _2DObject

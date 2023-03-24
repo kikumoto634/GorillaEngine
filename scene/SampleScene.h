@@ -3,9 +3,6 @@
 
 #include "../Engine/light/LightGroup.h"
 
-#include "../Game/3D/SampleFbxObject/SampleFbxObject.h"
-#include "../Game/3D/SampleObjObject/SampleObjObject.h"
-#include "../Engine/base/ParticleManager.h"
 #include "../Engine/3D/TouchableObject.h"
 
 #include "../Game/3D/Player/Player.h"
@@ -83,9 +80,6 @@ private:
     
     //sphere
     std::unique_ptr<SampleObjObject> sphere;
-
-    //skydome
-    std::unique_ptr<SampleObjObject> skydome;
 
 #ifdef _DEBUG
 	//カメラ移動、回転変更フラグ

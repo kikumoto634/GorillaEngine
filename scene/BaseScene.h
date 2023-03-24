@@ -4,7 +4,7 @@
 #include "../Engine/input/Input.h"
 #include "../camera/Camera.h"
 
-//#include "SceneManager.h"
+#include "../Game/3D/SampleObjObject/SampleObjObject.h"
 
 #ifdef _DEBUG
 #include "../Engine/debugProcess/DebugText.h"
@@ -85,6 +85,10 @@ protected:
 	//借り物
 	//シーンマネージャー
 	SceneManager* sceneManager = nullptr;
+
+
+	//skydome
+    std::unique_ptr<SampleObjObject> skydome;
 
 #ifdef _DEBUG
 	//借り物

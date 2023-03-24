@@ -21,6 +21,10 @@ void BaseScene::Initialize()
 
 	//ƒJƒƒ‰
 	camera->Initialize(window);
+
+	//Skydome
+	skydome = make_unique<SampleObjObject>();
+    skydome->Initialize("skydome");
 }
 
 void BaseScene::Update()
@@ -42,14 +46,20 @@ void BaseScene::Update()
 		ImGui::End();
 	}
 #endif // _DEBUG
+
+	//Skydome
+	skydome->Update(camera);
 }
 
 void BaseScene::Draw()
 {
+	//Skydome
+	skydome->Draw();
 }
 
 void BaseScene::Finalize()
 {
+	skydome->Finalize();
 }
 
 void BaseScene::NextSceneChange()
