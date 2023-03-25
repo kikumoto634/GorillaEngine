@@ -8,7 +8,7 @@ float4 main(VSOutput input) : SV_TARGET
 	float4 texcolor = float4(tex.Sample(smp, input.uv));
 
 	//mask処理
-	if(mask == 1){
+	if(mask == 1.0f){
 		////光沢度
 		const float shiness = 4.0f;
 		////頂点から視点への方向ベクトル
