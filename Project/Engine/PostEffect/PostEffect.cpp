@@ -7,7 +7,7 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 PostEffect* PostEffect::instance = nullptr;
-const float PostEffect::clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+const float PostEffect::clearColor[4] = {0.1f, 0.1f, 0.7f, 1.0f};
 
 
 PostEffect *PostEffect::GetInstance()

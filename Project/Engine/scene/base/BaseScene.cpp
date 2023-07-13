@@ -26,12 +26,19 @@ void BaseScene::Initialize()
 	camera->Initialize(window);
 
 	isDrawStop = false;
+
+	sp = new BaseSprites();
+	sp->Initialize(2);
+	sp->SetPosition({100,100});
+	sp->SetAnchorPoint({0.5f,0.5f});
 }
 
 void BaseScene::Update()
 {
 	//入力情報更新
 	input->Update();
+
+	sp->Update();
 
 #ifdef _DEBUG
 	{
@@ -67,8 +74,12 @@ void BaseScene::DrawBack()
 
 void BaseScene::DrawNear()
 {
+	Sprite::SetPipelineState();
+	sp->Draw();
 }
 
 void BaseScene::Finalize()
 {
+	sp->Finalize();
+	delete sp;
 }

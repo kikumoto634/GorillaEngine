@@ -6,6 +6,8 @@
 
 #include "PostEffect.h"
 
+#include "BaseSprites.h"
+
 #ifdef _DEBUG
 #include "DebugText.h"
 #include "imguiManager.h"
@@ -108,6 +110,9 @@ protected:
 
 	//描画停止
 	bool isDrawStop = false;
+
+
+	BaseSprites* sp = nullptr;
 
 };
 

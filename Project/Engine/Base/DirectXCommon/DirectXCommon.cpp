@@ -57,7 +57,7 @@ void DirectXCommon::BeginDraw()
 
 	//クリアコマンド
 	//色
-	FLOAT clearColor[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	FLOAT clearColor[] = {0.2f, 0.2f, 0.7f, 0.0f};
 	//画面クリア
 	commandList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
 	//深度クリア

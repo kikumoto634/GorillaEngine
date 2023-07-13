@@ -130,7 +130,7 @@ private:
 
 	//フェード
 	bool isFadeActive = false;
-	Vector3 fadeColor = {0,0,0};
+	Vector3 fadeColor = {1,1,1};
 	float fadeFrame = 0;
 };
 
