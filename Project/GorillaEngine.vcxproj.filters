@@ -61,59 +61,11 @@
     <Filter Include="リソース ファイル\Obj">
       <UniqueIdentifier>{64f7312d-974c-4d51-8c15-3186ca7f85ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Player">
-      <UniqueIdentifier>{5949d41d-9305-416f-9905-588970eaa92f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Player">
-      <UniqueIdentifier>{4f988093-55cc-4672-ab67-28950aae695c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Game\System">
       <UniqueIdentifier>{c16de102-9bbd-441c-ad95-b30ddbd0935a}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Game\System">
       <UniqueIdentifier>{5bde72aa-08f4-464c-938d-5bc03ea2e712}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Plane">
-      <UniqueIdentifier>{d3cb8c0d-ffd6-4aa4-86b3-671ed717c686}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Plane">
-      <UniqueIdentifier>{c8740d6b-0457-4874-b9ad-3a85efde1b7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Coins">
-      <UniqueIdentifier>{dafdb6d6-5359-4863-84cf-a9c10cba1380}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Exit">
-      <UniqueIdentifier>{ec9dcdcc-0a93-477b-861e-1b51f65cc100}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Exit">
-      <UniqueIdentifier>{b525510e-d601-40c0-9c1a-93abf8829e26}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Wall">
-      <UniqueIdentifier>{99ecf705-09bf-48c2-9596-03c3211b664e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Wall">
-      <UniqueIdentifier>{caaf6471-13f0-4f3d-b99a-2524f3b8ee83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Enemy">
-      <UniqueIdentifier>{6de8bc6b-fa8c-4739-aded-676a5e2a7030}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Enemy">
-      <UniqueIdentifier>{f5b86dad-2879-4169-a2a1-c525864c836a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\2D\Notes">
-      <UniqueIdentifier>{8b987a54-2d2c-434b-80d2-e6be314459be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\2D\Notes">
-      <UniqueIdentifier>{033bd725-094b-455b-9a85-0f6be593c23d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\2D\JudgeLocation">
-      <UniqueIdentifier>{0bcae4fd-ea46-429c-be4c-d60d85dbb6d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\2D\JudgeLocation">
-      <UniqueIdentifier>{d5ddf0ac-e577-465f-9b88-40454a57b16d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Coins">
-      <UniqueIdentifier>{88bd1333-2db8-444f-bada-4c190826bc99}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Game\Struct">
       <UniqueIdentifier>{dab8ceee-7f84-4444-a953-0fbed9000e7b}</UniqueIdentifier>
@@ -253,14 +205,8 @@
     <Filter Include="ソース ファイル\Game\Scene">
       <UniqueIdentifier>{73170d81-237c-484b-9f28-c5917f45b962}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Game\Scene\Base">
-      <UniqueIdentifier>{37d913e6-93f2-4bf2-b833-cb4c7790cd12}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Game\Scene">
       <UniqueIdentifier>{cc9f3368-0578-423a-bbb2-7e03a2af66f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\Scene\Base">
-      <UniqueIdentifier>{c451715e-44b7-4d1f-bd91-a4924a872a7b}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Engine\ObjectMatrix">
       <UniqueIdentifier>{16976cca-b7ee-4865-ba40-64cbcf06c3cc}</UniqueIdentifier>
@@ -340,65 +286,11 @@
     <Filter Include="ヘッダー ファイル\Engine\Base\Manager\Particle">
       <UniqueIdentifier>{5978c735-a316-434d-92bb-87725a011249}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Player\State">
-      <UniqueIdentifier>{a17b8b4f-04dc-4257-a5ae-d7f4ade25f4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Player\State">
-      <UniqueIdentifier>{eeddf66b-f894-41ad-a1dc-288bd392ae26}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Enemy\BlueSlime">
-      <UniqueIdentifier>{5d9b710d-fee6-40f5-a5e7-8434f155b91a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Enemy\BlueSlime">
-      <UniqueIdentifier>{85068870-9c3b-4612-b0ec-92e9ff9c9890}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Enemy\Boss">
-      <UniqueIdentifier>{c2f7aa22-0a62-47f0-8ef5-5aa2531970f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Enemy\Boss">
-      <UniqueIdentifier>{159045c0-9a99-4116-8736-297f62d72023}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Enemy\Skelton">
-      <UniqueIdentifier>{71660658-a63f-4015-8d28-5dddae6d79b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Enemy\Skelton">
-      <UniqueIdentifier>{3f6fc23e-5286-4039-8253-26c693e9289f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Enemy\Skelton\State">
-      <UniqueIdentifier>{45d8214c-439f-4ce3-ab00-937c9751eb70}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Enemy\Skelton\State">
-      <UniqueIdentifier>{c43fc8a7-dee3-4e76-83eb-09774008f206}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Enemy\BlueSlime\State">
-      <UniqueIdentifier>{345ef061-f3e5-4310-a061-db154c1cbd0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Enemy\BlueSlime\State">
-      <UniqueIdentifier>{575d2c1d-27b3-4d88-a570-f849bef56dc0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Enemy\_Base">
-      <UniqueIdentifier>{cefa15d4-7bf0-4bb5-ad59-8e4cd0279f63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Enemy\_Base">
-      <UniqueIdentifier>{ee438522-440c-4612-88cc-714f5e4e3d3f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Game\Utility">
       <UniqueIdentifier>{9283fdeb-94e9-45d6-978b-517f2e0853b5}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Game\Node">
       <UniqueIdentifier>{4eaa2358-a61a-449d-b83a-d41c5582a998}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Exit\Sprite">
-      <UniqueIdentifier>{8881a212-cfdf-4cfa-b983-452f68020eae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Exit\Sprite">
-      <UniqueIdentifier>{c838cf88-1478-44c9-b4fc-5eb142b65cd7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Enemy\Boss\State">
-      <UniqueIdentifier>{00be9c70-6936-4244-ad57-0e1f6272f3af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Enemy\Boss\State">
-      <UniqueIdentifier>{7415d071-9b18-4db7-b548-f6dea39b7e67}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Engine\PostEffect">
       <UniqueIdentifier>{d38aa09f-d056-4a51-b37d-d08031e15e98}</UniqueIdentifier>
@@ -408,12 +300,6 @@
     </Filter>
     <Filter Include="リソース ファイル\PostEffect">
       <UniqueIdentifier>{864dc63d-fd30-4a3a-b0d6-de1f2bc32c89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Game\3D\Botton">
-      <UniqueIdentifier>{457abeb1-d2bd-431e-8b23-a7c6bc7f6c59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Game\3D\Botton">
-      <UniqueIdentifier>{a8902612-cddc-450f-ade9-81ba785bc463}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -438,74 +324,11 @@
     <ClCompile Include="Engine\light\LightGroup.cpp">
       <Filter>ソース ファイル\Engine\Light</Filter>
     </ClCompile>
-    <ClCompile Include="Game\3D\Player\Player.cpp">
-      <Filter>ソース ファイル\Game\3D\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\audio\Audio.cpp">
       <Filter>ソース ファイル\Engine\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Game\System\RhythmManager.cpp">
-      <Filter>ソース ファイル\Game\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Plane\Planes.cpp">
-      <Filter>ソース ファイル\Game\3D\Plane</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Player\PlayerWeapon.cpp">
-      <Filter>ソース ファイル\Game\3D\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\System\GameManager.cpp">
-      <Filter>ソース ファイル\Game\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Coins\Coins.cpp">
-      <Filter>ソース ファイル\Game\3D\Coins</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Exit\Exit.cpp">
-      <Filter>ソース ファイル\Game\3D\Exit</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\System\AreaManager.cpp">
-      <Filter>ソース ファイル\Game\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Wall\Walls.cpp">
-      <Filter>ソース ファイル\Game\3D\Wall</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Wall\IndestructibleWall.cpp">
-      <Filter>ソース ファイル\Game\3D\Wall</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\2D\TutorialSp.cpp">
-      <Filter>ソース ファイル\Game\2D</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\2D\Notes\Notes.cpp">
-      <Filter>ソース ファイル\Game\2D\Notes</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\2D\JudgeLocation\JudgeLocation.cpp">
-      <Filter>ソース ファイル\Game\2D\JudgeLocation</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\2D\Notes\LNotes.cpp">
-      <Filter>ソース ファイル\Game\2D\Notes</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\2D\Notes\RNotes.cpp">
-      <Filter>ソース ファイル\Game\2D\Notes</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\2D\Combo.cpp">
-      <Filter>ソース ファイル\Game\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\scene\Boss1Area.cpp">
-      <Filter>ソース ファイル\Game\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\scene\GameScene.cpp">
-      <Filter>ソース ファイル\Game\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\scene\HomeScene.cpp">
-      <Filter>ソース ファイル\Game\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\scene\TitleScene.cpp">
-      <Filter>ソース ファイル\Game\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\scene\TutorialScene.cpp">
-      <Filter>ソース ファイル\Game\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Collision\CollisionSystem\Collision.cpp">
       <Filter>ソース ファイル\Engine\Collision\CollisionSystem</Filter>
@@ -515,9 +338,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Collision\CollisionSystem\CollisionPrimitive.cpp">
       <Filter>ソース ファイル\Engine\Collision\CollisionSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\scene\Base\BaseBattleScene.cpp">
-      <Filter>ソース ファイル\Game\Scene\Base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\Model\FbxModelObject.cpp">
       <Filter>ソース ファイル\Engine\3D\Model</Filter>
@@ -594,56 +414,8 @@
     <ClCompile Include="Engine\3D\ObjectBase\BaseObjObject.cpp">
       <Filter>ソース ファイル\Engine\3D\ObjectBase</Filter>
     </ClCompile>
-    <ClCompile Include="Game\3D\Player\State\PlayerState.cpp">
-      <Filter>ソース ファイル\Game\3D\Player\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Player\State\PlayerStateManager.cpp">
-      <Filter>ソース ファイル\Game\3D\Player\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Enemy\BlueSlime\BlueSlime.cpp">
-      <Filter>ソース ファイル\Game\3D\Enemy\BlueSlime</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Enemy\Boss\Boss1.cpp">
-      <Filter>ソース ファイル\Game\3D\Enemy\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Enemy\Skelton\Skelton.cpp">
-      <Filter>ソース ファイル\Game\3D\Enemy\Skelton</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Enemy\Skelton\State\SkeltonState.cpp">
-      <Filter>ソース ファイル\Game\3D\Enemy\Skelton\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Enemy\Skelton\State\SkeltonStateManager.cpp">
-      <Filter>ソース ファイル\Game\3D\Enemy\Skelton\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Enemy\BlueSlime\State\BlueSlimeState.cpp">
-      <Filter>ソース ファイル\Game\3D\Enemy\BlueSlime\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Enemy\BlueSlime\State\BlueSlimeStateManager.cpp">
-      <Filter>ソース ファイル\Game\3D\Enemy\BlueSlime\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Enemy\_Base\BaseEnemy.cpp">
-      <Filter>ソース ファイル\Game\3D\Enemy\_Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Exit\Sprite\ExitSprite.cpp">
-      <Filter>ソース ファイル\Game\3D\Exit\Sprite</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Enemy\Boss\State\BossState.cpp">
-      <Filter>ソース ファイル\Game\3D\Enemy\Boss\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Enemy\Boss\State\BossStateManager.cpp">
-      <Filter>ソース ファイル\Game\3D\Enemy\Boss\State</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp">
       <Filter>ソース ファイル\Engine\PostEffect</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Botton\Botton.cpp">
-      <Filter>ソース ファイル\Game\3D\Botton</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Botton\BottonLow.cpp">
-      <Filter>ソース ファイル\Game\3D\Botton</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\3D\Botton\BottonHigh.cpp">
-      <Filter>ソース ファイル\Game\3D\Botton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -668,71 +440,8 @@
     <ClInclude Include="Engine\light\LightGroup.h">
       <Filter>ヘッダー ファイル\Engine\Light</Filter>
     </ClInclude>
-    <ClInclude Include="Game\3D\Player\Player.h">
-      <Filter>ヘッダー ファイル\Game\3D\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\audio\Audio.h">
       <Filter>ヘッダー ファイル\Engine\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\System\RhythmManager.h">
-      <Filter>ヘッダー ファイル\Game\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Plane\Planes.h">
-      <Filter>ヘッダー ファイル\Game\3D\Plane</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Player\PlayerWeapon.h">
-      <Filter>ヘッダー ファイル\Game\3D\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\System\GameManager.h">
-      <Filter>ヘッダー ファイル\Game\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Exit\Exit.h">
-      <Filter>ヘッダー ファイル\Game\3D\Exit</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\System\AreaManager.h">
-      <Filter>ヘッダー ファイル\Game\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Wall\Walls.h">
-      <Filter>ヘッダー ファイル\Game\3D\Wall</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Wall\IndestructibleWall.h">
-      <Filter>ヘッダー ファイル\Game\3D\Wall</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\2D\TutorialSp.h">
-      <Filter>ヘッダー ファイル\Game\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\2D\Notes\Notes.h">
-      <Filter>ヘッダー ファイル\Game\2D\Notes</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\2D\JudgeLocation\JudgeLocation.h">
-      <Filter>ヘッダー ファイル\Game\2D\JudgeLocation</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\2D\Notes\LNotes.h">
-      <Filter>ヘッダー ファイル\Game\2D\Notes</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\2D\Notes\RNotes.h">
-      <Filter>ヘッダー ファイル\Game\2D\Notes</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\2D\Combo.h">
-      <Filter>ヘッダー ファイル\Game\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Coins\Coins.h">
-      <Filter>ヘッダー ファイル\Game\3D\Coins</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\scene\Boss1Area.h">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\scene\GameScene.h">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\scene\HomeScene.h">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\scene\TitleScene.h">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\scene\TutorialScene.h">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Collision\CollisionSystem\Collision.h">
       <Filter>ヘッダー ファイル\Engine\Collision\CollisionSystem</Filter>
@@ -751,9 +460,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Collision\CollisionSystem\QueryCallback.h">
       <Filter>ヘッダー ファイル\Engine\Collision\CollisionSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\scene\Base\BaseBattleScene.h">
-      <Filter>ヘッダー ファイル\Game\Scene\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\Model\ObjModelObject.h">
       <Filter>ヘッダー ファイル\Engine\3D\Model</Filter>
@@ -845,68 +551,17 @@
     <ClInclude Include="Engine\Base\Manager\.Obj\ObjModelMesh.h">
       <Filter>ヘッダー ファイル\Engine\Base\Manager\Obj</Filter>
     </ClInclude>
-    <ClInclude Include="Game\3D\Player\State\PlayerState.h">
-      <Filter>ヘッダー ファイル\Game\3D\Player\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Player\State\PlayerStateManager.h">
-      <Filter>ヘッダー ファイル\Game\3D\Player\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Enemy\BlueSlime\BlueSlime.h">
-      <Filter>ヘッダー ファイル\Game\3D\Enemy\BlueSlime</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Enemy\Boss\Boss1.h">
-      <Filter>ヘッダー ファイル\Game\3D\Enemy\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Enemy\Skelton\Skelton.h">
-      <Filter>ヘッダー ファイル\Game\3D\Enemy\Skelton</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Enemy\Skelton\State\SkeltonState.h">
-      <Filter>ヘッダー ファイル\Game\3D\Enemy\Skelton\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Enemy\Skelton\State\SkeltonStateManager.h">
-      <Filter>ヘッダー ファイル\Game\3D\Enemy\Skelton\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Enemy\BlueSlime\State\BlueSlimeState.h">
-      <Filter>ヘッダー ファイル\Game\3D\Enemy\BlueSlime\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Enemy\BlueSlime\State\BlueSlimeStateManager.h">
-      <Filter>ヘッダー ファイル\Game\3D\Enemy\BlueSlime\State</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Utility\AudioUtility.h">
       <Filter>ヘッダー ファイル\Game\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Node\MapNode.h">
-      <Filter>ヘッダー ファイル\Game\Node</Filter>
     </ClInclude>
     <ClInclude Include="Game\Utility\TextureUtility.h">
       <Filter>ヘッダー ファイル\Game\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Game\3D\Exit\Sprite\ExitSprite.h">
-      <Filter>ヘッダー ファイル\Game\3D\Exit\Sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Enemy\_Base\BaseEnemy.h">
-      <Filter>ヘッダー ファイル\Game\3D\Enemy\_Base</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Collision\Base\BaseCollider.h">
       <Filter>ヘッダー ファイル\Engine\Collision\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Game\3D\Enemy\Boss\State\BossState.h">
-      <Filter>ヘッダー ファイル\Game\3D\Enemy\Boss\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Enemy\Boss\State\BossStateManager.h">
-      <Filter>ヘッダー ファイル\Game\3D\Enemy\Boss\State</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\PostEffect\PostEffect.h">
       <Filter>ヘッダー ファイル\Engine\PostEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Botton\Botton.h">
-      <Filter>ヘッダー ファイル\Game\3D\Botton</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Botton\BottonLow.h">
-      <Filter>ヘッダー ファイル\Game\3D\Botton</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\3D\Botton\BottonHigh.h">
-      <Filter>ヘッダー ファイル\Game\3D\Botton</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -956,15 +611,6 @@
     </None>
     <None Include="Resources\shader\Obj.hlsli">
       <Filter>リソース ファイル\Obj</Filter>
-    </None>
-    <None Include="Resources\CSVData\Boss1.csv">
-      <Filter>リソース ファイル</Filter>
-    </None>
-    <None Include="Resources\CSVData\Home.csv">
-      <Filter>リソース ファイル</Filter>
-    </None>
-    <None Include="Resources\CSVData\Tutorial.csv">
-      <Filter>リソース ファイル</Filter>
     </None>
     <None Include="Resources\shader\PostEffect.hlsli">
       <Filter>リソース ファイル\PostEffect</Filter>
