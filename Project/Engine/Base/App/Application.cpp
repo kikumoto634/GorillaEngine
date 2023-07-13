@@ -1,10 +1,4 @@
 #include "Application.h"
-#include "TitleScene.h"
-
-#include "HomeScene.h"
-#include "GameScene.h"
-#include "Boss1Area.h"
-#include "TutorialScene.h"
 
 #include "AudioUtility.h"
 #include "TextureUtility.h"
@@ -62,7 +56,7 @@ void Application::Initialize()
 {
 #pragma region 汎用機能初期化
 	//Window生成
-	window->Create("CAVERHYTHM", 1280, 720);
+	window->Create("Engine", 1280, 720);
 
 	//DirectXCommon
 	dxCommon->Initialize(window);
@@ -156,7 +150,7 @@ void Application::Initialize()
 #endif // _DEBUG
 
 	sceneManager = SceneManager::GetInstance();
-	BaseScene* scene = new HomeScene(dxCommon, window);
+	BaseScene* scene = new BaseScene(dxCommon, window);
 
 #ifdef _DEBUG
 	scene->SetDebugText(debugText);
