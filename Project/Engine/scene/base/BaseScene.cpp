@@ -28,9 +28,10 @@ void BaseScene::Initialize()
 	isDrawStop = false;
 
 	sp = new BaseSprites();
-	sp->Initialize(2);
+	sp->Initialize(white1x1_tex.number);
 	sp->SetPosition({100,100});
 	sp->SetAnchorPoint({0.5f,0.5f});
+	sp->SetSize({100,100});
 }
 
 void BaseScene::Update()
