@@ -11,11 +11,8 @@ class BaseCollider;
 class BaseObjObject
 {
 protected:
-	//終了時間(x(s/秒))
-	const float ScaleEndTime = 0.25f;
-
 	//削除後の位置
-	const Vector3 NotAlivePos = {0,-50,0};
+	const Vector3 NotAlivePos = {0,0,0};
 
 public:
 	/// <summary>
@@ -63,8 +60,6 @@ public:
 	//当たり判定時処理
 	virtual void ContactUpdate();
 
-	inline void IsBeatEndOn()	{isBeatEnd_ = true;}
-
 	//光計算
 	inline void CaveLightOn()	{isLightCal_ = true;}
 	inline void CaveLightOff()	{isLightCal_ = false;}
@@ -89,19 +84,6 @@ public:
 	inline void SetModel(ObjModelManager* model)	{this->model_ = model;}
 
 protected:
-	/// <summary>
-	/// リズムにあわせてサイズ変更 
-	/// </summary>
-	/// <param name="sizeMax">最大サイズ</param>
-	/// <param name="sizeMin">最小サイズ</param>
-	/// <param name="EndTime">終了時間 (x:秒)</param>
-	/// <returns></returns>
-	bool ScaleChange(Vector3& sizeMax, Vector3& sizeMin, const float& EndTime);
-
-	//距離計算
-	virtual void DistanceUpdate();
-
-protected:
 	//クラス名(デバック用)
 	const char* name = nullptr;
 
@@ -117,27 +99,15 @@ protected:
 	Camera* camera_ = nullptr;
 
 	//生存フラグ
-	bool isAlive_ = false;
+	bool isAlive_ = true;
 
 	//生成可能
-	bool isPopsPosibble_ = true;
+	bool isPopsPosibble_ = false;
 
 	//接触
 	bool isContactTrigger_ = false;
 
 	//光計算
 	bool isLightCal_ = false;
-
-	//リズム更新用
-	//拍終了フラグ
-	bool isBeatEnd_ = false;
-
-	//サイズ変更用
-	Vector3 scaleMax_ = {1, 1, 1};
-	Vector3 scaleMin_ = {0.7f, 1, 0.7f};
-	//スケール
-	Vector3 scale_ = {scaleMax_};
-	//現在時間
-	float scaleCurrentTime_ = 0.f;
 };
 

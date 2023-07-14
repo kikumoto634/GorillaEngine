@@ -109,29 +109,3 @@ void BaseObjObject::SetCollider(BaseCollider *collider)
 	//コライダーを更新しておく
 	collider->Update();
 }
-
-bool BaseObjObject::ScaleChange(Vector3 &sizeMax, Vector3 &sizeMin, const float &EndTime)
-{
-	float ease = -(cosf(3.14159265f * scaleCurrentTime_) - 1.f)/2.f;
-	scale_ = Easing_Point2_Linear(sizeMin, sizeMax, ease);
-	SetScale(scale_);
-
-	if(scaleCurrentTime_ >= 1.0f){
-		scale_ = scaleMax_;
-		scaleCurrentTime_ = 0.f;
-		return true;
-	}
-
-	scaleCurrentTime_ += 1.f/(60*EndTime);
-	return false;
-}
-
-void BaseObjObject::DistanceUpdate()
-{
-	if(isLightCal_){
-		object_->OnLighting();
-		return;
-	}
-	
-	object_->OffLighting();
-}

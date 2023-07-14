@@ -8,6 +8,8 @@
 
 #include "BaseSprites.h"
 
+#include "BaseObjObject.h"
+
 #ifdef _DEBUG
 #include "DebugText.h"
 #include "imguiManager.h"
@@ -114,5 +116,6 @@ protected:
 
 	BaseSprites* sp = nullptr;
 
+	BaseObjObject* obj = nullptr;
 };
 

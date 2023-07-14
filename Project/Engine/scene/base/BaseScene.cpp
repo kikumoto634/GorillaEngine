@@ -32,6 +32,12 @@ void BaseScene::Initialize()
 	sp->SetPosition({100,100});
 	sp->SetAnchorPoint({0.5f,0.5f});
 	sp->SetSize({100,100});
+
+
+	obj = new BaseObjObject();
+	obj->Initialize("GroundBlock");
+	obj->SetPosition({0,10,0});
+	obj->CaveLightOn();
 }
 
 void BaseScene::Update()
@@ -40,6 +46,7 @@ void BaseScene::Update()
 	input->Update();
 
 	sp->Update();
+	obj->Update(camera);
 
 #ifdef _DEBUG
 	{
@@ -52,6 +59,30 @@ void BaseScene::Update()
 		ImGui::Checkbox("demoWindow", &show_demo_window);
 		//フラグによる出現物
 		if(show_demo_window)	ImGui::ShowDemoWindow(&show_demo_window);
+		ImGui::End();
+	}
+
+	{
+		//座標
+		ImGui::SetNextWindowPos(ImVec2{0,100});
+		//サイズ
+		ImGui::SetNextWindowSize(ImVec2{300,55});
+		ImGui::Begin("3DObj");
+		float tempPos[3] = {obj->GetPosition().x,obj->GetPosition().y,obj->GetPosition().z};
+		ImGui::SliderFloat3("Pos", tempPos, -100,100);
+		obj->SetPosition({tempPos[0],tempPos[1],tempPos[2]});
+		ImGui::End();
+	}
+
+	{
+		//座標
+		ImGui::SetNextWindowPos(ImVec2{0,160});
+		//サイズ
+		ImGui::SetNextWindowSize(ImVec2{300,55});
+		ImGui::Begin("Camera");
+		float tempPos[3] = {camera->GetEye().x,camera->GetEye().y,camera->GetEye().z};
+		ImGui::SliderFloat3("Pos", tempPos, -100,100);
+		camera->SetEye({tempPos[0],tempPos[1],tempPos[2]});
 		ImGui::End();
 	}
 #endif // _DEBUG
@@ -67,6 +98,7 @@ void BaseScene::EndUpdate()
 
 void BaseScene::Draw()
 {
+	obj->Draw();
 }
 
 void BaseScene::DrawBack()
@@ -83,4 +115,7 @@ void BaseScene::Finalize()
 {
 	sp->Finalize();
 	delete sp;
+
+	obj->Finalize();
+	delete obj;
 }
