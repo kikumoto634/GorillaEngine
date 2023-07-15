@@ -230,8 +230,20 @@ Matrix4x4 Matrix4x4::Inverse(Matrix4x4 m) {
 	return result;
 }
 
+Matrix4x4 Matrix4x4::MakePerspective(float angle, float aspect, float nearZ, float farZ)
+{
+	Matrix4x4 temp = {
+		aspect*(1/tan(angle/2)),0,0,0,
+		0,(1/tan(angle/2)),0,0,
+		0,0,farZ*(1/(farZ-nearZ)),1,
+		0,0,farZ*(-nearZ/(farZ-nearZ)),0
+	};
 
-Matrix4x4 &Matrix4x4::operator*=(Matrix4x4 &m1)
+	return temp;
+}
+
+
+Matrix4x4 &Matrix4x4::operator*=(const Matrix4x4 &m1)
 {
 
 	for(size_t i = 0; i < 4; i++){
@@ -244,7 +256,92 @@ Matrix4x4 &Matrix4x4::operator*=(Matrix4x4 &m1)
 	return *this; 
 }
 
-Matrix4x4 operator*(Matrix4x4 &m1, Matrix4x4 &m2)
+
+Matrix4x4 MakeIdentityMatrix()
+{
+	Matrix4x4 result{
+		1.0f, 0.0f, 0.0f, 0.0f, 
+		0.0f, 1.0f, 0.0f, 0.0f,
+	    0.0f, 0.0f, 1.0f, 0.0f, 
+		0.0f, 0.0f, 0.0f, 1.0f};
+
+	return result;
+}
+
+Matrix4x4 MakeScaleMatrix(const Vector3 &scale)
+{
+	Matrix4x4 result;
+
+	result = {
+		scale.x, 0.0f,	  0.0f,		0.0f,
+		0.0f,	 scale.y, 0.0f,		0.0f,
+		0.0f,	 0.0f,	  scale.z,  0.0f,
+		0.0f,	 0.0f,	  0.0f,		1.0f,
+	};
+
+	return result; 
+}
+
+Matrix4x4 MakeRotationXMatrix(float theta)
+{
+	float sin = std::sin(theta);
+	float cos = std::cos(theta);
+
+	Matrix4x4 result;
+
+	result = {
+		1.0f,	0.0f,		0.0f,	0.0f,
+		0.0f,	cos,		sin,	0.0f,
+		0.0f,	-sin,		cos,	0.0f,
+		0.0f,	0.0f,		0.0f,	1.0f,
+	};
+
+	return result; 
+}
+
+Matrix4x4 MakeRotationYMatrix(float theta)
+{
+	float sin = std::sin(theta);
+	float cos = std::cos(theta);
+
+	Matrix4x4 result = {
+		cos, 0.0f, -sin, 0.0f, 
+		0.0f,1.0f, 0.0f, 0.0f,
+		sin, 0.0f, cos,  0.0f, 
+		0.0f,0.0f, 0.0f, 1.0f
+	};
+
+	return result;
+}
+
+Matrix4x4 MakeRotationZMatrix(float theta)
+{
+	float sin = std::sin(theta);
+	float cos = std::cos(theta);
+
+	Matrix4x4 result = {
+		cos,  sin,  0.0f, 0.0f, 
+		-sin, cos,  0.0f, 0.0f,
+	    0.0f, 0.0f, 1.0f, 0.0f, 
+		0.0f, 0.0f, 0.0f, 1.0f
+	};
+
+	return result;
+}
+
+Matrix4x4 MakeTranslateMatrix(const Vector3 &trans)
+{
+	Matrix4x4 result = {
+		1.0f,	 0.0f,	  0.0f,	   0.0f,
+		0.0f,	 1.0f,	  0.0f,	   0.0f,
+		0.0f,	 0.0f,	  1.0f,	   0.0f,
+		trans.x, trans.y, trans.z, 1.0f,
+	};
+
+	return result; 
+}
+
+const Matrix4x4 operator*(const Matrix4x4 &m1, const Matrix4x4 &m2)
 {
 	Matrix4x4 result = m1;
 

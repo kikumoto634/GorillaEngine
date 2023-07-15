@@ -85,7 +85,7 @@ void ObjModelObject::Update(WorldTransform world, Camera* camera)
 {
 	HRESULT result {};
 
-	const XMMATRIX& matViewProjection = camera->GetViewProjectionMatrix();
+	const Matrix4x4& matViewProjection = camera->GetViewProjectionMatrix();
 	const Vector3& cameraPos = camera->GetEye();
 
 	// 定数バッファへデータ転送

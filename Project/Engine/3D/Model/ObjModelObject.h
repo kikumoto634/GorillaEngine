@@ -1,6 +1,4 @@
 ﻿#pragma once
-
-#include <DirectXMath.h>
 #include <string>
 
 #include "WorldTransform.h"
@@ -18,9 +16,6 @@ class ObjModelObject
 private: // エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	// DirectX::を省略
-	using XMMATRIX = DirectX::XMMATRIX;
-
 public: // サブクラス
 
 	class CommonObj{
@@ -41,8 +36,8 @@ public: // サブクラス
 	// 定数バッファ用データ構造体
 	struct ConstBufferDataB0
 	{
-		XMMATRIX viewproj;		//ビュープロジェクション
-		XMMATRIX world;			//ワールド
+		Matrix4x4 viewproj;		//ビュープロジェクション
+		Matrix4x4 world;			//ワールド
 		Vector3 cameraPos;		//カメラ座標
 		float pad1;
 		Vector4 color;

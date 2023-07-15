@@ -5,16 +5,13 @@
 #include "WorldTransform.h"
 #include "ViewProjection.h"
 
-#include <DirectXMath.h>
+#include "Matrix4x4.h"
 
 /// <summary>
 /// カメラ
 /// </summary>
 class Camera
 {
-protected:
-	using XMMATRIX = DirectX::XMMATRIX;
-
 public:
 	static Camera* GetInstance();
 
@@ -84,15 +81,15 @@ public:
 	/// </summary>
 	inline void ViewUpdate()	{view.UpdateViewMatrix();}
 
-	const XMMATRIX& GetMatProjection()	{return view.matProjection;}
-	const XMMATRIX& GetMatView()	{return view.matView;}
-	const XMMATRIX& GetViewProjectionMatrix()	{return view.matViewProjection;}
+	const Matrix4x4& GetMatProjection()	{return view.matProjection;}
+	const Matrix4x4& GetMatView()	{return view.matView;}
+	const Matrix4x4& GetViewProjectionMatrix()	{return view.matViewProjection;}
 
 	const Vector3& GetEye() {return view.eye; }
 	const Vector3& GetTarget() {return view.target; }
 	const Vector3& GetUp() {return view.up; }
 	const float& Distance() {return distance; }
-	const DirectX::XMMATRIX& GetBillboard() {return view.matBillboard;}
+	const Matrix4x4& GetBillboard() {return view.matBillboard;}
 
 	void SetEye(const Vector3& eye)	{this->view.eye = eye; }
 	void SetTarget(const Vector3& target)	{this->view.target = target; }
@@ -117,7 +114,7 @@ protected:
 	float distance = 20.f;	//カメラの距離
 
 	//回転行列
-	XMMATRIX matRot = DirectX::XMMatrixIdentity();
+	Matrix4x4 matRot = MakeIdentityMatrix();
 
 	//シェイク
 	bool IsShake = false;

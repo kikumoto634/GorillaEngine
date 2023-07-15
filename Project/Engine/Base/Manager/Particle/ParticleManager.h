@@ -2,13 +2,13 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
-#include <DirectXMath.h>
 #include <DirectXTex.h>
 #include <forward_list>
 
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
+#include "Matrix4x4.h"
 #include "DirectXCommon.h"
 #include "TextureManager.h"
 #include "Camera.h"
@@ -32,8 +32,8 @@ public:
 
 	//定数バッファ用データ構造体(3D変換行列
 	struct ConstBufferData{
-		DirectX::XMMATRIX mat;	//3D変換行列
-		DirectX::XMMATRIX matBillboard;	//ビルボード行列
+		Matrix4x4 mat;	//3D変換行列
+		Matrix4x4 matBillboard;	//ビルボード行列
 		Vector4 color;
 	};
 

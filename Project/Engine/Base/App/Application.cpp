@@ -73,10 +73,6 @@ void Application::Initialize()
 
 	//スプライト静的初期化
 	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
-	
-	//FBX
-	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
-	FbxModelObject::StaticInitialize(dxCommon);
 
 	//OBJ
 	ObjModelManager::StaticInitialize(dxCommon);
@@ -162,8 +158,6 @@ void Application::Finalize()
 #endif // _DEBUG
 
 	ObjModelObject::StaticFinalize();
-	FbxModelObject::StaticFinalize();
-	FbxLoader::GetInstance()->Finalize();
 	Sprite::StaticFinalize();
 
 	SceneManager::Delete();

@@ -1,13 +1,11 @@
-﻿#include "CollisionPrimitive.h"
-
-using namespace DirectX;
+#include "CollisionPrimitive.h"
 
 void Triangle::ComputeNormal()
 {
-	XMVECTOR p0_p1 = p1 - p0;
-	XMVECTOR p0_p2 = p2 - p0;
+	Vector4 p0_p1 = p1 - p0;
+	Vector4 p0_p2 = p2 - p0;
 
 	//外積により、2辺にスイ着なベクトルを算出する
-	normal = XMVector3Cross(p0_p1, p0_p2);
-	normal = XMVector3Normalize(normal);
+	normal = p0_p1.CorssVector3(p0_p2);
+	normal.NormalizeVector3();
 }

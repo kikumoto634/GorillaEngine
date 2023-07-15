@@ -34,9 +34,24 @@ public:
 	float Det(Matrix4x4 m);
 	Matrix4x4 Inverse(Matrix4x4 m);
 
+	//パースペクティブ行列
+	Matrix4x4 MakePerspective(float angle, float aspect, float nearZ, float farZ);
+
 	//代入演算子オーバーロード
-	Matrix4x4& operator*=(Matrix4x4& m1);
+	Matrix4x4& operator*=(const Matrix4x4& m1);
 };
 
+Matrix4x4 MakeIdentityMatrix();
+//スケーリング行列
+Matrix4x4 MakeScaleMatrix(const Vector3& scale);
+
+//回転行列
+Matrix4x4 MakeRotationXMatrix(float theta);
+Matrix4x4 MakeRotationYMatrix(float theta);
+Matrix4x4 MakeRotationZMatrix(float theta);
+
+//平行移動行列
+Matrix4x4 MakeTranslateMatrix(const Vector3& trans);
+
 //2公演算子オーバーロード
-Matrix4x4 operator*(Matrix4x4& m1, Matrix4x4& m2);
+const Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2);

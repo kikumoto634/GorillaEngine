@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Sprite.h"
 #include "Vector2.h"
+#include "Matrix4x4.h"
 #include "Camera.h"
 
 class BaseSprites
@@ -54,7 +55,7 @@ public:
 
 private:
 	//ベクトル*行列
-	Vector3 Vector3Transform( Vector3 &v,  DirectX::XMMATRIX &m);
+	Vector3 Vector3Transform( Vector3 &v,  Matrix4x4 &m);
 
 private:
 	Window* window = nullptr;

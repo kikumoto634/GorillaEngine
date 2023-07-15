@@ -1,4 +1,4 @@
-﻿#include "ParticleManager.h"
+#include "ParticleManager.h"
 #include <cassert>
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
@@ -122,9 +122,9 @@ void ParticleManager::Update(WorldTransform worldTransform, Camera* camera)
 	}
 
 	//カメラの行列取得
-	const XMMATRIX& matWorld = worldTransform.matWorld;
-	const XMMATRIX& matView = camera->GetMatView();
-	const XMMATRIX& matProjection = camera->GetMatProjection();
+	const Matrix4x4& matWorld = worldTransform.matWorld;
+	const Matrix4x4& matView = camera->GetMatView();
+	const Matrix4x4& matProjection = camera->GetMatProjection();
 
 	constMap->mat = matWorld * matView * matProjection;
 	constMap->matBillboard = camera->GetBillboard();

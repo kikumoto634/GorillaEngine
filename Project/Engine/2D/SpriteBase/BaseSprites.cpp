@@ -46,27 +46,27 @@ Vector2 BaseSprites::ChangeTransformation(Vector3 target, Camera* camera)
 {
 	targetPos = target;
 
-	DirectX::XMMATRIX matViewport = 
+	Matrix4x4 matViewport = 
 	{
 		(float)window->GetWindowWidth()/2, 0								  , 0, 0,
 		0								 , -((float)window->GetWindowHeight())/2, 0, 0,
 		0								 , 0								  , 1, 0, 
 		(float)window->GetWindowWidth()/2, (float)window->GetWindowHeight()/2 , 0, 1,
 	};
-	DirectX::XMMATRIX matViewProjectionViewPort = camera->GetMatView() * camera->GetMatProjection() * matViewport;
+	Matrix4x4 matViewProjectionViewPort = camera->GetMatView() * camera->GetMatProjection() * matViewport;
 	Vector3 positionreticle = Vector3Transform(target, matViewProjectionViewPort);
 	return Vector2{positionreticle.x, positionreticle.y};
 }
 
-Vector3 BaseSprites::Vector3Transform(Vector3 &v, DirectX::XMMATRIX &m)
+Vector3 BaseSprites::Vector3Transform(Vector3 &v, Matrix4x4 &m)
 {
-	float w = v.x * m.r[0].m128_f32[3] + v.y * m.r[1].m128_f32[3] + v.z * m.r[2].m128_f32[3] + m.r[3].m128_f32[3];
+	float w = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + m.m[3][3];
 
 	Vector3 result
 	{
-		(v.x*m.r[0].m128_f32[0] + v.y*m.r[1].m128_f32[0] + v.z*m.r[2].m128_f32[0] + m.r[3].m128_f32[0])/w,
-		(v.x*m.r[0].m128_f32[1] + v.y*m.r[1].m128_f32[1] + v.z*m.r[2].m128_f32[1] + m.r[3].m128_f32[1])/w,
-		(v.x*m.r[0].m128_f32[2] + v.y*m.r[1].m128_f32[2] + v.z*m.r[2].m128_f32[2] + m.r[3].m128_f32[2])/w
+		(v.x*m.m[0][0] + v.y*m.m[1][0] + v.z*m.m[2][0] + m.m[3][0])/w,
+		(v.x*m.m[0][1] + v.y*m.m[1][1] + v.z*m.m[2][1] + m.m[3][1])/w,
+		(v.x*m.m[0][2] + v.y*m.m[1][2] + v.z*m.m[2][2] + m.m[3][2])/w
 	};
 
 	return result;

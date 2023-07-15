@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <DirectXMath.h>
+#include "Vector4.h"
 
 ///<summary>
 /// 当たり判定プリミティブ
@@ -13,7 +13,7 @@
 struct Sphere
 {
 	//中心座標
-	DirectX::XMVECTOR center = {0,0,0,1};
+	Vector4 center = {0,0,0,1};
 	//半径
 	float radius = 1.0f;
 };
@@ -24,7 +24,7 @@ struct Sphere
 struct Plane
 {
 	//法線ベクトル
-	DirectX::XMVECTOR normal = {0,1,0,0};
+	Vector4 normal = {0,1,0,0};
 	//原点(0,0,0)から距離
 	float distance = 0.0f;
 };
@@ -37,11 +37,11 @@ class Triangle
 {
 public:
 	//頂点座標3つ
-	DirectX::XMVECTOR p0;
-	DirectX::XMVECTOR p1;
-	DirectX::XMVECTOR p2;
+	Vector4 p0;
+	Vector4 p1;
+	Vector4 p2;
 	//法線ベクトル
-	DirectX::XMVECTOR normal;
+	Vector4 normal;
 
 public:
 	/// <summary>
@@ -57,7 +57,7 @@ public:
 struct Ray
 {
 	//始点座標
-	DirectX::XMVECTOR start = {0,0,0,1};
+	Vector4 start = {0,0,0,1};
 	//方向
-	DirectX::XMVECTOR dir = {1,0,0,0};
+	Vector4 dir = {1,0,0,0};
 };

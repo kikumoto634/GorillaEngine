@@ -2,8 +2,6 @@
 #include "BaseCollider.h"
 #include "BaseObjObject.h"
 
-#include <DirectXMath.h>
-
 
 class BaseObjObject;
 
@@ -17,7 +15,7 @@ struct RaycastHit
 	//衝突相手のコライダー
 	BaseCollider* collider = nullptr;
 	//衝突点
-	DirectX::XMVECTOR inter;
+	Vector4 inter;
 	//衝突点までの距離
 	float distance = 0.0f;
 };

@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <DirectXMath.h>
-
 class BaseObjObject;
 class BaseCollider;
 
@@ -15,9 +13,9 @@ struct QueryHit
 	//衝突相手のコライダー
 	BaseCollider* collider = nullptr;
 	//衝突点
-	DirectX::XMVECTOR inter;
+	Vector4 inter;
 	//排斥ベクトル
-	DirectX::XMVECTOR reject;
+	Vector4 reject;
 };
 
 

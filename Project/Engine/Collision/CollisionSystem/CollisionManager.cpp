@@ -1,9 +1,7 @@
-﻿#include "CollisionManager.h"
+#include "CollisionManager.h"
 #include "BaseCollider.h"
 #include "Collision.h"
 #include "MeshCollider.h"
-
-using namespace DirectX;
 
 CollisionManager *CollisionManager::GetInstance()
 {
@@ -21,7 +19,7 @@ bool CollisionManager::Raycast(const Ray &ray, unsigned short attribute, Raycast
 	//今までで最も近いコライダーの距離を記録する変数
 	float distance = maxDistance;
 	//今までで最も近いコライダーとの交点を記録する変数
-	XMVECTOR inter;
+	Vector4 inter;
 
 	//すべてコライダーと総当たりチェック
 	it = colliders.begin();
@@ -37,7 +35,7 @@ bool CollisionManager::Raycast(const Ray &ray, unsigned short attribute, Raycast
 		if(colA->GetShapeType() == COLLISIONSHAPE_SPHERE){
 			Sphere* sphere = dynamic_cast<Sphere*>(colA);
 			float tempDistance;
-			XMVECTOR tempinter;
+			Vector4 tempinter;
 			//当たらなければ除外
 			if(!Collision::CheckRay2Sphere(ray, *sphere, &tempDistance, &tempinter)) continue;
 			//距離が最小でなければ除外
@@ -52,7 +50,7 @@ bool CollisionManager::Raycast(const Ray &ray, unsigned short attribute, Raycast
 			MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
 
 			float tempDistance;
-			DirectX::XMVECTOR tempInter;
+			Vector4 tempInter;
 			if(!meshCollider->CheckCollisionRay(ray, &tempDistance, &tempInter)) continue;
 			if(tempDistance >= distance) continue;
 
@@ -100,7 +98,7 @@ void CollisionManager::CheckAllCollisions()
 				colB->GetShapeType() == COLLISIONSHAPE_SPHERE){
 				Sphere* SphereA = dynamic_cast<Sphere*>(colA);
 				Sphere* SphereB = dynamic_cast<Sphere*>(colB);
-				DirectX::XMVECTOR inter;
+				Vector4 inter;
 				if(Collision::CheckSphere2Sphere(*SphereA, *SphereB, &inter)){
 					colA->OnCollision(CollisionInfo(colB->GetObjObject(), colB, inter));
 					colB->OnCollision(CollisionInfo(colA->GetObjObject(), colA, inter));
@@ -110,7 +108,7 @@ void CollisionManager::CheckAllCollisions()
 				colB->GetShapeType() == COLLISIONSHAPE_SPHERE){
 				MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
 				Sphere* sphere = dynamic_cast<Sphere*>(colB);
-				DirectX::XMVECTOR inter;
+				Vector4 inter;
 				if(meshCollider->CheckCollisionSphere(*sphere, &inter)){
 					colA->OnCollision(CollisionInfo(colB->GetObjObject(), colB, inter));
 					colB->OnCollision(CollisionInfo(colA->GetObjObject(), colA, inter));
@@ -120,7 +118,7 @@ void CollisionManager::CheckAllCollisions()
 				colB->GetShapeType() == COLLISIONSHAPE_MESH){
 				MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colB);
 				Sphere* sphere = dynamic_cast<Sphere*>(colA);
-				DirectX::XMVECTOR inter;
+				Vector4 inter;
 				if(meshCollider->CheckCollisionSphere(*sphere, &inter)){
 					colA->OnCollision(CollisionInfo(colB->GetObjObject(), colB, inter));
 					colB->OnCollision(CollisionInfo(colA->GetObjObject(), colA, inter));
@@ -150,8 +148,8 @@ void CollisionManager::QuerySphere(const Sphere &sphere, QueryCallback *callback
 		if(col->GetShapeType() == COLLISIONSHAPE_SPHERE){
 			Sphere* sphereB = dynamic_cast<Sphere*>(col);
 
-			XMVECTOR tempInter;
-			XMVECTOR tempReject;
+			Vector4 tempInter;
+			Vector4 tempReject;
 			if(!Collision::CheckSphere2Sphere(sphere, *sphereB, &tempInter, &tempReject)) continue;
 
 			//交差情報をセット
@@ -171,8 +169,8 @@ void CollisionManager::QuerySphere(const Sphere &sphere, QueryCallback *callback
 		else if(col->GetShapeType() == COLLISIONSHAPE_MESH){
 			MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(col);
 
-			XMVECTOR tempInter;
-			XMVECTOR tempReject;
+			Vector4 tempInter;
+			Vector4 tempReject;
 			if(!meshCollider->CheckCollisionSphere(sphere, &tempInter, &tempReject)) continue;
 
 			//交差情報をセット

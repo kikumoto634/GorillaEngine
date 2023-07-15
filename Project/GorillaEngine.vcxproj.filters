@@ -312,9 +312,6 @@
     <ClCompile Include="Engine\input\Input.cpp">
       <Filter>ソース ファイル\Engine\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\loader\FbxLoader.cpp">
-      <Filter>ソース ファイル\Engine\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\math\Vector\Vector2.cpp">
       <Filter>ソース ファイル\Engine\Math\Vector</Filter>
     </ClCompile>
@@ -345,17 +342,11 @@
     <ClCompile Include="Engine\Collision\CollisionSystem\CollisionPrimitive.cpp">
       <Filter>ソース ファイル\Engine\Collision\CollisionSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Model\FbxModelObject.cpp">
-      <Filter>ソース ファイル\Engine\3D\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3D\Model\ObjModelObject.cpp">
       <Filter>ソース ファイル\Engine\3D\Model</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\Model\TouchableObject.cpp">
       <Filter>ソース ファイル\Engine\3D\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\ObjectBase\BaseFbxObjects.cpp">
-      <Filter>ソース ファイル\Engine\3D\ObjectBase</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\ObjectBase\ParticleObject.cpp">
       <Filter>ソース ファイル\Engine\3D\ObjectBase</Filter>
@@ -408,9 +399,6 @@
     <ClCompile Include="Engine\Base\Manager\Particle\ParticleManager.cpp">
       <Filter>ソース ファイル\Engine\Base\Manager\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Base\Manager\.Fbx\FbxModelManager.cpp">
-      <Filter>ソース ファイル\Engine\Base\Manager\Fbx</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Base\Manager\.Obj\ObjModelManager.cpp">
       <Filter>ソース ファイル\Engine\Base\Manager\Obj</Filter>
     </ClCompile>
@@ -430,9 +418,6 @@
   <ItemGroup>
     <ClInclude Include="Engine\input\Input.h">
       <Filter>ヘッダー ファイル\Engine\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\loader\FbxLoader.h">
-      <Filter>ヘッダー ファイル\Engine\Loader</Filter>
     </ClInclude>
     <ClInclude Include="Engine\math\Vector\Vector2.h">
       <Filter>ヘッダー ファイル\Engine\Math\Vector</Filter>
@@ -473,14 +458,8 @@
     <ClInclude Include="Engine\3D\Model\ObjModelObject.h">
       <Filter>ヘッダー ファイル\Engine\3D\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\Model\FbxModelObject.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3D\Model\TouchableObject.h">
       <Filter>ヘッダー ファイル\Engine\3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\ObjectBase\BaseFbxObjects.h">
-      <Filter>ヘッダー ファイル\Engine\3D\ObjectBase</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\ObjectBase\BaseObjObject.h">
       <Filter>ヘッダー ファイル\Engine\3D\ObjectBase</Filter>
@@ -550,9 +529,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Base\Manager\Particle\ParticleManager.h">
       <Filter>ヘッダー ファイル\Engine\Base\Manager\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Base\Manager\.Fbx\FbxModelManager.h">
-      <Filter>ヘッダー ファイル\Engine\Base\Manager\Fbx</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\Manager\.Obj\ObjModelManager.h">
       <Filter>ヘッダー ファイル\Engine\Base\Manager\Obj</Filter>

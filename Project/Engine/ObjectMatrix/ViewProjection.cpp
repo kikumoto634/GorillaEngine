@@ -1,85 +1,81 @@
-﻿#include "ViewProjection.h"
+#include "ViewProjection.h"
+#include <DirectXMath.h>
 
-using namespace DirectX;
-
-XMMATRIX ViewProjection::matBillboard  = DirectX::XMMatrixIdentity();
-XMMATRIX ViewProjection::matBillboardY  = DirectX::XMMatrixIdentity();
+Matrix4x4 ViewProjection::matBillboard  = MakeIdentityMatrix();
+Matrix4x4 ViewProjection::matBillboardY  = MakeIdentityMatrix();
 
 void ViewProjection::UpdateViewMatrix()
 {
-	XMFLOAT3 leye = {eye.x,eye.y,eye.z};
-	XMFLOAT3 ltarget = {target.x,target.y,target.z};
-	XMFLOAT3 lup = {up.x,up.y,up.z};
-
-	//視点座標
-	XMVECTOR eyePosition = XMLoadFloat3(&leye);
-	XMVECTOR targetPosition = XMLoadFloat3(&ltarget);
-	XMVECTOR upVector = XMLoadFloat3(&lup);
-
 	//カメラZ軸
-	XMVECTOR cameraAxisZ = XMVectorSubtract(targetPosition, eyePosition);
+	Vector3 cameraAxisZ = (target-eye);
 	//0ベクトルだと向きが定まらないので除外
-	assert(!XMVector3Equal(cameraAxisZ, XMVectorZero()));
+	/*assert(!XMVector3Equal(cameraAxisZ, XMVectorZero()));
 	assert(!XMVector3IsInfinite(cameraAxisZ));
 	assert(!XMVector3Equal(upVector, XMVectorZero()));
-	assert(!XMVector3IsInfinite(upVector));
+	assert(!XMVector3IsInfinite(upVector));*/
 	//ベクトルを正規化
-	cameraAxisZ = XMVector3Normalize(cameraAxisZ);
+	cameraAxisZ = cameraAxisZ.normalize();
 	//カメラのX軸
-	XMVECTOR cameraAxisX;
+	Vector3 cameraAxisX;
 	//X軸は上方向->Z軸の外積で求まる
-	cameraAxisX = XMVector3Cross(upVector, cameraAxisZ);
+	cameraAxisX = up.cross(cameraAxisZ);
 	//ベクトルを正規化
-	cameraAxisX = XMVector3Normalize(cameraAxisX);
+	cameraAxisX = cameraAxisX.normalize();
 	//カメラのY軸
-	XMVECTOR cameraAxisY;
-	cameraAxisY = XMVector3Cross(cameraAxisZ, cameraAxisX);
+	Vector3 cameraAxisY;
+	cameraAxisY = cameraAxisZ.cross(cameraAxisX);
 	//カメラ行列
-	XMMATRIX matCameraRot;
 	//カメラ座標系->ワールド座標系の変換行列
-	matCameraRot.r[0] = cameraAxisX;
-	matCameraRot.r[1] = cameraAxisY;
-	matCameraRot.r[2] = cameraAxisZ;
-	matCameraRot.r[3] = XMVectorSet(0,0,0,1);
+	Matrix4x4 matCameraRot = {
+		cameraAxisX.x, cameraAxisX.y, cameraAxisX.z, 0,
+		cameraAxisY.x, cameraAxisY.y, cameraAxisY.z, 0,
+		cameraAxisZ.x, cameraAxisZ.y, cameraAxisZ.z, 0,
+		0,0,0,1
+	};
 
 	//ビュー変換行列
-	matView = XMMatrixTranspose(matCameraRot);
+	matView = matCameraRot;
 
 	//視点座標に-1を掛けた座標
-	XMVECTOR reverseEyePosition = XMVectorNegate(eyePosition);
+	Vector3 reverseEyePosition = -(eye);
 	//カメラの位置からワールド原点へのベクトル(カメラ座標系)
-	XMVECTOR tX = XMVector3Dot(cameraAxisX, reverseEyePosition);//X成分
-	XMVECTOR tY = XMVector3Dot(cameraAxisY, reverseEyePosition);//Y成分
-	XMVECTOR tZ = XMVector3Dot(cameraAxisZ, reverseEyePosition);//Z成分
+	Vector3 tX = cameraAxisX*reverseEyePosition;//X成分
+	Vector3 tY = cameraAxisY*reverseEyePosition;//Y成分
+	Vector3 tZ = cameraAxisZ*reverseEyePosition;//Z成分
 	//一つのベクトルにまとめる
-	XMVECTOR translation = XMVectorSet(tX.m128_f32[0], tY.m128_f32[1], tZ.m128_f32[2], 1.0f);
+	Vector3 translation = {tX.x, tY.y, tZ.x};
 
 	//ビュー行列に平行移動成分を設定
-	matView.r[3] = translation;
+	matView.m[3][0] = translation.x;
+	matView.m[3][1] = translation.y;
+	matView.m[3][2] = translation.z;
+	matView.m[3][3] = 1;
 
 #pragma region ビルボード計算
 	//カメラX軸、Y軸、Z軸
-	XMVECTOR ybillCameraAxisX, ybillCameraAxisY, ybillCameraAxisZ;
+	Vector3 ybillCameraAxisX, ybillCameraAxisY, ybillCameraAxisZ;
 	//X軸は共通
 	ybillCameraAxisX = cameraAxisX;
 	//Y軸はワールド座標系のY軸
-	ybillCameraAxisY = XMVector3Normalize(upVector);
+	ybillCameraAxisY = up.normalize();
 	//Z軸はX軸->Y軸の外積で求まる
-	ybillCameraAxisZ = XMVector3Cross(cameraAxisX, cameraAxisY);
+	ybillCameraAxisZ = cameraAxisX.cross(cameraAxisY);
 
 	//ビルボード行列計算
-	matBillboard.r[0] = ybillCameraAxisX;
-	matBillboard.r[1] = ybillCameraAxisY;
-	matBillboard.r[2] = ybillCameraAxisZ;
-	matBillboard.r[3] = XMVectorSet(0,0,0,1);
+	matBillboard = {
+		ybillCameraAxisX.x,ybillCameraAxisX.y,ybillCameraAxisX.z,0,
+		ybillCameraAxisY.x,ybillCameraAxisY.y,ybillCameraAxisY.z,0,
+		ybillCameraAxisZ.x,ybillCameraAxisZ.y,ybillCameraAxisZ.z,0,
+		0,0,0,1
+	};
 #pragma endregion ビルボード計算
 }
 
 void ViewProjection::UpdateProjectionMatrix(int width, int height)
 {
 	//透視投影
-	matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(45.0f),	//上下画角45°
+	matProjection.MakePerspective(
+		DirectX::XMConvertToRadians(45.0f),	//上下画角45°
 		(float)width / height,			//aspect比(画面横幅/画面縦幅)
 		0.1f, 1000.0f				//前端、奥端
 	);

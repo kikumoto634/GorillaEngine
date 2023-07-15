@@ -1,9 +1,7 @@
-﻿#include "DirectXCommon.h"
+#include "DirectXCommon.h"
 #include "WorldTransform.h"
 #include <cassert>
 #include <d3dx12.h>
-
-using namespace DirectX;
 
 void WorldTransform::Initialize()
 {
@@ -40,20 +38,20 @@ void WorldTransform::Map()
 	assert(SUCCEEDED(result));
 }
 
-void WorldTransform::UpdateMatrix(DirectX::XMMATRIX matBillboard)
+void WorldTransform::UpdateMatrix(Matrix4x4 matBillboard)
 {
-	XMMATRIX matScale, matRot, matTrans;
+	Matrix4x4 matScale, matRot, matTrans;
 
 	// スケール、回転、平行移動行列の計算
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(rotation.z);
-	matRot *= XMMatrixRotationX(rotation.x);
-	matRot *= XMMatrixRotationY(rotation.y);
-	matTrans = XMMatrixTranslation(translation.x, translation.y, translation.z);
+	matScale = matScale.MakeScaleMatrix({scale});
+	matRot = MakeIdentityMatrix();
+	matRot *= matRot.MakeRotationZMatrix(rotation.z);
+	matRot *= matRot.MakeRotationXMatrix(rotation.x);
+	matRot *= matRot.MakeRotationYMatrix(rotation.y);
+	matTrans = matTrans.MakeTranslateMatrix({translation});
 
 	// ワールド行列の合成
-	matWorld = XMMatrixIdentity(); // 変形をリセット
+	matWorld = MakeIdentityMatrix(); // 変形をリセット
 	matWorld *= matScale;          // ワールド行列にスケーリングを反映
 	matWorld *= matRot;            // ワールド行列に回転を反映
 	//matWorld *= matBillboard;	//ビルボード行列を掛ける
