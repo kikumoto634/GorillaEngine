@@ -1,4 +1,4 @@
-﻿#include "imguiManager.h"
+#include "imguiManager.h"
 
 #include <imgui.h>
 #include <imgui_impl_win32.h>
@@ -70,4 +70,11 @@ void imguiManager::Finalize()
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+}
+
+Vector3 imguiManager::ImGuiDragVector3(const char* name, Vector3 value, float speed, float min, float max)
+{
+	float tempPos[3] = {value.x,value.y,value.z};
+	ImGui::DragFloat3(name, tempPos, speed, min, max);
+	return Vector3({tempPos[0],tempPos[1],tempPos[2]});
 }

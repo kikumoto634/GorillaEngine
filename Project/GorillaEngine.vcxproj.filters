@@ -301,6 +301,12 @@
     <Filter Include="リソース ファイル\PostEffect">
       <UniqueIdentifier>{864dc63d-fd30-4a3a-b0d6-de1f2bc32c89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Math\Matrix">
+      <UniqueIdentifier>{b1724b4b-eed9-4894-840f-e380a0ec0e9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\Math\Matrix">
+      <UniqueIdentifier>{bb20fcc1-502d-48da-b3f6-0af1049e0e9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\input\Input.cpp">
@@ -416,6 +422,9 @@
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp">
       <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Matrix\Matrix4x4.cpp">
+      <Filter>ソース ファイル\Engine\Math\Matrix</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -562,6 +571,9 @@
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\PostEffect.h">
       <Filter>ヘッダー ファイル\Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Matrix\Matrix4x4.h">
+      <Filter>ヘッダー ファイル\Engine\Math\Matrix</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

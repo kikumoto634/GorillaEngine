@@ -8,6 +8,7 @@
 
 #include "BaseSprites.h"
 
+#include "ObjModelManager.h"
 #include "BaseObjObject.h"
 
 #ifdef _DEBUG
@@ -23,6 +24,10 @@ class SceneManager;
 
 class BaseScene
 {
+private:
+	//ライト色
+	const Vector3 LightColor = {0.15f,0.15f,0.15f};
+
 //メンバ関数
 public:
 	/// <summary>
@@ -103,6 +108,9 @@ protected:
 	//ポストエフェクト
 	PostEffect* postEffect = nullptr;
 
+	//ライト
+	LightGroup* lightGroup_ = nullptr;
+
 #ifdef _DEBUG
 	//借り物
 	DebugText* debugText = nullptr;
@@ -116,6 +124,7 @@ protected:
 
 	BaseSprites* sp = nullptr;
 
+	ObjModelManager* model = nullptr;
 	BaseObjObject* obj = nullptr;
 };
 

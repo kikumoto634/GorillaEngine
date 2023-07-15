@@ -16,7 +16,12 @@ void Camera::Initialize(Window* window)
 	view.eye = {0, 0, -distance};
 	view.target = {0, 0, 0};
 	view.up = {0, 1, 0};
+	/*world.translation = {0,0,-distance};
+	world.rotation = {0,0,0};
+	world.Initialize();*/
 
+
+	view.matView = 
 	view.matViewProjection = view.matView * view.matProjection;
 	view.UpdateViewMatrix();
 	view.UpdateProjectionMatrix(window->GetWindowWidth(),window->GetWindowHeight());
@@ -30,6 +35,13 @@ void Camera::Update()
 	view.UpdateViewMatrix();
 	view.UpdateProjectionMatrix(window->GetWindowWidth(),window->GetWindowHeight());
 }
+
+void Camera::Movement(Vector3 move)
+{
+	
+}
+
+
 
 void Camera::MoveEyeVector(Vector3 move)
 {
@@ -60,11 +72,13 @@ void Camera::MoveVector(Vector3 move)
 
 void Camera::RotVector(Vector3 rot)
 {
+	rot_ = {DirectX::XMConvertToRadians(rot.x),DirectX::XMConvertToRadians(rot.y),DirectX::XMConvertToRadians(rot.z)};
+
 	// 追加回転分の回転行列を生成
 	XMMATRIX matRotNew = XMMatrixIdentity();
-	matRotNew *= XMMatrixRotationZ(-rot.z);
-	matRotNew *= XMMatrixRotationX(-rot.x);
-	matRotNew *= XMMatrixRotationY(-rot.y);
+	matRotNew *= XMMatrixRotationZ(-rot_.z);
+	matRotNew *= XMMatrixRotationX(-rot_.x);
+	matRotNew *= XMMatrixRotationY(-rot_.y);
 	// 累積の回転行列を合成
 	// ※回転行列を累積していくと、誤差でスケーリングがかかる危険がある為
 	// クォータニオンを使用する方が望ましい

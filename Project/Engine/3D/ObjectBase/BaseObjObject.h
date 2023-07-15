@@ -10,10 +10,6 @@ class BaseCollider;
 
 class BaseObjObject
 {
-protected:
-	//削除後の位置
-	const Vector3 NotAlivePos = {0,0,0};
-
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -55,8 +51,6 @@ public:
 	/// <param name="info">衝突情報</param>
 	virtual void OnCollision(const CollisionInfo& info){};
 
-	virtual void Pop(Vector3 pos);
-
 	//当たり判定時処理
 	virtual void ContactUpdate();
 
@@ -67,7 +61,6 @@ public:
 	//Getter
 	bool GetIsContactTrigger();
 	inline bool GetIsAlive()	{return isAlive_;}
-	inline bool GetIsPopsPmposibble_() {return isPopsPosibble_;}
 	inline const Vector3& GetPosition()	{return world_.translation;}
 	inline const Vector3& GetRotation()	{return world_.rotation;}
 	inline const Vector3& GetScale()		{return world_.scale;}
@@ -100,9 +93,6 @@ protected:
 
 	//生存フラグ
 	bool isAlive_ = true;
-
-	//生成可能
-	bool isPopsPosibble_ = false;
 
 	//接触
 	bool isContactTrigger_ = false;

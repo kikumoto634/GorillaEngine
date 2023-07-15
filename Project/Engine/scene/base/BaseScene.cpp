@@ -34,10 +34,22 @@ void BaseScene::Initialize()
 	sp->SetSize({100,100});
 
 
+	model = new ObjModelManager();
+	model->CreateModel("GroundBlock");
+
 	obj = new BaseObjObject();
-	obj->Initialize("GroundBlock");
-	obj->SetPosition({0,10,0});
-	obj->CaveLightOn();
+	obj->Initialize(model);
+
+	//ライト
+	lightGroup_ = LightGroup::Create();
+	//色設定
+	lightGroup_->SetAmbientColor(LightColor);
+	//3Dオブジェクト(.obj)にセット
+	ObjModelObject::SetLight(lightGroup_);
+
+	lightGroup_->SetDirLightActive(0, true);
+	lightGroup_->SetDirLightActive(1, false);
+	lightGroup_->SetDirLightActive(2, false);
 }
 
 void BaseScene::Update()
@@ -66,34 +78,24 @@ void BaseScene::Update()
 		//座標
 		ImGui::SetNextWindowPos(ImVec2{0,100});
 		//サイズ
-		ImGui::SetNextWindowSize(ImVec2{300,55});
-		ImGui::Begin("3DObj");
-		float tempPos[3] = {obj->GetPosition().x,obj->GetPosition().y,obj->GetPosition().z};
-		ImGui::SliderFloat3("Pos", tempPos, -100,100);
-		obj->SetPosition({tempPos[0],tempPos[1],tempPos[2]});
+		ImGui::SetNextWindowSize(ImVec2{300,100});
+		ImGui::Begin(obj->GetName());
+		obj->SetPosition(imgui->ImGuiDragVector3("Pos", obj->GetPosition()));
+		obj->SetRotation(imgui->ImGuiDragVector3("Rot", obj->GetRotation()));
+		obj->SetScale(imgui->ImGuiDragVector3("Sca", obj->GetScale()));
 		ImGui::End();
 	}
 
-	{
-		//座標
-		ImGui::SetNextWindowPos(ImVec2{0,160});
-		//サイズ
-		ImGui::SetNextWindowSize(ImVec2{300,55});
-		ImGui::Begin("Camera");
-		float tempPos[3] = {camera->GetEye().x,camera->GetEye().y,camera->GetEye().z};
-		ImGui::SliderFloat3("Pos", tempPos, -100,100);
-		camera->SetEye({tempPos[0],tempPos[1],tempPos[2]});
-		ImGui::End();
+	if(input->Push(DIK_LEFT)){
+		camera->RotVector({0,-1,0});
 	}
+
 #endif // _DEBUG
 }
 
 void BaseScene::EndUpdate()
 {
-#pragma region 汎用機能更新
-	//カメラ
 	camera->Update();
-#pragma endregion
 }
 
 void BaseScene::Draw()

@@ -128,7 +128,7 @@ void Application::Draw()
 {
 	//レンダーターゲットへの描画
 	postEffect_->PreDrawScene();
-	//sceneManager->Draw();
+	sceneManager->Draw();
 	postEffect_->PostDrawScene();
 
 
@@ -136,8 +136,8 @@ void Application::Draw()
 	dxCommon->BeginDraw();
 
 	sceneManager->DrawBack();
-	//postEffect_->Draw();
-	sceneManager->Draw();
+	postEffect_->Draw();
+	//sceneManager->Draw();
 	sceneManager->DrawNear();
 
 #ifdef _DEBUG

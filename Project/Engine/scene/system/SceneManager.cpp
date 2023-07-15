@@ -66,6 +66,7 @@ void SceneManager::Update()
 	}
 
 	scene->Update();
+	scene->EndUpdate();
 }
 
 void SceneManager::Draw()

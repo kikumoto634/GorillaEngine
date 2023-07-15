@@ -43,6 +43,7 @@ void BaseObjObject::Update(Camera *camera)
 	world_.UpdateMatrix();
 	object_->Update(world_, this->camera_);
 
+	if(!isAlive_) return;
 	//当たり判定更新
 	if(baseCollider_){
 		baseCollider_->Update();
@@ -51,6 +52,7 @@ void BaseObjObject::Update(Camera *camera)
 
 void BaseObjObject::Draw()
 {
+	if(!isAlive_) return;
 	object_->Draw();
 }
 
@@ -71,12 +73,6 @@ void BaseObjObject::Finalize()
 	object_ = nullptr;
 
 	world_ = {};
-}
-
-void BaseObjObject::Pop(Vector3 pos)
-{
-	SetPosition(pos);
-	isPopsPosibble_ = false;
 }
 
 void BaseObjObject::ContactUpdate()

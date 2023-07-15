@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Vector3.h"
 
+#include "WorldTransform.h"
 #include "ViewProjection.h"
 
 #include <DirectXMath.h>
@@ -26,6 +27,22 @@ public:
 	/// 更新
 	/// </summary>
 	virtual void Update();
+
+	//移動(移動量)
+	void Movement(Vector3 move);
+
+#pragma region Getter
+
+#pragma endregion
+
+#pragma region Setter
+
+#pragma endregion
+
+
+
+
+
 
 	/// <summary>
 	/// 注視点移動
@@ -67,11 +84,9 @@ public:
 	/// </summary>
 	inline void ViewUpdate()	{view.UpdateViewMatrix();}
 
-	//getter
 	const XMMATRIX& GetMatProjection()	{return view.matProjection;}
 	const XMMATRIX& GetMatView()	{return view.matView;}
 	const XMMATRIX& GetViewProjectionMatrix()	{return view.matViewProjection;}
-
 
 	const Vector3& GetEye() {return view.eye; }
 	const Vector3& GetTarget() {return view.target; }
@@ -79,7 +94,6 @@ public:
 	const float& Distance() {return distance; }
 	const DirectX::XMMATRIX& GetBillboard() {return view.matBillboard;}
 
-	//setter
 	void SetEye(const Vector3& eye)	{this->view.eye = eye; }
 	void SetTarget(const Vector3& target)	{this->view.target = target; }
 	void SetUp(const Vector3& up)	{this->view.up = up; }
@@ -93,7 +107,12 @@ private:
 	Window* window;
 
 public:
+	WorldTransform world;
 	ViewProjection view;
+
+	Vector3 pos_;
+	Vector3 rot_;
+
 protected:
 	float distance = 20.f;	//カメラの距離
 
