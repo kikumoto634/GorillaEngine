@@ -1,4 +1,7 @@
 #include "Camera.h"
+#include "Easing.h"
+
+#include <typeinfo>
 
 using namespace DirectX;
 
@@ -11,17 +14,15 @@ Camera *Camera::GetInstance()
 void Camera::Initialize(Window* window)
 {
 	this->window = window;
+	//クラス名の文字列を取得
+	name = typeid(*this).name();
 
 	//カメラ
-	view.eye = {0, 0, -distance};
-	view.target = {0, 0, 0};
-	view.up = {0, 1, 0};
-	/*world.translation = {0,0,-distance};
+	world.translation = {0,0,-distance};
 	world.rotation = {0,0,0};
-	world.Initialize();*/
+	world.Initialize();
 
 
-	view.matView = 
 	view.matViewProjection = view.matView * view.matProjection;
 	view.UpdateViewMatrix();
 	view.UpdateProjectionMatrix(window->GetWindowWidth(),window->GetWindowHeight());
@@ -30,81 +31,12 @@ void Camera::Initialize(Window* window)
 void Camera::Update()
 {
 	Shake();
+	view.matView = XMMatrixInverse(nullptr, world.matWorld);
 	view.matViewProjection = view.matView * view.matProjection;
-
-	view.UpdateViewMatrix();
-	view.UpdateProjectionMatrix(window->GetWindowWidth(),window->GetWindowHeight());
 }
 
-void Camera::Movement(Vector3 move)
+void Camera::Tracking(Vector3 target, Vector3 offset)
 {
-	
-}
-
-
-
-void Camera::MoveEyeVector(Vector3 move)
-{
-	Vector3 eye_= GetEye();
-	eye_ += move;
-	SetEye(eye_);
-	view.UpdateViewMatrix();
-}
-
-void Camera::MoveTargetVector(Vector3 move)
-{
-	Vector3 target_= GetTarget();
-	target_ += move;
-	SetTarget(target_);
-	view.UpdateViewMatrix();
-}
-
-void Camera::MoveVector(Vector3 move)
-{
-	Vector3 eye_ = GetEye();
-	Vector3 target_ = GetTarget();
-	eye_ += move;
-	target_ += move;
-	SetEye(eye_);
-	SetTarget(target_);
-	view.UpdateViewMatrix();
-}
-
-void Camera::RotVector(Vector3 rot)
-{
-	rot_ = {DirectX::XMConvertToRadians(rot.x),DirectX::XMConvertToRadians(rot.y),DirectX::XMConvertToRadians(rot.z)};
-
-	// 追加回転分の回転行列を生成
-	XMMATRIX matRotNew = XMMatrixIdentity();
-	matRotNew *= XMMatrixRotationZ(-rot_.z);
-	matRotNew *= XMMatrixRotationX(-rot_.x);
-	matRotNew *= XMMatrixRotationY(-rot_.y);
-	// 累積の回転行列を合成
-	// ※回転行列を累積していくと、誤差でスケーリングがかかる危険がある為
-	// クォータニオンを使用する方が望ましい
-	matRot = matRotNew * matRot;
-
-	// 注視点から視点へのベクトルと、上方向ベクトル
-	XMVECTOR vTargetEye = {0.0f, 0.0f, -distance, 1.0f};
-	XMVECTOR vUp = {0.0f, 1.0f, 0.0f, 0.0f};
-
-	// ベクトルを回転
-	vTargetEye = XMVector3Transform(vTargetEye, matRot);
-	vUp = XMVector3Transform(vUp, matRot);
-
-	// 注視点からずらした位置に視点座標を決定
-	const Vector3& target = GetTarget();
-	SetEye(
-		{target.x + vTargetEye.m128_f32[0], target.y + vTargetEye.m128_f32[1],
-		target.z + vTargetEye.m128_f32[2]});
-	SetUp({vUp.m128_f32[0], vUp.m128_f32[1], vUp.m128_f32[2]});
-	view.UpdateViewMatrix();
-}
-
-void Camera::Tracking(Vector3 target, bool isActive)
-{
-	if(isActive) return;
-
 	Vector3 cameraPosXZ = view.eye - view.target;
 	float height = cameraPosXZ.y;
 	cameraPosXZ.y = 0.0f;
@@ -125,50 +57,51 @@ void Camera::Tracking(Vector3 target, bool isActive)
 	newCameraPos.y = height;
 	Vector3 pos = ltarget + newCameraPos;
 
-	view.target = ltarget;
-	view.eye = pos;
-	ViewUpdate();
+	SetPosition(pos + offset);
 }
 
-void Camera::ShakeStart(int MaxFrame)
+
+
+
+void Camera::ShakeStart()
 {
-	ShakeFrame = MaxFrame;
+	if(isShake) return;
 
-	if(!IsShake){
-		saveTarget = view.target;
-		saveEye = view.eye;
-	}
+	isShake = true;
+	savePos = GetPosition();
 
-	IsShake = true;
+	shakeMaxPower = shakeMaxPower<<4;
 }
 
-void Camera::Reset()
-{
-	//カメラ
-	RotVector({XMConvertToRadians(60.f), 0.f, 0.f});
-	view.UpdateViewMatrix();
-}
 
 void Camera::Shake()
 {
-	if(!IsShake) return;
+	if(!isShake) return;
 
-	if(frame >= ShakeFrame){
-		view.target = saveTarget;
-		view.eye = saveEye;
-		frame = 0;
-		IsShake = false;
+	world.translation = savePos;
+
+	if(shakeFrame >= shakeMaxFrame){
+		shakeFrame = 0;
+		shakePower = 0;
+		shakeMaxPower = shakeMaxPower>>4;
+		isShake = false;
 		return;
 	}
 
-	view.target = saveTarget;
-	view.eye = saveEye;
+	shakeFrame++;
+	shakePower = (int)Easing_Point2_Linear((float)shakeMaxPower, 1.0f, shakeFrame/shakeMaxFrame);
 
-	Vector3 temp = {static_cast<float>(rand()%2-1),static_cast<float>(rand()%2-1),static_cast<float>(rand()%2-1)};
-	MoveVector(temp);
+	int randomPowerX = rand()%shakePower-(shakePower/2);
+	float tempPowerX = float(randomPowerX)/16.f;
 
-	frame++;
-	view.UpdateViewMatrix();
+	int randomPowerY = rand()%shakePower-(shakePower/2);
+	float tempPowerY = float(randomPowerY)/16.f;
+
+	int randomPowerZ = rand()%shakePower-(shakePower/2);
+	float tempPowerZ = float(randomPowerZ)/16.f;
+
+	Vector3 temp = {tempPowerX,tempPowerY,tempPowerZ};
+	Movement(temp);
 }
 
 

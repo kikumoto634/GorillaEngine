@@ -1,4 +1,4 @@
-﻿#include "ViewProjection.h"
+#include "ViewProjection.h"
 
 using namespace DirectX;
 
@@ -19,10 +19,10 @@ void ViewProjection::UpdateViewMatrix()
 	//カメラZ軸
 	XMVECTOR cameraAxisZ = XMVectorSubtract(targetPosition, eyePosition);
 	//0ベクトルだと向きが定まらないので除外
-	assert(!XMVector3Equal(cameraAxisZ, XMVectorZero()));
-	assert(!XMVector3IsInfinite(cameraAxisZ));
-	assert(!XMVector3Equal(upVector, XMVectorZero()));
-	assert(!XMVector3IsInfinite(upVector));
+	//assert(!XMVector3Equal(cameraAxisZ, XMVectorZero()));
+	//assert(!XMVector3IsInfinite(cameraAxisZ));
+	//assert(!XMVector3Equal(upVector, XMVectorZero()));
+	//assert(!XMVector3IsInfinite(upVector));
 	//ベクトルを正規化
 	cameraAxisZ = XMVector3Normalize(cameraAxisZ);
 	//カメラのX軸

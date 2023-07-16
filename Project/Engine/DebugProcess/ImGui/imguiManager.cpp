@@ -78,3 +78,10 @@ Vector3 imguiManager::ImGuiDragVector3(const char* name, Vector3 value, float sp
 	ImGui::DragFloat3(name, tempPos, speed, min, max);
 	return Vector3({tempPos[0],tempPos[1],tempPos[2]});
 }
+
+Vector2 imguiManager::ImGuiDragVector2(const char *name, Vector2 value, float speed, float min, float max)
+{
+	float tempPos[2] = {value.x,value.y};
+	ImGui::DragFloat2(name, tempPos, speed, min, max);
+	return Vector2({tempPos[0],tempPos[1]});
+}

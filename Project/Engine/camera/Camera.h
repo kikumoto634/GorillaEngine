@@ -29,60 +29,29 @@ public:
 	virtual void Update();
 
 	//移動(移動量)
-	void Movement(Vector3 move);
-
-#pragma region Getter
-
-#pragma endregion
-
-#pragma region Setter
-
-#pragma endregion
-
-
-
-
-
-
-	/// <summary>
-	/// 注視点移動
-	/// </summary>
-	/// <param name="move">移動量(radianを設定)</param>
-	void MoveEyeVector(Vector3 move);
-
-	/// <summary>
-	/// 視点移動
-	/// </summary>
-	/// <param name="move">移動量(radianを設定)</param>
-	void MoveTargetVector(Vector3 move);
-
-	/// <summary>
-	/// カメラ移動
-	/// </summary>
-	/// <param name="move">移動量</param>
-	void MoveVector(Vector3 move);
-
-	/// <summary>
-	/// 回転
-	/// </summary>
-	/// <param name="rot">回転量</param>
-	void RotVector(Vector3 rot);
-
-	/// <summary>
-	/// カメラ追従
-	/// </summary>
-	/// <param name="target">ターゲット</param>
-	void Tracking(Vector3 target, bool isActive);
+	void Movement(Vector3 move){
+		world.translation += move;
+		world.UpdateMatrix();
+	}
+	//回転
+	void Rotation(Vector3 rot){
+		world.rotation += rot;
+		world.UpdateMatrix();
+	}
+	// カメラ追従
+	void Tracking(Vector3 target, Vector3 offset);
 
 	//シェイク
-	void ShakeStart(int MaxFrame = 5);
-	//シェイク停止
-	void Reset();
+	void ShakeStart();
 
-	/// <summary>
-	/// View更新
-	/// </summary>
-	inline void ViewUpdate()	{view.UpdateViewMatrix();}
+#pragma region Getter
+	//名前
+	const char* GetName()	{return name;}
+
+	//座標
+	const Vector3 GetPosition()	{return world.translation;}
+	//回転
+	const Vector3 GetRotation()	{return world.rotation;}
 
 	const XMMATRIX& GetMatProjection()	{return view.matProjection;}
 	const XMMATRIX& GetMatView()	{return view.matView;}
@@ -91,13 +60,31 @@ public:
 	const Vector3& GetEye() {return view.eye; }
 	const Vector3& GetTarget() {return view.target; }
 	const Vector3& GetUp() {return view.up; }
-	const float& Distance() {return distance; }
 	const DirectX::XMMATRIX& GetBillboard() {return view.matBillboard;}
+
+	const float GetShakeMaxFrame()	{return shakeMaxFrame;}
+	const int GetShakeMaxPower()	{return shakeMaxPower;}
+#pragma endregion
+
+#pragma region Setter
+	//座標
+	void SetPosition(const Vector3& pos)	
+	{
+		world.translation = pos;
+		world.UpdateMatrix();
+	}
+	//回転
+	void SetRotation(const Vector3& rot){
+		world.rotation = rot;
+		world.UpdateMatrix();
+	}
 
 	void SetEye(const Vector3& eye)	{this->view.eye = eye; }
 	void SetTarget(const Vector3& target)	{this->view.target = target; }
 	void SetUp(const Vector3& up)	{this->view.up = up; }
-	void SetDistance(const float& distance)	{this->distance = distance; }
+
+	void SetShake(float frame, int power)	{shakeMaxFrame = frame, shakeMaxPower = power;}
+#pragma endregion
 
 private:
 	void Shake();
@@ -106,25 +93,27 @@ private:
 	//アスペクト用
 	Window* window;
 
-public:
-	WorldTransform world;
-	ViewProjection view;
-
-	Vector3 pos_;
-	Vector3 rot_;
-
-protected:
+	//クラス名(デバック用)
+	const char* name = nullptr;
+	
 	float distance = 20.f;	//カメラの距離
-
 	//回転行列
 	XMMATRIX matRot = DirectX::XMMatrixIdentity();
 
-	//シェイク
-	bool IsShake = false;
-	int shakePower = 1;
-	int ShakeFrame = 5;
-	int frame = 0;
-	Vector3 saveTarget{};
-	Vector3 saveEye{};
+
+	bool isShake = false;
+	Vector3 savePos = {};
+	
+	float shakeMaxFrame = 60;
+	float shakeFrame = 0;
+
+	int shakeMaxPower = 10;
+	int shakePower = 0;
+
+protected:
+
+	WorldTransform world;
+	ViewProjection view;
+
 };
 

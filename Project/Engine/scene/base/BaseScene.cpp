@@ -86,8 +86,18 @@ void BaseScene::Update()
 		ImGui::End();
 	}
 
-	if(input->Push(DIK_LEFT)){
-		camera->RotVector({0,-1,0});
+	{
+		//座標
+		ImGui::SetNextWindowPos(ImVec2{0,200});
+		//サイズ
+		ImGui::SetNextWindowSize(ImVec2{300,125});
+		ImGui::Begin(camera->GetName());
+		camera->SetPosition(imgui->ImGuiDragVector3("Pos", camera->GetPosition()));
+		camera->SetRotation(imgui->ImGuiDragVector3("Rot", camera->GetRotation(), 0.1f));
+		if(ImGui::Button("Shake")) camera->ShakeStart();
+		Vector2 temp = imgui->ImGuiDragVector2("frame/power ", {camera->GetShakeMaxFrame(), (float)camera->GetShakeMaxPower()}, 0.1f);
+		camera->SetShake(temp.x,(int)temp.y);
+		ImGui::End();
 	}
 
 #endif // _DEBUG
