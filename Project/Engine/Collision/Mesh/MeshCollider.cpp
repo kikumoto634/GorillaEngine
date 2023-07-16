@@ -50,7 +50,7 @@ bool MeshCollider::CheckCollisionSphere(const Sphere &sphere, Vector4 *inter, Ve
 	localSphere.center = localSphere.center.TransformVector3(sphere.center, invMatWorld);
 
 	Vector4 tempV = {invMatWorld.m[0][0], invMatWorld.m[0][1], invMatWorld.m[0][2], invMatWorld.m[0][3]};
-	localSphere.radius *= tempV.NormalizeVector3().x;
+	localSphere.radius *= tempV.Normalize().x;
 
 	//ローカル座標系での交差をチェック
 	std::vector<Triangle>::const_iterator it = triangle.cbegin();

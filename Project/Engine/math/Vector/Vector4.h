@@ -17,9 +17,9 @@ public:
 	Vector4(Vector3 v, float w);
 
 	//長さ
-	float LengthVector3();
+	float Length();
 	//正規化
-	Vector4 NormalizeVector3();
+	Vector4 Normalize();
 
 	//行列とベクトル4積
 	Vector4 TransformVector3(Vector4 v, Matrix4x4 m);

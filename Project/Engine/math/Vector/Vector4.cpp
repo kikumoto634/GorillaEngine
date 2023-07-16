@@ -16,14 +16,14 @@ Vector4::Vector4(Vector3 v, float w):
 {
 }
 
-float Vector4::LengthVector3()
+float Vector4::Length()
 {
-	return (float)sqrt(x*x + y*y + z*z);
+	return (float)sqrt(x*x + y*y + z*z + w*w);
 }
 
-Vector4 Vector4::NormalizeVector3()
+Vector4 Vector4::Normalize()
 {
-	float len = LengthVector3();
+	float len = Length();
 	if(len != 0)
 	{
 		return *this /= len;

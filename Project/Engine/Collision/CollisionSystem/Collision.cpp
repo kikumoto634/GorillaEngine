@@ -16,13 +16,14 @@ bool Collision::CheckSphere2Sphere(const Sphere &sphere1, const Sphere &sphere2,
 	if(inter){
 		//Aの半径が0の時、座標はBの中心、Bの半径が0の時座標はAの中心となる
 		float t = sphere2.radius / (sphere1.radius + sphere2.radius);
-		inter->Lerp(sphere1.center, sphere2.center, t);
+		Vector4 temp = temp.Lerp(sphere1.center, sphere2.center, t);
+		*inter = temp;
 	}
 	//押し出すベクトルを計算
 	if(reject){
 		float rejectLen = sphere1.radius + sphere2.radius - sqrtf(dist);
 		Vector4 temp = sphere1.center - sphere2.center;
-		*reject = temp.NormalizeVector3();
+		*reject = temp.Normalize();
 		*reject *= rejectLen;
 	}
 
