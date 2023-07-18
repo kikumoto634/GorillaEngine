@@ -264,6 +264,7 @@
   <ItemGroup>
     <None Include="Resources\shader\Obj.hlsli" />
     <None Include="Resources\shader\FBX.hlsli" />
+    <None Include="Resources\shader\ObjLight.hlsli" />
     <None Include="Resources\shader\Particle.hlsli" />
     <None Include="Resources\shader\PostEffect.hlsli" />
     <None Include="Resources\shader\Sprite.hlsli" />

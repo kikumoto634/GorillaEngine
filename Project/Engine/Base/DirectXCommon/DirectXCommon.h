@@ -82,5 +82,7 @@ private:
 
 	// 記録時間(FPS固定用)
     std::chrono::steady_clock::time_point reference_;
+	std::chrono::microseconds elapsed;
+
 };
 

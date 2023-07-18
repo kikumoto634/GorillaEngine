@@ -37,8 +37,10 @@ void BaseScene::Initialize()
 	model = new ObjModelManager();
 	model->CreateModel("GroundBlock");
 
-	obj = new BaseObjObject();
-	obj->Initialize(model);
+	for(int i = 0; i < num; i++){
+		obj[i] = new BaseObjObject();
+		obj[i]->Initialize(model);
+	}
 
 	//ライト
 	lightGroup_ = LightGroup::Create();
@@ -58,7 +60,9 @@ void BaseScene::Update()
 	input->Update();
 
 	sp->Update();
-	obj->Update(camera);
+	for(int i = 0; i < num; i++){
+		obj[i]->Update(camera);
+	}
 
 #ifdef _DEBUG
 	{
@@ -79,10 +83,10 @@ void BaseScene::Update()
 		ImGui::SetNextWindowPos(ImVec2{0,100});
 		//サイズ
 		ImGui::SetNextWindowSize(ImVec2{300,100});
-		ImGui::Begin(obj->GetName());
-		obj->SetPosition(imgui->ImGuiDragVector3("Pos", obj->GetPosition(),0.1f));
-		obj->SetRotation(imgui->ImGuiDragVector3("Rot", obj->GetRotation(), 0.1f));
-		obj->SetScale(imgui->ImGuiDragVector3("Sca", obj->GetScale(),0.1f));
+		ImGui::Begin(obj[0]->GetName());
+		obj[0]->SetPosition(imgui->ImGuiDragVector3("Pos", obj[0]->GetPosition(),0.1f));
+		obj[0]->SetRotation(imgui->ImGuiDragVector3("Rot", obj[0]->GetRotation(), 0.1f));
+		obj[0]->SetScale(imgui->ImGuiDragVector3("Sca", obj[0]->GetScale(),0.1f));
 		ImGui::End();
 	}
 
@@ -112,6 +116,10 @@ void BaseScene::Update()
 		ImGui::End();
 	}
 
+	{
+
+	}
+
 #endif // _DEBUG
 }
 
@@ -122,7 +130,9 @@ void BaseScene::EndUpdate()
 
 void BaseScene::Draw()
 {
-	obj->Draw();
+	for(int i = 0; i < num; i++){
+		obj[i]->Draw();
+	}
 }
 
 void BaseScene::DrawBack()
@@ -140,6 +150,8 @@ void BaseScene::Finalize()
 	sp->Finalize();
 	delete sp;
 
-	obj->Finalize();
-	delete obj;
+	for(int i = 0; i < num; i++){
+		obj[i]->Finalize();
+		delete obj[i];
+	}
 }

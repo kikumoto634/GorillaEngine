@@ -627,5 +627,8 @@
     <None Include="Resources\shader\PostEffect.hlsli">
       <Filter>リソース ファイル\PostEffect</Filter>
     </None>
+    <None Include="Resources\shader\ObjLight.hlsli">
+      <Filter>リソース ファイル\Obj</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -125,6 +125,7 @@ protected:
 	BaseSprites* sp = nullptr;
 
 	ObjModelManager* model = nullptr;
-	BaseObjObject* obj = nullptr;
+	static const int num = 2;
+	BaseObjObject* obj[num] = {};
 };
 
