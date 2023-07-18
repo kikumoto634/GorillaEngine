@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Sprite.h"
+#include "Vector4.h"
 #include "Vector2.h"
 #include "Camera.h"
 
@@ -29,13 +30,14 @@ public:
 	//Getter
 	const Vector2& GetPosition()	{return position;}
 	const Vector2& GetSize()	{return size;}
-	const Vector3& GetColor()	{return {color.x,color.y,color.z};}
+	const Vector4 GetColor()	{return color;}
 	const UINT GetTextureNumber()	{return sprite->GetTexNumber();}
+	const char* GetName()	{return name;}
 
 	//Setter
 	void SetPosition(const Vector2& position)	{this->position = position;}
 	void SetSize(const Vector2& size)	{this->size = size;}
-	void SetColor(DirectX::XMFLOAT4 color)	{this->color = color;}
+	void SetColor(Vector4 color)	{this->color = color;}
 	void SetTexNumber(UINT texNumber)	{sprite->SetTexNumber(texNumber);}
 	void SetAnchorPoint(Vector2 anchorPoint)	{sprite->SetAnchorpoint(anchorPoint);}
 
@@ -59,11 +61,14 @@ private:
 private:
 	Window* window = nullptr;
 
+	//クラス名(デバック用)
+	const char* name = nullptr;
+
 protected:
 	Sprite* sprite = nullptr;
 	Vector2 position = {0,0};
 	Vector2 size = {100,100};
-	DirectX::XMFLOAT4 color = {1,1,1,1};
+	Vector4 color = {1,1,1,1};
 
 	Vector3 targetPos = {};
 

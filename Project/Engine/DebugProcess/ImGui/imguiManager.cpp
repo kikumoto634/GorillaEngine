@@ -72,6 +72,13 @@ void imguiManager::Finalize()
 	ImGui::DestroyContext();
 }
 
+Vector4 imguiManager::ImGuiDragVector4(const char *name, Vector4 value, float speed, float min, float max)
+{
+	float tempPos[4] = {value.x,value.y,value.z,value.w};
+	ImGui::DragFloat4(name, tempPos, speed, min, max);
+	return Vector4({tempPos[0],tempPos[1],tempPos[2],tempPos[3]});
+}
+
 Vector3 imguiManager::ImGuiDragVector3(const char* name, Vector3 value, float speed, float min, float max)
 {
 	float tempPos[3] = {value.x,value.y,value.z};

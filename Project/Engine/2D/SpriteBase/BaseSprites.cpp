@@ -6,13 +6,16 @@ void BaseSprites::Initialize(UINT textureNumber)
 	sprite = Sprite::Create(textureNumber, position);
 
 	window = Window::GetInstance();
+
+	//クラス名の文字列を取得
+	name = typeid(*this).name();
 }
 
 void BaseSprites::Update()
 {
 	sprite->SetPosition(position);
 	sprite->SetSize(size);
-	sprite->SetColor(color);
+	sprite->SetColor({color.x,color.y,color.z,color.w});
 }
 
 void BaseSprites::Draw()
