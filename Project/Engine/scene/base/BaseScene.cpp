@@ -27,6 +27,7 @@ void BaseScene::Initialize()
 
 	isDrawStop = false;
 
+	//画像
 	sp = new BaseSprites();
 	sp->Initialize(white1x1_tex.number);
 	sp->SetPosition({100,100});
@@ -34,13 +35,20 @@ void BaseScene::Initialize()
 	sp->SetSize({100,100});
 
 
+	//モデル
 	model = new ObjModelManager();
 	model->CreateModel("GroundBlock");
 
+	//オブジェクト
 	for(int i = 0; i < num; i++){
 		obj[i] = new BaseObjObject();
 		obj[i]->Initialize(model);
 	}
+
+	//パーティクル
+	particle = new ParticleObject();
+	particle->Initialize();
+
 
 	//ライト
 	lightGroup_ = LightGroup::Create();
@@ -117,7 +125,31 @@ void BaseScene::Update()
 	}
 
 	{
+		if(input->Push(DIK_SPACE)){
+			//速度
+			vel_.x = (float)rand() / RAND_MAX * Rand_Vel - Rand_Vel_Half;
+			vel_.y = VelY;
+			vel_.z = (float)rand() / RAND_MAX * Rand_Vel - Rand_Vel_Half;
 
+			//加速度
+			acc_.y = AccY;
+
+			//サイズ
+			size_ = (float)rand() / RAND_MAX * ScaleMax - ScaleMin;
+
+			particle->ParticleSet(
+				ParticleAliveFrameMax,
+				obj[0]->GetPosition(),
+				vel_,
+				acc_,
+				size_,
+				ScaleMax,
+				uvChecker_tex.number,
+				Color
+			);
+			particle->ParticleAppearance();
+		}
+		particle->Update(camera);
 	}
 
 #endif // _DEBUG
@@ -133,6 +165,8 @@ void BaseScene::Draw()
 	for(int i = 0; i < num; i++){
 		obj[i]->Draw();
 	}
+
+	particle->Draw();
 }
 
 void BaseScene::DrawBack()
@@ -154,4 +188,6 @@ void BaseScene::Finalize()
 		obj[i]->Finalize();
 		delete obj[i];
 	}
+
+	particle->Finalize();
 }

@@ -11,6 +11,8 @@
 #include "ObjModelManager.h"
 #include "BaseObjObject.h"
 
+#include "ParticleObject.h"
+
 #ifdef _DEBUG
 #include "DebugText.h"
 #include "imguiManager.h"
@@ -121,11 +123,28 @@ protected:
 	//描画停止
 	bool isDrawStop = false;
 
-
+	//画像
 	BaseSprites* sp = nullptr;
 
+	//オブジェクト
 	ObjModelManager* model = nullptr;
 	static const int num = 2;
 	BaseObjObject* obj[num] = {};
+
+	//パーティクル
+	ParticleObject* particle = nullptr;
+
+	Vector3 vel_{};
+	Vector3 acc_{};
+	float size_ = 0.f;
+
+	const int ParticleAliveFrameMax = 50;
+	const float Rand_Vel = 0.05f;
+	const float Rand_Vel_Half = 0.025f;
+	const float VelY = 0.00f;
+	const float AccY = 0.003f;
+	const float ScaleMin = 0.1f;
+	const float ScaleMax = 0.5f;
+	const Vector4 Color = {1.f,1.f,1.f,1.f};
 };
 

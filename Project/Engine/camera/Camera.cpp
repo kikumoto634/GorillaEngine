@@ -22,17 +22,17 @@ void Camera::Initialize(Window* window)
 	world.rotation = {0,0,0};
 	world.Initialize();
 
-
-	view.matViewProjection = view.matView * view.matProjection;
-	view.UpdateViewMatrix();
 	view.UpdateProjectionMatrix(window->GetWindowWidth(),window->GetWindowHeight());
+	view.matView = XMMatrixInverse(nullptr, world.matWorld);
+	view.UpdateViewMatrix();
 }
 
 void Camera::Update()
 {
 	Shake();
+	
 	view.matView = XMMatrixInverse(nullptr, world.matWorld);
-	view.matViewProjection = view.matView * view.matProjection;
+	view.UpdateViewMatrix();
 }
 
 void Camera::Tracking(Vector3 target, Vector3 offset)

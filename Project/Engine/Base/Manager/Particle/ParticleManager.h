@@ -147,6 +147,6 @@ private:
 	//テクスチャデータ
 	UINT texNumber = 0;
 
-	Vector4 color = {0,1,0,0.5};
+	Vector4 color = {0,1,0,1};
 };
 

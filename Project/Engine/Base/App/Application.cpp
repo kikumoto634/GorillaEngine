@@ -65,6 +65,8 @@ void Application::Initialize()
 	TextureManager::GetInstance()->Initialize(dxCommon);
 	TextureManager::Load(texFont_tex.number			,texFont_tex.path);
 	TextureManager::Load(white1x1_tex.number		,white1x1_tex.path);
+	TextureManager::Load(uvChecker_tex.number		,uvChecker_tex.path);
+
 
 	//音声
 	Audio::GetInstance()->Initialize();
@@ -135,9 +137,10 @@ void Application::Draw()
 	//描画前処理
 	dxCommon->BeginDraw();
 
-	sceneManager->DrawBack();
 	postEffect_->Draw();
-	//sceneManager->Draw();
+	Sprite::SetPipelineState();
+	sceneManager->DrawBack();
+	//postEffect_->Draw();
 	sceneManager->DrawNear();
 
 #ifdef _DEBUG
