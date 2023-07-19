@@ -46,8 +46,8 @@ void BaseScene::Initialize()
 	}
 
 	//パーティクル
-	particle = new ParticleObject();
-	particle->Initialize();
+	particleObj = new ParticleObject();
+	particleObj->Initialize();
 
 
 	//ライト
@@ -75,7 +75,7 @@ void BaseScene::Update()
 #ifdef _DEBUG
 	{
 		//座標
-		ImGui::SetNextWindowPos(ImVec2{0,40});
+		ImGui::SetNextWindowPos(ImVec2{0,0});
 		//サイズ
 		ImGui::SetNextWindowSize(ImVec2{300,55});
 		ImGui::Begin("Demo");
@@ -88,7 +88,7 @@ void BaseScene::Update()
 
 	{
 		//座標
-		ImGui::SetNextWindowPos(ImVec2{0,100});
+		ImGui::SetNextWindowPos(ImVec2{0,60});
 		//サイズ
 		ImGui::SetNextWindowSize(ImVec2{300,100});
 		ImGui::Begin(obj[0]->GetName());
@@ -100,7 +100,7 @@ void BaseScene::Update()
 
 	{
 		//座標
-		ImGui::SetNextWindowPos(ImVec2{000,200});
+		ImGui::SetNextWindowPos(ImVec2{000,160});
 		//サイズ
 		ImGui::SetNextWindowSize(ImVec2{300,100});
 		ImGui::Begin(sp->GetName());
@@ -112,7 +112,7 @@ void BaseScene::Update()
 
 	{
 		//座標
-		ImGui::SetNextWindowPos(ImVec2{0,300});
+		ImGui::SetNextWindowPos(ImVec2{0,260});
 		//サイズ
 		ImGui::SetNextWindowSize(ImVec2{300,125});
 		ImGui::Begin(camera->GetName());
@@ -126,50 +126,42 @@ void BaseScene::Update()
 
 	{
 		//座標
-		ImGui::SetNextWindowPos(ImVec2{980,300});
+		ImGui::SetNextWindowPos(ImVec2{00,385});
 		//サイズ
 		ImGui::SetNextWindowSize(ImVec2{300,300});
 		ImGui::Begin("Particle");
 
 		num_ = imgui->ImGuiDrawInt("Num", &num_, 1);
-		life_ = imgui->ImGuiDrawInt("Life", &life_, 1);
+		particle.life = imgui->ImGuiDrawInt("Life", &particle.life, 1);
 
-		pos_ = (imgui->ImGuiDragVector3("Pos", pos_, 0.1f));
+		particle.position = (imgui->ImGuiDragVector3("Pos", particle.position, 0.1f));
 
-		MinSize_ = (imgui->ImGuiDragFloat("MinSize", &MinSize_, 0.1f));
-		MaxSize_ = (imgui->ImGuiDragFloat("MaxSize", &MaxSize_, 0.1f));
+		MinSize_ = (imgui->ImGuiDragFloat("MinSize", &MinSize_, 0.001f));
+		MaxSize_ = (imgui->ImGuiDragFloat("MaxSize", &MaxSize_, 0.001f));
 
-		MinVel_ = (imgui->ImGuiDragVector3("MinVel", MinVel_, 0.1f));
-		MaxVel_ = (imgui->ImGuiDragVector3("MaxVel", MaxVel_, 0.1f));
+		MinVel_ = (imgui->ImGuiDragVector3("MinVel", MinVel_, 0.001f));
+		MaxVel_ = (imgui->ImGuiDragVector3("MaxVel", MaxVel_, 0.001f));
 		
-		MinAcc_ = (imgui->ImGuiDragVector3("MinAcc", MinAcc_, 0.1f));
-		MaxAcc_ = (imgui->ImGuiDragVector3("MaxAcc", MaxAcc_, 0.1f));
+		MinAcc_ = (imgui->ImGuiDragVector3("MinAcc", MinAcc_, 0.001f));
+		MaxAcc_ = (imgui->ImGuiDragVector3("MaxAcc", MaxAcc_, 0.001f));
 
 		if(ImGui::Button("App")){
 			for(int i = 0; i < num_; i++){
 				//速度
-				vel_.x = MinVel_.x + (float)rand() * (MaxVel_.x-MinVel_.x) / RAND_MAX;
-				vel_.y = MinVel_.y + (float)rand() * (MaxVel_.y-MinVel_.y) / RAND_MAX;
-				vel_.z = MinVel_.z + (float)rand() * (MaxVel_.z-MinVel_.z) / RAND_MAX;
+				particle.velocity.x = MinVel_.x + (float)rand() * (MaxVel_.x-MinVel_.x) / RAND_MAX;
+				particle.velocity.y = MinVel_.y + (float)rand() * (MaxVel_.y-MinVel_.y) / RAND_MAX;
+				particle.velocity.z = MinVel_.z + (float)rand() * (MaxVel_.z-MinVel_.z) / RAND_MAX;
 				//加速度
-				acc_.x = MinAcc_.x + (float)rand() * (MaxAcc_.x-MinAcc_.x) / RAND_MAX;
-				acc_.y = MinAcc_.y + (float)rand() * (MaxAcc_.y-MinAcc_.y) / RAND_MAX;
-				acc_.z = MinAcc_.z + (float)rand() * (MaxAcc_.z-MinAcc_.z) / RAND_MAX;
+				particle.accel.x = MinAcc_.x + (float)rand() * (MaxAcc_.x-MinAcc_.x) / RAND_MAX;
+				particle.accel.y = MinAcc_.y + (float)rand() * (MaxAcc_.y-MinAcc_.y) / RAND_MAX;
+				particle.accel.z = MinAcc_.z + (float)rand() * (MaxAcc_.z-MinAcc_.z) / RAND_MAX;
 
 				//サイズ
-				size_ = MinSize_ + (float)rand() * (MaxSize_ - MinSize_) /RAND_MAX;
+				particle.start_scale = MinSize_ + (float)rand() * (MaxSize_ - MinSize_) /RAND_MAX;
+				particle.end_scale = MaxSize_;
 
-				particle->ParticleSet(
-					life_,
-					pos_,
-					vel_,
-					acc_,
-					size_,
-					MaxSize_,
-					uvChecker_tex.number,
-					color_
-				);
-				particle->ParticleAppearance();
+				particleObj->ParticleSet(particle);
+				particleObj->ParticleAppearance();
 			}
 		}
 
@@ -181,7 +173,7 @@ void BaseScene::Update()
 
 void BaseScene::EndUpdate()
 {
-	particle->Update(camera);
+	particleObj->Update(camera);
 
 	camera->Update();
 }
@@ -192,7 +184,7 @@ void BaseScene::Draw()
 		obj[i]->Draw();
 	}
 
-	particle->Draw();
+	particleObj->Draw();
 }
 
 void BaseScene::DrawBack()
@@ -215,5 +207,5 @@ void BaseScene::Finalize()
 		delete obj[i];
 	}
 
-	particle->Finalize();
+	particleObj->Finalize();
 }

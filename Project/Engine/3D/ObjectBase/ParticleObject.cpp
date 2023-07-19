@@ -1,16 +1,28 @@
 #include "ParticleObject.h"
 #include "DirectXCommon.h"
 
-ParticleObject::ParticleObject(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale, UINT texNumber, Vector4 color)
+ParticleObject::ParticleObject(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale, UINT texNumber, Vector4 color):
+	life(life),
+	position(position),
+	velocity(velocity),
+	accel(accel),
+	start_scale(start_scale),
+	end_scale(end_scale),
+	texNumber(texNumber)
 {
-	this->life = life;
-	this->position = position;
-	this->velocity = velocity;
-	this->accel = accel;
-	this->start_scale = start_scale;
-	this->end_scale = end_scale;
-	this->texNumber = texNumber;
 	particle->SetColor(color);
+}
+
+ParticleObject::ParticleObject(Particle obj)
+{
+	life = obj.life;
+	position = obj.position;
+	velocity = obj.velocity;
+	accel = obj.accel;
+	start_scale = obj.start_scale;
+	end_scale = obj.end_scale;
+	texNumber = obj.texNumber;
+	particle->SetColor(obj.color);
 }
 
 ParticleObject::~ParticleObject()
@@ -49,14 +61,14 @@ void ParticleObject::ParticleAppearance()
 	particle->Add(life, position,velocity,accel,start_scale,end_scale,texNumber);
 }
 
-void ParticleObject::ParticleSet(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale, UINT texNumber, Vector4 color)
+void ParticleObject::ParticleSet(Particle obj)
 {
-	this->life = life;
-	this->position = position;
-	this->velocity = velocity;
-	this->accel = accel;
-	this->start_scale = start_scale;
-	this->end_scale = end_scale;
-	this->texNumber = texNumber;
-	particle->SetColor(color);
+	life = obj.life;
+	position = obj.position;
+	velocity = obj.velocity;
+	accel = obj.accel;
+	start_scale = obj.start_scale;
+	end_scale = obj.end_scale;
+	texNumber = obj.texNumber;
+	particle->SetColor(obj.color);
 }

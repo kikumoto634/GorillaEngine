@@ -128,19 +128,23 @@ protected:
 
 	//オブジェクト
 	ObjModelManager* model = nullptr;
-	static const int num = 2;
+	static const int num = 1;
 	BaseObjObject* obj[num] = {};
 
 	//パーティクル
-	ParticleObject* particle = nullptr;
+	ParticleObject* particleObj = nullptr;
 
 	int num_ = 1;
-	int life_ = 60;
-	Vector3 pos_{};
-	Vector3 vel_{};
-	Vector3 acc_{};
-	float size_ = 0.f;
-	Vector4 color_ = {1,1,1,1};
+	Particle particle = {
+		60,
+		{},
+		{},
+		{},
+		0,
+		1,
+		1,
+		{1,1,1,1}
+	};
 
 	Vector3 MinVel_ = {0,0,0};
 	Vector3 MaxVel_ = {0,1,0};

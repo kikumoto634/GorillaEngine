@@ -1,6 +1,28 @@
 ﻿#pragma once
 #include "ParticleManager.h"
 
+/// <summary>
+/// パーティクル属性
+/// ・生存時間
+/// ・座標
+/// ・速度
+/// ・加速度
+/// ・初期サイズ
+/// ・終期サイズ
+/// ・テクスチャ番号
+/// ・色
+/// </summary>
+struct Particle{
+	int life;
+	Vector3 position;
+	Vector3 velocity; 
+	Vector3 accel;
+	float start_scale; 
+	float end_scale;
+	UINT texNumber;
+	Vector4 color;
+};
+
 class ParticleObject
 {
 //メンバ関数
@@ -16,6 +38,7 @@ public:
 		UINT texNumber = 1,
 		Vector4 color = {1,1,1,1}
 	);
+	ParticleObject(Particle obj);
 
 	~ParticleObject();
 
@@ -47,15 +70,7 @@ public:
 	/// <summary>
 	/// パーティクル変更
 	/// </summary>
-	void ParticleSet(int life, 
-		Vector3 position, 
-		Vector3 velocity, 
-		Vector3 accel, 
-		float start_scale, 
-		float end_scale, 
-		UINT texNumber,
-		Vector4 color
-	);
+	void ParticleSet(Particle obj);
 
 //メンバ変数
 public:
