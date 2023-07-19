@@ -92,3 +92,17 @@ Vector2 imguiManager::ImGuiDragVector2(const char *name, Vector2 value, float sp
 	ImGui::DragFloat2(name, tempPos, speed, min, max);
 	return Vector2({tempPos[0],tempPos[1]});
 }
+
+float imguiManager::ImGuiDragFloat(const char *name, float* value, float speed, float min, float max)
+{
+	float *tempPos = value;
+	ImGui::DragFloat(name, tempPos, speed, min, max);
+	return *tempPos;
+}
+
+int imguiManager::ImGuiDrawInt(const char *name, int *value, float speed, int min, int max)
+{
+	int *tempPos = value;
+	ImGui::DragInt(name, tempPos, speed, min, max);
+	return *tempPos;
+}

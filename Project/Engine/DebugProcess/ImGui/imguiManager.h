@@ -29,6 +29,8 @@ public:
 	Vector4 ImGuiDragVector4(const char* name, Vector4 value, float speed = 1.0f, float min = -100, float max = 100);
 	Vector3 ImGuiDragVector3(const char* name, Vector3 value, float speed = 1.0f, float min = -100, float max = 100);
 	Vector2 ImGuiDragVector2(const char* name, Vector2 value, float speed = 1.0f, float min = -100, float max = 100);
+	float ImGuiDragFloat(const char* name, float* value, float speed = 1.0f, float min = -100, float max = 100);
+	int ImGuiDrawInt(const char* name, int* value, float speed = 1, int min = -100, int max = 100);
 
 private:
 	Window* winApp = nullptr;

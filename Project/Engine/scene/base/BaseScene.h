@@ -134,17 +134,21 @@ protected:
 	//パーティクル
 	ParticleObject* particle = nullptr;
 
+	int num_ = 1;
+	int life_ = 60;
+	Vector3 pos_{};
 	Vector3 vel_{};
 	Vector3 acc_{};
 	float size_ = 0.f;
+	Vector4 color_ = {1,1,1,1};
 
-	const int ParticleAliveFrameMax = 50;
-	const float Rand_Vel = 0.05f;
-	const float Rand_Vel_Half = 0.025f;
-	const float VelY = 0.00f;
-	const float AccY = 0.003f;
-	const float ScaleMin = 0.1f;
-	const float ScaleMax = 0.5f;
-	const Vector4 Color = {1.f,1.f,1.f,1.f};
+	Vector3 MinVel_ = {0,0,0};
+	Vector3 MaxVel_ = {0,1,0};
+	
+	Vector3 MinAcc_ = {0,0,0};
+	Vector3 MaxAcc_ = {0,0,0};
+
+	float MinSize_ = 0;
+	float MaxSize_ = 1;
 };
 

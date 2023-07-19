@@ -125,31 +125,55 @@ void BaseScene::Update()
 	}
 
 	{
-		if(input->Push(DIK_SPACE)){
-			//速度
-			vel_.x = (float)rand() / RAND_MAX * Rand_Vel - Rand_Vel_Half;
-			vel_.y = VelY;
-			vel_.z = (float)rand() / RAND_MAX * Rand_Vel - Rand_Vel_Half;
+		//座標
+		ImGui::SetNextWindowPos(ImVec2{980,300});
+		//サイズ
+		ImGui::SetNextWindowSize(ImVec2{300,300});
+		ImGui::Begin("Particle");
 
-			//加速度
-			acc_.y = AccY;
+		num_ = imgui->ImGuiDrawInt("Num", &num_, 1);
+		life_ = imgui->ImGuiDrawInt("Life", &life_, 1);
 
-			//サイズ
-			size_ = (float)rand() / RAND_MAX * ScaleMax - ScaleMin;
+		pos_ = (imgui->ImGuiDragVector3("Pos", pos_, 0.1f));
 
-			particle->ParticleSet(
-				ParticleAliveFrameMax,
-				obj[0]->GetPosition(),
-				vel_,
-				acc_,
-				size_,
-				ScaleMax,
-				uvChecker_tex.number,
-				Color
-			);
-			particle->ParticleAppearance();
+		MinSize_ = (imgui->ImGuiDragFloat("MinSize", &MinSize_, 0.1f));
+		MaxSize_ = (imgui->ImGuiDragFloat("MaxSize", &MaxSize_, 0.1f));
+
+		MinVel_ = (imgui->ImGuiDragVector3("MinVel", MinVel_, 0.1f));
+		MaxVel_ = (imgui->ImGuiDragVector3("MaxVel", MaxVel_, 0.1f));
+		
+		MinAcc_ = (imgui->ImGuiDragVector3("MinAcc", MinAcc_, 0.1f));
+		MaxAcc_ = (imgui->ImGuiDragVector3("MaxAcc", MaxAcc_, 0.1f));
+
+		if(ImGui::Button("App")){
+			for(int i = 0; i < num_; i++){
+				//速度
+				vel_.x = MinVel_.x + (float)rand() * (MaxVel_.x-MinVel_.x) / RAND_MAX;
+				vel_.y = MinVel_.y + (float)rand() * (MaxVel_.y-MinVel_.y) / RAND_MAX;
+				vel_.z = MinVel_.z + (float)rand() * (MaxVel_.z-MinVel_.z) / RAND_MAX;
+				//加速度
+				acc_.x = MinAcc_.x + (float)rand() * (MaxAcc_.x-MinAcc_.x) / RAND_MAX;
+				acc_.y = MinAcc_.y + (float)rand() * (MaxAcc_.y-MinAcc_.y) / RAND_MAX;
+				acc_.z = MinAcc_.z + (float)rand() * (MaxAcc_.z-MinAcc_.z) / RAND_MAX;
+
+				//サイズ
+				size_ = MinSize_ + (float)rand() * (MaxSize_ - MinSize_) /RAND_MAX;
+
+				particle->ParticleSet(
+					life_,
+					pos_,
+					vel_,
+					acc_,
+					size_,
+					MaxSize_,
+					uvChecker_tex.number,
+					color_
+				);
+				particle->ParticleAppearance();
+			}
 		}
-		particle->Update(camera);
+
+		ImGui::End();
 	}
 
 #endif // _DEBUG
@@ -157,6 +181,8 @@ void BaseScene::Update()
 
 void BaseScene::EndUpdate()
 {
+	particle->Update(camera);
+
 	camera->Update();
 }
 
