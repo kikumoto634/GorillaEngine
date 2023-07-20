@@ -158,7 +158,7 @@ void BaseScene::Update()
 
 				//サイズ
 				particle.start_scale = MinSize_ + (float)rand() * (MaxSize_ - MinSize_) /RAND_MAX;
-				particle.end_scale = MaxSize_;
+				particle.end_scale = 0;
 
 				particleObj->ParticleSet(particle);
 				particleObj->ParticleAppearance();
