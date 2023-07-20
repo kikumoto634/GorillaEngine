@@ -1,4 +1,4 @@
-#include "ParticleManager.h"
+#include "GPUParticle.h"
 #include <cassert>
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
@@ -6,13 +6,8 @@
 using namespace std;
 using namespace DirectX;
 
-ParticleManager *ParticleManager::GetInstance()
-{
-	static ParticleManager instance;
-	return &instance;
-}
 
-void ParticleManager::Initialize(DirectXCommon* dxCommon)
+void GPUParticle::Initialize(DirectXCommon* dxCommon)
 {
 	HRESULT result;
 	this->dxCommon = dxCommon;
@@ -81,7 +76,7 @@ void ParticleManager::Initialize(DirectXCommon* dxCommon)
 	}
 }
 
-void ParticleManager::Update(WorldTransform worldTransform, Camera* camera)
+void GPUParticle::Update(WorldTransform worldTransform, Camera* camera)
 {
 	//寿命がつきたパーティクルの全削除
 	particle.remove_if([](Particle& x){
@@ -130,7 +125,7 @@ void ParticleManager::Update(WorldTransform worldTransform, Camera* camera)
 	constMap->color = color;
 }
 
-void ParticleManager::Draw()
+void GPUParticle::Draw()
 {
 #pragma region 共通描画コマンド
 	//パイプラインステートの設定
@@ -161,7 +156,7 @@ void ParticleManager::Draw()
 #pragma endregion
 }
 
-void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale, UINT texNumber)
+void GPUParticle::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel, float start_scale, float end_scale, UINT texNumber)
 {
 	//テクスチャ変更
 	this->texNumber = texNumber;
@@ -179,7 +174,7 @@ void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 
 	p.num_frame = life;
 }
 
-void ParticleManager::InitializeGraphicsPipeline()
+void GPUParticle::InitializeGraphicsPipeline()
 {
 	HRESULT result;
 
@@ -380,7 +375,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 	assert(SUCCEEDED(result));
 }
 
-void ParticleManager::InitializeDescriptorHeap()
+void GPUParticle::InitializeDescriptorHeap()
 {
 	HRESULT result;
 

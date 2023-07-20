@@ -197,6 +197,7 @@
     <ClCompile Include="Engine\math\Vector\Vector4.cpp" />
     <ClCompile Include="Engine\ObjectMatrix\ViewProjection.cpp" />
     <ClCompile Include="Engine\ObjectMatrix\WorldTransform.cpp" />
+    <ClCompile Include="Engine\Particle\GPUParticle.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
     <ClCompile Include="Engine\scene\base\BaseScene.cpp" />
     <ClCompile Include="Engine\scene\system\SceneManager.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="Engine\math\Vector\Vector4.h" />
     <ClInclude Include="Engine\ObjectMatrix\ViewProjection.h" />
     <ClInclude Include="Engine\ObjectMatrix\WorldTransform.h" />
+    <ClInclude Include="Engine\Particle\GPUParticle.h" />
     <ClInclude Include="Engine\PostEffect\PostEffect.h" />
     <ClInclude Include="Engine\scene\base\BaseScene.h" />
     <ClInclude Include="Engine\scene\system\SceneManager.h" />
@@ -270,6 +272,16 @@
     <None Include="Resources\shader\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\shader\GPUParticle.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\shader\ObjPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

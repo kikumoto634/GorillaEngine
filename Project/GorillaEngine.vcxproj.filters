@@ -426,6 +426,9 @@
     <ClCompile Include="Engine\math\Matrix\Matrix4x4.cpp">
       <Filter>ソース ファイル\Engine\Math\Matrix</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Particle\GPUParticle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\input\Input.h">
@@ -575,6 +578,9 @@
     <ClInclude Include="Engine\math\Matrix\Matrix4x4.h">
       <Filter>ヘッダー ファイル\Engine\Math\Matrix</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Particle\GPUParticle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">
@@ -610,6 +616,7 @@
     <FxCompile Include="Resources\shader\PostEffectPS.hlsl">
       <Filter>リソース ファイル\PostEffect</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticle.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Sprite.hlsli">
