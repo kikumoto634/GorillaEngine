@@ -307,6 +307,9 @@
     <Filter Include="ソース ファイル\Engine\Math\Matrix">
       <UniqueIdentifier>{bb20fcc1-502d-48da-b3f6-0af1049e0e9d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\GPUParticle">
+      <UniqueIdentifier>{15375cb9-ce3f-4535-9cdb-ef1e82ee9c00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\input\Input.cpp">
@@ -616,7 +619,18 @@
     <FxCompile Include="Resources\shader\PostEffectPS.hlsl">
       <Filter>リソース ファイル\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\GPUParticle.hlsl" />
+    <FxCompile Include="Resources\shader\GPUParticleCS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticleGS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticlePS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticleVS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Sprite.hlsli">
@@ -636,6 +650,9 @@
     </None>
     <None Include="Resources\shader\ObjLight.hlsli">
       <Filter>リソース ファイル\Obj</Filter>
+    </None>
+    <None Include="Resources\shader\GPUParticle.hlsli">
+      <Filter>リソース ファイル\GPUParticle</Filter>
     </None>
   </ItemGroup>
 </Project>
