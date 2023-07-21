@@ -622,9 +622,6 @@
     <FxCompile Include="Resources\shader\GPUParticleCS.hlsl">
       <Filter>リソース ファイル\GPUParticle</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\GPUParticleGS.hlsl">
-      <Filter>リソース ファイル\GPUParticle</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shader\GPUParticlePS.hlsl">
       <Filter>リソース ファイル\GPUParticle</Filter>
     </FxCompile>
