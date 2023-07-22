@@ -29,6 +29,10 @@ void GPUParticle::Initialize()
 	//コマンドアロケータ
 	{
 		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart());
+
+		for(UINT i = 0; i < FrameCount; ++i){
+			
+		}
 	}
 
 
