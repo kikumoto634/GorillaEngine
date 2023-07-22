@@ -5,8 +5,123 @@
 
 void GPUParticle::Initialize()
 {
+	HRESULT result = {};
+
 	dxCommon_ = DirectXCommon::GetInstance();
 
+	//コマンドキュー
+	{
+		//グラフィックス
+		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+		result = dxCommon_->GetDevice()->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue));
+		assert(SUCCEEDED(result));
+
+		//コンピュート
+		D3D12_COMMAND_QUEUE_DESC computeQueueDesc = {};
+		computeQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		computeQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
+		result = dxCommon_->GetDevice()->CreateCommandQueue(&computeQueueDesc, IID_PPV_ARGS(&computeCommandQueue));
+		assert(SUCCEEDED(result));
+	}
+
+	//コマンドアロケータ
+	{
+		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart());
+	}
+
+
+	InitializeDescriptorHeap();
+	InitializeRootSignature();
+	InitializePipeline();
+}
+
+void GPUParticle::Update()
+{
+}
+
+void GPUParticle::Draw()
+{
+}
+
+void GPUParticle::Finalize()
+{
+}
+
+void GPUParticle::InitializeRootSignature()
+{
+	HRESULT result = {};
+	//ルートシグネチャの最新バージョン
+	D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
+	featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+	result = dxCommon_->GetDevice()->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE,&featureData,sizeof(featureData));
+	if(FAILED(result)){
+		featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+	}
+
+
+	//シグネチャ
+	ComPtr<ID3DBlob> signature;
+	ComPtr<ID3DBlob> error;
+
+	//グラフィックス
+	CD3DX12_ROOT_PARAMETER1 rootParameters[GraphicsRootParamtersCount];
+	rootParameters[Cbv].InitAsConstantBufferView(0,0,D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC, D3D12_SHADER_VISIBILITY_VERTEX);
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	rootSignatureDesc.Init_1_1(_countof(rootParameters),rootParameters,0,nullptr,D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc,featureData.HighestVersion,&signature,&error);
+	assert(SUCCEEDED(result));
+	result = dxCommon_->GetDevice()->CreateRootSignature(0,signature->GetBufferPointer(),signature->GetBufferSize(),IID_PPV_ARGS(&rootSignature));
+	assert(SUCCEEDED(result));
+
+	//コンピュート
+	CD3DX12_DESCRIPTOR_RANGE1 ranges[2];
+	ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+	ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
+	CD3DX12_ROOT_PARAMETER1 computeRootParameters[ComputeRootParametersCount];
+	computeRootParameters[SrvUavTable].InitAsDescriptorTable(2, ranges);
+	computeRootParameters[RootConstants].InitAsConstants(4,0);
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC computeRootSignatureDesc;
+	computeRootSignatureDesc.Init_1_1(_countof(computeRootParameters), computeRootParameters);
+
+	result = D3DX12SerializeVersionedRootSignature(&computeRootSignatureDesc, featureData.HighestVersion, &signature, &error);
+	assert(SUBLANGID(result));
+	result = dxCommon_->GetDevice()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&computePipelineState));
+	assert(SUCCEEDED(result));
+}
+
+void GPUParticle::InitializeDescriptorHeap()
+{
+	//RTV
+	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+	rtvHeapDesc.NumDescriptors = FrameCount;
+	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	dxCommon_->GetDevice()->CreateDescriptorHeap(&rtvHeapDesc,IID_PPV_ARGS(&rtvHeap));
+
+	//DSV
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+	dsvHeapDesc.NumDescriptors = 1;
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	dxCommon_->GetDevice()->CreateDescriptorHeap(&dsvHeapDesc,IID_PPV_ARGS(&dsvHeap));
+
+	//CBV,SRV,UAV
+	D3D12_DESCRIPTOR_HEAP_DESC cbvSrvUavHeapDesc = {};
+	cbvSrvUavHeapDesc.NumDescriptors = CbvSrvUavDescriptorCountPerFrame * FrameCount;
+	cbvSrvUavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	cbvSrvUavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	dxCommon_->GetDevice()->CreateDescriptorHeap(&cbvSrvUavHeapDesc,IID_PPV_ARGS(&cbvSrvUavHeap));
+
+	//デスクリプタサイズ
+	rtvDescriptorSize = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	cbvSrvUavDescriptorSize = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
+
+void GPUParticle::InitializePipeline()
+{
 	HRESULT result;
 
 	//パイプライン
@@ -28,24 +143,24 @@ void GPUParticle::Initialize()
 		);
 
 		result = D3DCompileFromFile(
-				L"Resources/shader/GPUParticlePS.hlsl",
-				nullptr,
-				D3D_COMPILE_STANDARD_FILE_INCLUDE,
-				"main", "ps_5_0",
-				D3DCOMPILE_DEBUG| D3DCOMPILE_SKIP_OPTIMIZATION,
-				0,
-				&vsBlob, &errorBlob
-			);
+			L"Resources/shader/GPUParticlePS.hlsl",
+			nullptr,
+			D3D_COMPILE_STANDARD_FILE_INCLUDE,
+			"main", "ps_5_0",
+			D3DCOMPILE_DEBUG| D3DCOMPILE_SKIP_OPTIMIZATION,
+			0,
+			&vsBlob, &errorBlob
+		);
 
 		result = D3DCompileFromFile(
-				L"Resources/shader/GPUParticleCS.hlsl",
-				nullptr,
-				D3D_COMPILE_STANDARD_FILE_INCLUDE,
-				"main", "cs_5_0",
-				D3DCOMPILE_DEBUG| D3DCOMPILE_SKIP_OPTIMIZATION,
-				0,
-				&vsBlob, &errorBlob
-			);
+			L"Resources/shader/GPUParticleCS.hlsl",
+			nullptr,
+			D3D_COMPILE_STANDARD_FILE_INCLUDE,
+			"main", "cs_5_0",
+			D3DCOMPILE_DEBUG| D3DCOMPILE_SKIP_OPTIMIZATION,
+			0,
+			&vsBlob, &errorBlob
+		);
 	}
 
 	//頂点レイアウト
@@ -53,91 +168,29 @@ void GPUParticle::Initialize()
 		"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 	};
 
-	//ルートパラメータ
-	CD3DX12_DESCRIPTOR_RANGE descRangeSRV = {};
-	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,1,0);
-
-	//設定
-	CD3DX12_ROOT_PARAMETER rootParam[2] = {};
-	rootParam[0].InitAsConstantBufferView(0);
-	rootParam[1].InitAsDescriptorTable(1,&descRangeSRV);
-
-	///テクスチャサンプラー
-	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
-
-	//ルートシグネチャ (グラフィックス)
-	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc{};
-	rootSignatureDesc.Init_1_0(_countof(rootParam), rootParam,1, &samplerDesc,D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-	//シリアライズ
-	ComPtr<ID3DBlob> rootSigBlob;
-	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob,&errorBlob);
-	assert(SUCCEEDED(result));
-	result = dxCommon_->GetDevice()->CreateRootSignature(0,rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),IID_PPV_ARGS(&rootSignature));
-	assert(SUCCEEDED(result));
-
 	//グラフィックスパイプライン(頂点、ピクセル)
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
+	pipelineDesc.InputLayout = {inputLayout, _countof(inputLayout)};
+	pipelineDesc.pRootSignature = rootSignature.Get();
 	pipelineDesc.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
 	pipelineDesc.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
-	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDesc.BlendState.RenderTarget[0];
-	blendDesc.RenderTargetWriteMask= D3D12_COLOR_WRITE_ENABLE_ALL;
-	blendDesc.BlendEnable = true;
-	blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-	blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-	blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc.SrcBlend = D3D12_BLEND_SRC1_ALPHA;
-	blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
-	pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
-	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	pipelineDesc.SampleDesc.Count = 1;
+	pipelineDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	pipelineDesc.SampleMask = UINT_MAX;
+	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	pipelineDesc.NumRenderTargets = 1;
+	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-	pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-
-	//パイプラインにルートシグネチャをセット
-	pipelineDesc.pRootSignature = rootSignature.Get();
+	pipelineDesc.SampleDesc.Count = 1;
 	result = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
-	
-
-
-	//ルートシグネチャ(コンピュート)
-	CD3DX12_DESCRIPTOR_RANGE1 descRange1[2] = {};
-	descRange1[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,2,0,0,D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
-	descRange1[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV,1,0,0,D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
-
-	CD3DX12_ROOT_PARAMETER1 computeRootparameters[2];
-	computeRootparameters[0].InitAsDescriptorTable(2,descRange1);
-	computeRootparameters[1].InitAsConstants(4,0);
-
-	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC computeRootSignatureDesc;
-	computeRootSignatureDesc.Init_1_1(_countof(computeRootparameters), computeRootparameters);
-
-	result = D3DX12SerializeVersionedRootSignature(&computeRootSignatureDesc,D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob,&errorBlob);
 	assert(SUCCEEDED(result));
-	result = dxCommon_->GetDevice()->CreateRootSignature(0,rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),IID_PPV_ARGS(&computeRootSignature));
-	assert(SUCCEEDED(result));
+
 
 	//コンピュートパイプライン
 	D3D12_COMPUTE_PIPELINE_STATE_DESC computePipelineDesc = {};
-	computePipelineDesc.CS = CD3DX12_SHADER_BYTECODE(csBlob.Get());
-
-	//パイプラインにルートシグネチャをセット
 	computePipelineDesc.pRootSignature = computeRootSignature.Get();
+	computePipelineDesc.CS = CD3DX12_SHADER_BYTECODE(csBlob.Get());
 	result = dxCommon_->GetDevice()->CreateComputePipelineState(&computePipelineDesc, IID_PPV_ARGS(&computePipelineState));
-}
-
-void GPUParticle::Update()
-{
-}
-
-void GPUParticle::Draw()
-{
-}
-
-void GPUParticle::Finalize()
-{
+	assert(SUCCEEDED(result));
 }

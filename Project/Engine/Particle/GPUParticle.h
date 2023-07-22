@@ -34,11 +34,43 @@ public:
 		float commandCount;
 	};
 
+
+	//グラフィックスルートシグネチャ
+	enum GraphicsRootParameters{
+		Cbv,
+		GraphicsRootParamtersCount
+	};
+
+	//コンピュートシグネチャ
+	enum ComputeRootParameters{
+		SrvUavTable,
+		RootConstants,
+		ComputeRootParametersCount,
+	};
+
+
+	//デスクリプタヒープ(CBV/SRV/UAV)作成のオフセット
+	enum HeapOffset{
+		CbvSrvOffset = 0,
+		CommandsOffset = CbvSrvOffset + 1,
+		ProcessedCommandsOffset = CommandsOffset + 1,
+		CbvSrvUavDescriptorCountPerFrame = ProcessedCommandsOffset + 1
+	};
+
 public:
 	void Initialize();
 	void Update();
 	void Draw();
 	void Finalize();
+
+private:
+	void InitializeRootSignature();
+	void InitializeDescriptorHeap();
+	void InitializePipeline();
+
+private:
+	//ポリゴン数
+    static const UINT FrameCount = 3;
 
 private:
 	DirectXCommon* dxCommon_ = nullptr;
@@ -50,5 +82,30 @@ private:
 	//パイプライン
 	ComPtr<ID3D12PipelineState> pipelineState;
 	ComPtr<ID3D12PipelineState> computePipelineState;
+
+	//デスクリプタヒープ
+	ComPtr<ID3D12DescriptorHeap> rtvHeap;
+	ComPtr<ID3D12DescriptorHeap> dsvHeap;
+	ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap;
+	//デスクリプタサイズ
+	UINT rtvDescriptorSize;
+	UINT cbvSrvUavDescriptorSize;
+
+
+	//GPUパーティクル用のコマンドアロケータ
+	ComPtr<ID3D12CommandAllocator> commandAllocators[FrameCount];
+	ComPtr<ID3D12CommandAllocator> computeCommandAllocators[FrameCount];
+
+	//GPUパーティクル用のコマンドキュー
+	ComPtr<ID3D12CommandQueue> commandQueue;
+    ComPtr<ID3D12CommandQueue> computeCommandQueue;
+
+	//GPUパーティクル用のフェンス
+	ComPtr<ID3D12Fence> fence;
+    ComPtr<ID3D12Fence> computeFence;
+
+	//GPUパーティクル用のコマンドリスト
+	ComPtr<ID3D12GraphicsCommandList> commandList;
+	ComPtr<ID3D12GraphicsCommandList> computeCommandList;
 };
 
