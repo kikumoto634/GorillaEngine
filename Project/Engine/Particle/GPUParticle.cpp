@@ -3,6 +3,9 @@
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
+const float D3D12ExecuteIndirect::TriangleHalfWidth = 0.05f;
+const float D3D12ExecuteIndirect::TriangleDepth = 1.0f;
+
 void GPUParticle::Initialize()
 {
 	HRESULT result = {};
@@ -28,17 +31,69 @@ void GPUParticle::Initialize()
 
 	//コマンドアロケータ
 	{
-		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart());
-
 		for(UINT i = 0; i < FrameCount; ++i){
-			
+			result = dxCommon_->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_COMPUTE, IID_PPV_ARGS(&computeCommandAllocators[i]));
 		}
 	}
 
+	//コマンドキュー
+	D3D12_COMMAND_QUEUE_DESC computeQueueDesc = {};
+	computeQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+	computeQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
+	result = dxCommon_->GetDevice()->CreateCommandQueue(&computeQueueDesc, IID_PPV_ARGS(&computeCommandQueue));
+	assert(SUCCEEDED(result));
+
+
+	//バックバッファ
+	frameIndex = dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
 
 	InitializeDescriptorHeap();
 	InitializeRootSignature();
 	InitializePipeline();
+
+	//コマンドリスト
+	result = dxCommon_->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_COMPUTE, computeCommandAllocators[frameIndex].Get(), computePipelineState.Get(), IID_PPV_ARGS(&computeCommandList));
+	assert(SUCCEEDED(result));
+	result = computeCommandList->Close();
+	assert(SUCCEEDED(result));
+
+
+	ComPtr<ID3D12Resource> vertexBufferUpload;
+    ComPtr<ID3D12Resource> commandBufferUpload;
+	//頂点バッファ
+	{
+		//三角形頂点情報
+		Vertex triangleVertices[] = {
+			{{0.0f, TriangleHalfWidth,TriangleDepth,}},
+			{{TriangleHalfWidth,-TriangleHalfWidth,TriangleDepth}},
+			{{-TriangleHalfWidth,-TriangleHalfWidth,TriangleDepth}}
+		};
+		//頂点バッファサイズ
+		const UINT vertexBufferSize = sizeof(triangleVertices);
+
+		//生成
+		result = dxCommon_->GetDevice()->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE,
+			&CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			nullptr,
+			IID_PPV_ARGS(&vertBuffer));
+		assert(SUCCEEDED(result));
+		result = dxCommon_->GetDevice()->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+			D3D12_HEAP_FLAG_NONE,
+			&CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			nullptr,
+			IID_PPV_ARGS(&vertexBufferUpload));
+		assert(SUCCEEDED(result));
+
+		D3D12_SUBRESOURCE_DATA vertexData = {};
+		vertexData.pData = reinterpret_cast<UINT8*>(triangleVertices);
+		vertexData.RowPitch = vertexBufferSize;
+		vertexData.SlicePitch = vertexData.RowPitch;
+	}
 }
 
 void GPUParticle::Update()

@@ -33,6 +33,7 @@ public:
 	ID3D12Device* GetDevice()		{return device.Get();}
 	ID3D12GraphicsCommandList* GetCommandList()		{return commandList.Get();}
 	size_t GetBackBuffersCount()	{return backBuffers.size();}
+	IDXGISwapChain3* GetSwapChain(){return swapChain.Get();}
 
 private:
 	/// <summary>
@@ -63,7 +64,7 @@ private:
 	//コマンドキュー
 	ComPtr<ID3D12CommandQueue> commandQueue = nullptr;
 	//スワップチェーン
-	ComPtr<IDXGISwapChain4> swapChain  = nullptr;
+	ComPtr<IDXGISwapChain3> swapChain  = nullptr;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	//バックバッファ
 	std::vector<ComPtr<ID3D12Resource>> backBuffers;

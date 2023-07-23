@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Vector3.h"
 #include "Vector4.h"
 
@@ -11,12 +11,12 @@ public:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:
-	//’¸“_
+	//é ‚ç‚¹
 	struct Vertex{
 		Vector3 pos;
 	};
 
-	//’è”
+	//å®šæ•°
 	struct Const{
 		Vector4 velocity;
 		Vector4 offset;
@@ -26,7 +26,7 @@ public:
 		float padding[36];
 	};
 
-	//ƒRƒ“ƒsƒ…[ƒg
+	//ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ãƒˆ
 	struct Compute{
 		float offSetX;
 		float offSetY;
@@ -35,13 +35,13 @@ public:
 	};
 
 
-	//ƒOƒ‰ƒtƒBƒbƒNƒXƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+	//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
 	enum GraphicsRootParameters{
 		Cbv,
 		GraphicsRootParamtersCount
 	};
 
-	//ƒRƒ“ƒsƒ…[ƒgƒVƒOƒlƒ`ƒƒ
+	//ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
 	enum ComputeRootParameters{
 		SrvUavTable,
 		RootConstants,
@@ -49,7 +49,7 @@ public:
 	};
 
 
-	//ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv(CBV/SRV/UAV)ì¬‚ÌƒIƒtƒZƒbƒg
+	//ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—(CBV/SRV/UAV)ä½œæˆã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 	enum HeapOffset{
 		CbvSrvOffset = 0,
 		CommandsOffset = CbvSrvOffset + 1,
@@ -69,43 +69,54 @@ private:
 	void InitializePipeline();
 
 private:
-	//ƒ|ƒŠƒSƒ“”
-    static const UINT FrameCount = 3;
+	//ã‚¹ãƒ¯ãƒƒãƒ—æšæ•°
+    static const UINT FrameCount = 2;
+
+	//ä¸‰è§’å½¢æƒ…å ±
+	static const float TriangleHalfWidth;
+	static const float TriangleDepth;    
 
 private:
 	DirectXCommon* dxCommon_ = nullptr;
 
-	//ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+	//ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
 	ComPtr<ID3D12RootSignature> rootSignature;
 	ComPtr<ID3D12RootSignature> computeRootSignature;
 
-	//ƒpƒCƒvƒ‰ƒCƒ“
+	//ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	ComPtr<ID3D12PipelineState> pipelineState;
 	ComPtr<ID3D12PipelineState> computePipelineState;
 
-	//ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	//ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	ComPtr<ID3D12DescriptorHeap> rtvHeap;
 	ComPtr<ID3D12DescriptorHeap> dsvHeap;
 	ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap;
-	//ƒfƒXƒNƒŠƒvƒ^ƒTƒCƒY
+	//ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚µã‚¤ã‚º
 	UINT rtvDescriptorSize;
 	UINT cbvSrvUavDescriptorSize;
 
 
-	//GPUƒp[ƒeƒBƒNƒ‹—p‚ÌƒRƒ}ƒ“ƒhƒAƒƒP[ƒ^
-	ComPtr<ID3D12CommandAllocator> commandAllocators[FrameCount];
+	//GPUãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”¨ã®ã‚³ãƒãƒ³ãƒ‰ã‚¢ãƒ­ã‚±ãƒ¼ã‚¿
 	ComPtr<ID3D12CommandAllocator> computeCommandAllocators[FrameCount];
 
-	//GPUƒp[ƒeƒBƒNƒ‹—p‚ÌƒRƒ}ƒ“ƒhƒLƒ…[
+	//GPUãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”¨ã®ã‚³ãƒãƒ³ãƒ‰ã‚­ãƒ¥ãƒ¼
 	ComPtr<ID3D12CommandQueue> commandQueue;
     ComPtr<ID3D12CommandQueue> computeCommandQueue;
 
-	//GPUƒp[ƒeƒBƒNƒ‹—p‚ÌƒtƒFƒ“ƒX
+	//GPUãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”¨ã®ãƒ•ã‚§ãƒ³ã‚¹
 	ComPtr<ID3D12Fence> fence;
     ComPtr<ID3D12Fence> computeFence;
 
-	//GPUƒp[ƒeƒBƒNƒ‹—p‚ÌƒRƒ}ƒ“ƒhƒŠƒXƒg
-	ComPtr<ID3D12GraphicsCommandList> commandList;
+	//GPUãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”¨ã®ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ
 	ComPtr<ID3D12GraphicsCommandList> computeCommandList;
+
+	//ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	UINT frameIndex;
+
+
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
+	ComPtr<ID3D12Resource> vertBuffer;
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
+	D3D12_VERTEX_BUFFER_VIEW vertBufferView{};
 };
 
