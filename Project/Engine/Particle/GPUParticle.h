@@ -1,10 +1,12 @@
 ﻿#pragma once
 #include "Vector3.h"
 #include "Vector4.h"
+#include "Camera.h"
 
 #include <DirectXMath.h>
 #include <d3dx12.h>
 #include <DirectXCommon.h>
+#include <vector>
 
 class GPUParticle{
 public:
@@ -58,7 +60,7 @@ public:
 	};
 
 public:
-	void Initialize();
+	void Initialize(Camera* camera);
 	void Update();
 	void Draw();
 	void Finalize();
@@ -68,9 +70,14 @@ private:
 	void InitializeDescriptorHeap();
 	void InitializePipeline();
 
+	float GetRandomFloat(float min, float max);
+
 private:
 	//スワップ枚数
     static const UINT FrameCount = 2;
+
+	static const UINT TriangleCount = 1024;
+    static const UINT TriangleResourceCount = TriangleCount * FrameCount;
 
 	//三角形情報
 	static const float TriangleHalfWidth;
@@ -114,9 +121,19 @@ private:
 	UINT frameIndex;
 
 
+	//三角形の定数情報
+	std::vector<Const> constantBufferData;
+	UINT8* cbvDataBegin;
+
 	//頂点バッファ
 	ComPtr<ID3D12Resource> vertBuffer;
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertBufferView{};
+
+	//深度ステンシル
+	ComPtr<ID3D12Resource> depthStencil;
+
+	//定数バッファ
+	ComPtr<ID3D12Resource> constBuffer;
 };
 

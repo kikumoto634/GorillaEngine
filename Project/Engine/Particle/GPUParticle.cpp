@@ -1,12 +1,13 @@
 #include "GPUParticle.h"
+#include "Window.h"
 
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
-const float D3D12ExecuteIndirect::TriangleHalfWidth = 0.05f;
-const float D3D12ExecuteIndirect::TriangleDepth = 1.0f;
+const float GPUParticle::TriangleHalfWidth = 0.05f;
+const float GPUParticle::TriangleDepth = 1.0f;
 
-void GPUParticle::Initialize()
+void GPUParticle::Initialize(Camera* camera)
 {
 	HRESULT result = {};
 
@@ -93,6 +94,80 @@ void GPUParticle::Initialize()
 		vertexData.pData = reinterpret_cast<UINT8*>(triangleVertices);
 		vertexData.RowPitch = vertexBufferSize;
 		vertexData.SlicePitch = vertexData.RowPitch;
+
+		UpdateSubresources<1>(dxCommon_->GetCommandList(), vertBuffer.Get(), vertexBufferUpload.Get(),0,0,1,&vertexData);
+		dxCommon_->GetCommandList()->ResourceBarrier(1,&CD3DX12_RESOURCE_BARRIER::Transition(vertBuffer.Get(),D3D12_RESOURCE_STATE_COPY_DEST,D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
+
+		vertBufferView.BufferLocation = vertBuffer->GetGPUVirtualAddress();
+		vertBufferView.StrideInBytes = sizeof(Vertex);
+		vertBufferView.SizeInBytes = sizeof(triangleVertices);
+	}
+
+	//深度ステンシル
+	{
+		D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
+		depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+		depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
+
+		D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
+		depthOptimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+		depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
+		depthOptimizedClearValue.DepthStencil.Stencil = 0;
+
+		result = dxCommon_->GetDevice()->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE,
+			&CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, Window::GetWindowWidth(), Window::GetWindowHeight(),
+				1,0,1,0,D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL),
+			D3D12_RESOURCE_STATE_DEPTH_WRITE,
+			&depthOptimizedClearValue,
+			IID_PPV_ARGS(&depthStencil)
+		);
+		assert(SUCCEEDED(result));
+
+		dxCommon_->GetDevice()->CreateDepthStencilView(depthStencil.Get(),&depthStencilDesc,dsvHeap->GetCPUDescriptorHandleForHeapStart());
+	}
+
+	//定数バッファ
+	{
+		UINT constantBufferDataSize = TriangleResourceCount * sizeof(Const);
+
+		result = dxCommon_->GetDevice()->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+			D3D12_HEAP_FLAG_NONE,
+			&CD3DX12_RESOURCE_DESC::Buffer(constantBufferDataSize),
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&constBuffer)
+		);
+		assert(SUCCEEDED(result));
+
+		for(UINT i = 0; i < TriangleCount; i++){
+			constantBufferData[i].velocity = Vector4(GetRandomFloat(0.01f,0.02f),0,0,0);
+			constantBufferData[i].offset = Vector4(GetRandomFloat(-5.f,5.f),GetRandomFloat(-1.f,1.f),GetRandomFloat(0.f,2.f),0);
+			constantBufferData[i].color = Vector4(GetRandomFloat(0.5f,1.f),GetRandomFloat(0.5f,1.f),GetRandomFloat(0.5f,1.f),1.0f);
+			constantBufferData[i].projection = camera->GetViewProjectionMatrix();
+		}
+
+		CD3DX12_RANGE readRange(0,0);
+		constBuffer->Map(0,&readRange, reinterpret_cast<void**>(&cbvDataBegin));
+		memcpy(cbvDataBegin, &constantBufferData[0],TriangleCount*sizeof(Const));
+
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+        srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        srvDesc.Buffer.NumElements = TriangleCount;
+        srvDesc.Buffer.StructureByteStride = sizeof(Const);
+        srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+
+		CD3DX12_CPU_DESCRIPTOR_HANDLE cbvSrvHandle(cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart(), CbvSrvOffset, cbvSrvUavDescriptorSize);
+		for(UINT frame = 0; frame < FrameCount; frame++){
+			srvDesc.Buffer.FirstElement = frame*TriangleCount;
+			dxCommon_->GetDevice()->CreateShaderResourceView(constBuffer.Get(), &srvDesc, cbvSrvHandle);
+			cbvSrvHandle.Offset(CbvSrvUavDescriptorCountPerFrame, cbvSrvUavDescriptorSize);
+		}
 	}
 }
 
@@ -252,4 +327,11 @@ void GPUParticle::InitializePipeline()
 	computePipelineDesc.CS = CD3DX12_SHADER_BYTECODE(csBlob.Get());
 	result = dxCommon_->GetDevice()->CreateComputePipelineState(&computePipelineDesc, IID_PPV_ARGS(&computePipelineState));
 	assert(SUCCEEDED(result));
+}
+
+float GPUParticle::GetRandomFloat(float min, float max)
+{
+	float scale = static_cast<float>(rand()) / RAND_MAX;
+    float range = max - min;
+    return scale * range + min;
 }
