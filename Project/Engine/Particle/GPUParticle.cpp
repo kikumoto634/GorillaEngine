@@ -4,6 +4,8 @@
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
+const UINT GPUParticle::CommandSizePerFrame = TriangleCount * sizeof(IndirectCommand);
+
 const float GPUParticle::TriangleHalfWidth = 0.05f;
 const float GPUParticle::TriangleDepth = 1.0f;
 
@@ -168,6 +170,90 @@ void GPUParticle::Initialize(Camera* camera)
 			dxCommon_->GetDevice()->CreateShaderResourceView(constBuffer.Get(), &srvDesc, cbvSrvHandle);
 			cbvSrvHandle.Offset(CbvSrvUavDescriptorCountPerFrame, cbvSrvUavDescriptorSize);
 		}
+	}
+
+	//コマンドシグネチャ
+	{
+		D3D12_INDIRECT_ARGUMENT_DESC argumentDescs[2] = {};
+		argumentDescs[0].Type = D3D12_INDIRECT_ARGUMENT_TYPE_CONSTANT_BUFFER_VIEW;
+		argumentDescs[0].ConstantBufferView.RootParameterIndex = Cbv;
+		argumentDescs[1].Type = D3D12_INDIRECT_ARGUMENT_TYPE_DRAW;
+
+		D3D12_COMMAND_SIGNATURE_DESC commandSignatureDesc = {};
+		commandSignatureDesc.pArgumentDescs = argumentDescs;
+		commandSignatureDesc.NumArgumentDescs = _countof(argumentDescs);
+		commandSignatureDesc.ByteStride = sizeof(IndirectCommand);
+
+		result = dxCommon_->GetDevice()->CreateCommandSignature(&commandSignatureDesc, rootSignature.Get(), IID_PPV_ARGS(&commandSignature));
+		assert(SUCCEEDED(result));
+	}
+
+	//コマンドバッファ
+	{
+		std::vector<IndirectCommand> commands;
+		commands.resize(TriangleResourceCount);
+		const UINT commandBufferSize = CommandSizePerFrame * FrameCount;
+
+		D3D12_RESOURCE_DESC commandBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(commandBufferSize);
+		result = dxCommon_->GetDevice()->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE,
+			&commandBufferDesc,
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			nullptr,
+			IID_PPV_ARGS(&commandBuffer)
+		);
+		assert(SUCCEEDED(result));
+
+		result = dxCommon_->GetDevice()->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+			D3D12_HEAP_FLAG_NONE,
+			&CD3DX12_RESOURCE_DESC::Buffer(commandBufferSize),
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&commandBufferUpload)
+		);
+		assert(SUCCEEDED(result));
+
+		//GPUアドレス
+		D3D12_GPU_VIRTUAL_ADDRESS gpuAddres = constBuffer->GetGPUVirtualAddress();
+		UINT commandIndex = 0;
+		for(UINT frame = 0; frame < FrameCount; frame++){
+			for(UINT i = 0; i < TriangleCount; i++){
+				commands[commandIndex].cbv = gpuAddres;
+				commands[commandIndex].drawArguments.VertexCountPerInstance = 3;
+				commands[commandIndex].drawArguments.InstanceCount = 1;
+				commands[commandIndex].drawArguments.StartVertexLocation = 0;
+				commands[commandIndex].drawArguments.StartInstanceLocation = 0;
+
+				commandIndex++;
+				gpuAddres += sizeof(Const);
+			}
+		}
+
+		//コピー
+		D3D12_SUBRESOURCE_DATA commandData = {};
+		commandData.pData = reinterpret_cast<UINT8*>(&commands[0]);
+		commandData.RowPitch = commandBufferSize;
+		commandData.SlicePitch = commandData.RowPitch;
+
+		UpdateSubresources<1>(dxCommon_->GetCommandList(),commandBuffer.Get(), commandBufferUpload.Get(), 0, 0, 1, &commandData);
+		dxCommon_->GetCommandList()->ResourceBarrier(1,&CD3DX12_RESOURCE_BARRIER::Transition(commandBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE));
+	
+		//SRV生成
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		srvDesc.Buffer.NumElements = TriangleCount;
+		srvDesc.Buffer.StructureByteStride = sizeof(IndirectCommand);
+		srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+
+		CD3DX12_CPU_DESCRIPTOR_HANDLE commandsHandle(cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart(),ProcessedCommandsOffset,cbvSrvUavDescriptorSize);
+		for(UINT frame =0; frame < FrameCount; frame++){
+			
+		}
+		
 	}
 }
 

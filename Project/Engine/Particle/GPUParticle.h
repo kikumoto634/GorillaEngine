@@ -36,6 +36,12 @@ public:
 		float commandCount;
 	};
 
+	//コマンドシグネチャ
+	struct IndirectCommand{
+		D3D12_GPU_VIRTUAL_ADDRESS cbv;
+		D3D12_DRAW_ARGUMENTS drawArguments;
+	};
+
 
 	//グラフィックスルートシグネチャ
 	enum GraphicsRootParameters{
@@ -76,6 +82,10 @@ private:
 	//スワップ枚数
     static const UINT FrameCount = 2;
 
+	//コマンド
+	static const UINT CommandSizePerFrame;
+
+	//三角形
 	static const UINT TriangleCount = 1024;
     static const UINT TriangleResourceCount = TriangleCount * FrameCount;
 
@@ -89,6 +99,9 @@ private:
 	//ルートシグネチャ
 	ComPtr<ID3D12RootSignature> rootSignature;
 	ComPtr<ID3D12RootSignature> computeRootSignature;
+	//コマンドシグネチャ
+	ComPtr<ID3D12CommandSignature> commandSignature;
+
 
 	//パイプライン
 	ComPtr<ID3D12PipelineState> pipelineState;
@@ -135,5 +148,8 @@ private:
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffer;
+
+	//コマンドバッファ
+	ComPtr<ID3D12Resource> commandBuffer;
 };
 
