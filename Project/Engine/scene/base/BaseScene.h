@@ -12,6 +12,7 @@
 #include "BaseObjObject.h"
 
 #include "ParticleObject.h"
+#include "../Particle/GPUParticle.h"
 
 #ifdef _DEBUG
 #include "DebugText.h"
@@ -154,5 +155,7 @@ protected:
 
 	float MinSize_ = 0;
 	float MaxSize_ = 1;
+
+	GPUParticle* gpuParticle = nullptr;
 };
 

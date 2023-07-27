@@ -1,4 +1,13 @@
-float4 main( float4 pos : POSITION ) : SV_POSITION
+#include "GPUParticle.hlsli"
+
+PSInput main(float4 position : POSITION)
 {
-	return pos;
+    PSInput result;
+
+    result.position = mul(position + offset, projection);
+
+    float intensity = saturate((4.0f - result.position.z) / 2.0f);
+    result.color = float4(color.xyz * intensity, 1.0f);
+
+    return result;
 }

@@ -49,6 +49,10 @@ void BaseScene::Initialize()
 	particleObj = new ParticleObject();
 	particleObj->Initialize();
 
+	//GPU
+	gpuParticle = new GPUParticle();
+	gpuParticle->Initialize(camera);
+
 
 	//ライト
 	lightGroup_ = LightGroup::Create();
@@ -174,6 +178,7 @@ void BaseScene::Update()
 void BaseScene::EndUpdate()
 {
 	particleObj->Update(camera);
+	gpuParticle->Update();
 
 	camera->Update();
 }
@@ -185,6 +190,7 @@ void BaseScene::Draw()
 	}
 
 	particleObj->Draw();
+	gpuParticle->Draw();
 }
 
 void BaseScene::DrawBack()
@@ -208,4 +214,7 @@ void BaseScene::Finalize()
 	}
 
 	particleObj->Finalize();
+
+	gpuParticle->Finalize();
+	delete gpuParticle;
 }

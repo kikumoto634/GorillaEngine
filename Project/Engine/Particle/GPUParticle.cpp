@@ -68,10 +68,11 @@ void GPUParticle::Initialize(Camera* camera)
 	{
 		//三角形頂点情報
 		Vertex triangleVertices[] = {
-			{{0.0f, TriangleHalfWidth,TriangleDepth,}},
-			{{TriangleHalfWidth,-TriangleHalfWidth,TriangleDepth}},
-			{{-TriangleHalfWidth,-TriangleHalfWidth,TriangleDepth}}
+			{ {0.0f, TriangleHalfWidth,TriangleDepth,} },
+			{ {TriangleHalfWidth, -TriangleHalfWidth, TriangleDepth} },
+			{ {-TriangleHalfWidth,-TriangleHalfWidth, TriangleDepth} }
 		};
+
 		//頂点バッファサイズ
 		const UINT vertexBufferSize = sizeof(triangleVertices);
 
@@ -88,7 +89,7 @@ void GPUParticle::Initialize(Camera* camera)
 			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 			D3D12_HEAP_FLAG_NONE,
 			&CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
-			D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
 			IID_PPV_ARGS(&vertexBufferUpload));
 		assert(SUCCEEDED(result));
@@ -146,6 +147,7 @@ void GPUParticle::Initialize(Camera* camera)
 		);
 		assert(SUCCEEDED(result));
 
+		constantBufferData.resize(TriangleCount);
 		for(UINT i = 0; i < TriangleCount; i++){
 			constantBufferData[i].velocity = Vector4(GetRandomFloat(0.01f,0.02f),0,0,0);
 			constantBufferData[i].offset = Vector4(GetRandomFloat(-5.f,5.f),GetRandomFloat(-1.f,1.f),GetRandomFloat(0.f,2.f),0);
@@ -332,6 +334,9 @@ void GPUParticle::Update()
 
 void GPUParticle::Draw()
 {
+	HRESULT result = {};
+
+	try{
 		//コマンドリスト
 		computeCommandAllocators[frameIndex]->Reset();
 		computeCommandList->Reset(computeCommandAllocators[frameIndex].Get(), computePipelineState.Get());
@@ -369,8 +374,11 @@ void GPUParticle::Draw()
 		computeCommandQueue->Signal(computeFence.Get(), fenceValues[frameIndex]);
 
 		computeCommandQueue->Wait(computeFence.Get(), fenceValues[frameIndex]);
-
-		
+	}
+	catch(int a){
+		a;
+		throw;
+	}	
 
 }
 
@@ -395,7 +403,7 @@ void GPUParticle::InitializeRootSignature()
 	ComPtr<ID3DBlob> error;
 
 	//グラフィックス
-	CD3DX12_ROOT_PARAMETER1 rootParameters[GraphicsRootParamtersCount];
+	CD3DX12_ROOT_PARAMETER1 rootParameters[GraphicsRootParamtersCount] = {};
 	rootParameters[Cbv].InitAsConstantBufferView(0,0,D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC, D3D12_SHADER_VISIBILITY_VERTEX);
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 	rootSignatureDesc.Init_1_1(_countof(rootParameters),rootParameters,0,nullptr,D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
@@ -409,15 +417,15 @@ void GPUParticle::InitializeRootSignature()
 	CD3DX12_DESCRIPTOR_RANGE1 ranges[2];
 	ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
 	ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
-	CD3DX12_ROOT_PARAMETER1 computeRootParameters[ComputeRootParametersCount];
+	CD3DX12_ROOT_PARAMETER1 computeRootParameters[ComputeRootParametersCount] = {};
 	computeRootParameters[SrvUavTable].InitAsDescriptorTable(2, ranges);
 	computeRootParameters[RootConstants].InitAsConstants(4,0);
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC computeRootSignatureDesc;
 	computeRootSignatureDesc.Init_1_1(_countof(computeRootParameters), computeRootParameters);
 
 	result = D3DX12SerializeVersionedRootSignature(&computeRootSignatureDesc, featureData.HighestVersion, &signature, &error);
-	assert(SUBLANGID(result));
-	result = dxCommon_->GetDevice()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&computePipelineState));
+	assert(SUCCEEDED(result));
+	result = dxCommon_->GetDevice()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&computeRootSignature));
 	assert(SUCCEEDED(result));
 }
 
@@ -478,7 +486,7 @@ void GPUParticle::InitializePipeline()
 			"main", "ps_5_0",
 			D3DCOMPILE_DEBUG| D3DCOMPILE_SKIP_OPTIMIZATION,
 			0,
-			&vsBlob, &errorBlob
+			&psBlob, &errorBlob
 		);
 
 		result = D3DCompileFromFile(
@@ -488,7 +496,7 @@ void GPUParticle::InitializePipeline()
 			"main", "cs_5_0",
 			D3DCOMPILE_DEBUG| D3DCOMPILE_SKIP_OPTIMIZATION,
 			0,
-			&vsBlob, &errorBlob
+			&csBlob, &errorBlob
 		);
 	}
 
