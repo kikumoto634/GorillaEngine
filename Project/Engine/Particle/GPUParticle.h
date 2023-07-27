@@ -78,12 +78,22 @@ private:
 
 	float GetRandomFloat(float min, float max);
 
+	static inline UINT AlignForUavCounter(UINT bufferSize)
+    {
+        const UINT alignment = D3D12_UAV_COUNTER_PLACEMENT_ALIGNMENT;
+        return (bufferSize + (alignment - 1)) & ~(alignment - 1);
+    }
+
 private:
 	//スワップ枚数
     static const UINT FrameCount = 2;
 
 	//コマンド
 	static const UINT CommandSizePerFrame;
+	static const UINT CommandBufferCounterOffset;
+
+	//コンピュート
+	static const UINT ComputeThreadBlockSize = 128;
 
 	//三角形
 	static const UINT TriangleCount = 1024;
@@ -95,6 +105,9 @@ private:
 
 private:
 	DirectXCommon* dxCommon_ = nullptr;
+
+	//定数、コンピュートシェーダー
+	Compute csRootConstants;
 
 	//ルートシグネチャ
 	ComPtr<ID3D12RootSignature> rootSignature;
@@ -120,12 +133,11 @@ private:
 	ComPtr<ID3D12CommandAllocator> computeCommandAllocators[FrameCount];
 
 	//GPUパーティクル用のコマンドキュー
-	ComPtr<ID3D12CommandQueue> commandQueue;
     ComPtr<ID3D12CommandQueue> computeCommandQueue;
 
 	//GPUパーティクル用のフェンス
-	ComPtr<ID3D12Fence> fence;
     ComPtr<ID3D12Fence> computeFence;
+	UINT64 fenceValues[FrameCount];
 
 	//GPUパーティクル用のコマンドリスト
 	ComPtr<ID3D12GraphicsCommandList> computeCommandList;
@@ -151,5 +163,7 @@ private:
 
 	//コマンドバッファ
 	ComPtr<ID3D12Resource> commandBuffer;
+	ComPtr<ID3D12Resource> processedCommandBuffers[FrameCount];
+	ComPtr<ID3D12Resource> processedCommandBufferCounterReset;
 };
 
