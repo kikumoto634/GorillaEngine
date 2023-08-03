@@ -16,6 +16,13 @@ void GPUParticle::Initialize(Camera* camera)
 
 	dxCommon_ = DirectXCommon::GetInstance();
 
+
+	csRootConstants.offSetX = TriangleHalfWidth;
+	csRootConstants.offSetY = TriangleDepth;
+	csRootConstants.offSetCull = 0.5f;
+	csRootConstants.commandCount = TriangleCount;
+
+
 	//コマンドキュー
 	{
 		//グラフィックス
@@ -252,14 +259,14 @@ void GPUParticle::Initialize(Camera* camera)
 		srvDesc.Buffer.StructureByteStride = sizeof(IndirectCommand);
 		srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
-		CD3DX12_CPU_DESCRIPTOR_HANDLE commandsHandle(cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart(),ProcessedCommandsOffset,cbvSrvUavDescriptorSize);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE commandsHandle(cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart(),CommandsOffset,cbvSrvUavDescriptorSize);
 		for(UINT frame =0; frame < FrameCount; frame++){
 			srvDesc.Buffer.FirstElement = frame*TriangleCount;
 			dxCommon_->GetDevice()->CreateShaderResourceView(commandBuffer.Get(), &srvDesc, commandsHandle);
 			commandsHandle.Offset(CbvSrvUavDescriptorCountPerFrame, cbvSrvUavDescriptorSize);
 		}
 
-		CD3DX12_CPU_DESCRIPTOR_HANDLE processedCommandsHandle(cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart());
+		CD3DX12_CPU_DESCRIPTOR_HANDLE processedCommandsHandle(cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart(),ProcessedCommandsOffset, cbvSrvUavDescriptorSize);
 		for(UINT frame = 0; frame <FrameCount; frame++){
 			commandBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(CommandBufferCounterOffset+sizeof(UINT), D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 			result = dxCommon_->GetDevice()->CreateCommittedResource(
@@ -336,11 +343,12 @@ void GPUParticle::Draw()
 {
 	HRESULT result = {};
 
-	try{
+	//try{
 		//コマンドリスト
-		computeCommandAllocators[frameIndex]->Reset();
-		computeCommandList->Reset(computeCommandAllocators[frameIndex].Get(), computePipelineState.Get());
-
+		result = computeCommandAllocators[frameIndex]->Reset();
+		assert(SUCCEEDED(result));
+		result = computeCommandList->Reset(computeCommandAllocators[frameIndex].Get(), computePipelineState.Get());
+		assert(SUCCEEDED(result));
 		
 		UINT frameDescriptorOffset = frameIndex*CbvSrvUavDescriptorCountPerFrame;
 		D3D12_GPU_DESCRIPTOR_HANDLE cbvSrvUavHandle = cbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart();
@@ -352,7 +360,7 @@ void GPUParticle::Draw()
 
 		computeCommandList->SetComputeRootDescriptorTable(
 			SrvUavTable,
-			CD3DX12_GPU_DESCRIPTOR_HANDLE(cbvSrvUavHandle, CbvSrvOffset+frameDescriptorOffset,cbvSrvUavDescriptorSize)
+			CD3DX12_GPU_DESCRIPTOR_HANDLE(cbvSrvUavHandle, CbvSrvOffset+frameDescriptorOffset, cbvSrvUavDescriptorSize)
 		);
 
 		computeCommandList->SetComputeRoot32BitConstants(RootConstants,4,reinterpret_cast<void*>(&csRootConstants),0);
@@ -367,6 +375,27 @@ void GPUParticle::Draw()
 		result = computeCommandList->Close();
 		assert(SUCCEEDED(result));
 
+		dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+
+		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+        dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertBufferView);
+
+		dxCommon_->GetCommandList()->ExecuteIndirect(
+                commandSignature.Get(),
+                TriangleCount,
+                processedCommandBuffers[frameIndex].Get(),
+                0,
+                processedCommandBuffers[frameIndex].Get(),
+                CommandBufferCounterOffset);
+		// Draw all of the triangles.
+        /*dxCommon_->GetCommandList()->ExecuteIndirect(
+            commandSignature.Get(),
+            TriangleCount,
+            commandBuffer.Get(),
+            CommandSizePerFrame * frameIndex,
+            nullptr,
+            0);*/
+
 
 		ID3D12CommandList* ppCommandLists[] = {computeCommandList.Get()};
 		computeCommandQueue->ExecuteCommandLists(_countof(ppCommandLists),ppCommandLists);
@@ -374,11 +403,13 @@ void GPUParticle::Draw()
 		computeCommandQueue->Signal(computeFence.Get(), fenceValues[frameIndex]);
 
 		computeCommandQueue->Wait(computeFence.Get(), fenceValues[frameIndex]);
-	}
-	catch(int a){
-		a;
-		throw;
-	}	
+	//}
+	//catch(int a){
+	//	a;
+	//	throw;
+	//}	
+
+		frameIndex = dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
 
 }
 
@@ -414,7 +445,7 @@ void GPUParticle::InitializeRootSignature()
 	assert(SUCCEEDED(result));
 
 	//コンピュート
-	CD3DX12_DESCRIPTOR_RANGE1 ranges[2];
+	CD3DX12_DESCRIPTOR_RANGE1 ranges[2] = {};
 	ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
 	ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
 	CD3DX12_ROOT_PARAMETER1 computeRootParameters[ComputeRootParametersCount] = {};

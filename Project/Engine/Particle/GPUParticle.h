@@ -130,16 +130,20 @@ private:
 
 
 	//GPUパーティクル用のコマンドアロケータ
+	//ComPtr<ID3D12CommandAllocator> commandAllocators[FrameCount];
 	ComPtr<ID3D12CommandAllocator> computeCommandAllocators[FrameCount];
 
 	//GPUパーティクル用のコマンドキュー
     ComPtr<ID3D12CommandQueue> computeCommandQueue;
 
 	//GPUパーティクル用のフェンス
+	//ComPtr<ID3D12Fence> fence;
     ComPtr<ID3D12Fence> computeFence;
 	UINT64 fenceValues[FrameCount];
+	//HANDLE fenceEvent;
 
 	//GPUパーティクル用のコマンドリスト
+	//ComPtr<ID3D12GraphicsCommandList> commandList;
 	ComPtr<ID3D12GraphicsCommandList> computeCommandList;
 
 	//バックバッファインデックス
