@@ -343,6 +343,8 @@ void GPUParticle::Draw()
 {
 	HRESULT result = {};
 
+	frameIndex = dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
+
 	//try{
 		//コマンドリスト
 		result = computeCommandAllocators[frameIndex]->Reset();
@@ -376,9 +378,14 @@ void GPUParticle::Draw()
 		assert(SUCCEEDED(result));
 
 		dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+		dxCommon_->GetCommandList()->SetPipelineState(pipelineState.Get());
 
 		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
         dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertBufferView);
+
+		dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuffer->GetGPUVirtualAddress());
+
+		dxCommon_->GetCommandList()->IASetVertexBuffers(0,1,&vertBufferView);
 
 		dxCommon_->GetCommandList()->ExecuteIndirect(
                 commandSignature.Get(),
@@ -408,8 +415,6 @@ void GPUParticle::Draw()
 	//	a;
 	//	throw;
 	//}	
-
-		frameIndex = dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
 
 }
 
@@ -548,7 +553,7 @@ void GPUParticle::InitializePipeline()
 	pipelineDesc.SampleMask = UINT_MAX;
 	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	pipelineDesc.NumRenderTargets = 1;
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	pipelineDesc.SampleDesc.Count = 1;
 	result = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
