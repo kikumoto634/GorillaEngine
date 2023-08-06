@@ -3,6 +3,7 @@
 
 #pragma comment(lib, "winmm.lib")
 
+HWND Window::hwnd = nullptr;
 wchar_t Window::kWindowClassName[] = L"DirectXGame";
 Window* Window::instance = nullptr;
 

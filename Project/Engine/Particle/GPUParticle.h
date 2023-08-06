@@ -46,7 +46,7 @@ public:
 	//グラフィックスルートシグネチャ
 	enum GraphicsRootParameters{
 		Cbv,
-		GraphicsRootParamtersCount
+		GraphicsRootParametersCount
 	};
 
 	//コンピュートシグネチャ
@@ -72,9 +72,6 @@ public:
 	void Finalize();
 
 private:
-	void InitializeRootSignature();
-	void InitializeDescriptorHeap();
-	void InitializePipeline();
 
 	float GetRandomFloat(float min, float max);
 
@@ -86,7 +83,7 @@ private:
 
 private:
 	//スワップ枚数
-    static const UINT FrameCount = 2;
+    static const UINT FrameCount = 3;
 
 	//コマンド
 	static const UINT CommandSizePerFrame;
@@ -104,7 +101,13 @@ private:
 	static const float TriangleDepth;    
 
 private:
-	DirectXCommon* dxCommon_ = nullptr;
+	//DirectXCommon* dxCommon_ = nullptr;
+	//デバイス
+	ComPtr<ID3D12Device> device = nullptr;
+
+	ComPtr<IDXGISwapChain3> swapChain;
+
+	ComPtr<ID3D12Resource> renderTargets[FrameCount];
 
 	//定数、コンピュートシェーダー
 	Compute csRootConstants;
@@ -130,20 +133,21 @@ private:
 
 
 	//GPUパーティクル用のコマンドアロケータ
-	//ComPtr<ID3D12CommandAllocator> commandAllocators[FrameCount];
+	ComPtr<ID3D12CommandAllocator> commandAllocators[FrameCount];
 	ComPtr<ID3D12CommandAllocator> computeCommandAllocators[FrameCount];
 
 	//GPUパーティクル用のコマンドキュー
+    ComPtr<ID3D12CommandQueue> commandQueue;
     ComPtr<ID3D12CommandQueue> computeCommandQueue;
 
 	//GPUパーティクル用のフェンス
-	//ComPtr<ID3D12Fence> fence;
+	ComPtr<ID3D12Fence> fence;
     ComPtr<ID3D12Fence> computeFence;
 	UINT64 fenceValues[FrameCount];
-	//HANDLE fenceEvent;
+	HANDLE fenceEvent;
 
 	//GPUパーティクル用のコマンドリスト
-	//ComPtr<ID3D12GraphicsCommandList> commandList;
+	ComPtr<ID3D12GraphicsCommandList> commandList;
 	ComPtr<ID3D12GraphicsCommandList> computeCommandList;
 
 	//バックバッファインデックス

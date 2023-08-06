@@ -61,116 +61,116 @@ void Application::Initialize()
 	//DirectXCommon
 	dxCommon->Initialize(window);
 
-	//テクスチャ
-	TextureManager::GetInstance()->Initialize(dxCommon);
-	TextureManager::Load(texFont_tex.number			,texFont_tex.path);
-	TextureManager::Load(white1x1_tex.number		,white1x1_tex.path);
-	TextureManager::Load(uvChecker_tex.number		,uvChecker_tex.path);
-
-
-	//音声
-	Audio::GetInstance()->Initialize();
-
-#pragma endregion
-
-	//スプライト静的初期化
-	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
-	
-	//FBX
-	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
-	FbxModelObject::StaticInitialize(dxCommon);
-
-	//OBJ
-	ObjModelManager::StaticInitialize(dxCommon);
-	ObjModelObject::StaticInitialize(dxCommon);
-
-	//Light
-	LightGroup::StaticInitialize(dxCommon->GetDevice());
-
-	// パーティクルマネージャ初期化
-	ParticleManager::GetInstance()->Initialize(dxCommon);
-
-#ifdef _DEBUG
-	debugText = new DebugText();
-	debugText->Initialize(0);
-
-	imgui = new imguiManager();
-	imgui->Initialize(window, dxCommon);
-#endif // _DEBUG
-
-	sceneManager = SceneManager::GetInstance();
-	BaseScene* scene = new BaseScene(dxCommon, window);
-
-#ifdef _DEBUG
-	scene->SetDebugText(debugText);
-	scene->SetImGui(imgui);
-#endif // _DEBUG
-
-	sceneManager->SetNextScene(scene);
-
-	
-	//ポストエフェクト
-	postEffect_ = PostEffect::GetInstance();
+//	//テクスチャ
+//	TextureManager::GetInstance()->Initialize(dxCommon);
+//	TextureManager::Load(texFont_tex.number			,texFont_tex.path);
+//	TextureManager::Load(white1x1_tex.number		,white1x1_tex.path);
+//	TextureManager::Load(uvChecker_tex.number		,uvChecker_tex.path);
+//
+//
+//	//音声
+//	Audio::GetInstance()->Initialize();
+//
+//#pragma endregion
+//
+//	//スプライト静的初期化
+//	Sprite::StaticInitialize(dxCommon, window->GetWindowWidth(), window->GetWindowHeight());
+//	
+//	//FBX
+//	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
+//	FbxModelObject::StaticInitialize(dxCommon);
+//
+//	//OBJ
+//	ObjModelManager::StaticInitialize(dxCommon);
+//	ObjModelObject::StaticInitialize(dxCommon);
+//
+//	//Light
+//	LightGroup::StaticInitialize(dxCommon->GetDevice());
+//
+//	// パーティクルマネージャ初期化
+//	ParticleManager::GetInstance()->Initialize(dxCommon);
+//
+//#ifdef _DEBUG
+//	debugText = new DebugText();
+//	debugText->Initialize(0);
+//
+//	imgui = new imguiManager();
+//	imgui->Initialize(window, dxCommon);
+//#endif // _DEBUG
+//
+//	sceneManager = SceneManager::GetInstance();
+//	BaseScene* scene = new BaseScene(dxCommon, window);
+//
+//#ifdef _DEBUG
+//	scene->SetDebugText(debugText);
+//	scene->SetImGui(imgui);
+//#endif // _DEBUG
+//
+//	sceneManager->SetNextScene(scene);
+//
+//	
+//	//ポストエフェクト
+//	postEffect_ = PostEffect::GetInstance();
 }
 
 void Application::Update()
 {
-#ifdef _DEBUG
-	imgui->Begin();
-#endif // _DEBUG
-	sceneManager->Update();
-	postEffect_->Update();
-
-#ifdef _DEBUG
-	imgui->End();
-#endif // _DEBUG
+//#ifdef _DEBUG
+//	imgui->Begin();
+//#endif // _DEBUG
+//	sceneManager->Update();
+//	postEffect_->Update();
+//
+//#ifdef _DEBUG
+//	imgui->End();
+//#endif // _DEBUG
 }
 
 void Application::Draw()
 {
 	//レンダーターゲットへの描画
-	postEffect_->PreDrawScene();
+	/*postEffect_->PreDrawScene();
 	sceneManager->Draw();
-	postEffect_->PostDrawScene();
+	postEffect_->PostDrawScene();*/
 
 
 	//描画前処理
-	dxCommon->BeginDraw();
+	//dxCommon->BeginDraw();
 
-	postEffect_->Draw();
-	Sprite::SetPipelineState();
-	sceneManager->DrawBack();
 	//postEffect_->Draw();
-	sceneManager->DrawNear();
+	//Sprite::SetPipelineState();
+	//sceneManager->DrawBack();
+	////postEffect_->Draw();
+	//sceneManager->DrawNear();
 
 #ifdef _DEBUG
-	debugText->DrawAll();
-	imgui->Draw();
+	//debugText->DrawAll();
+	//imgui->Draw();
 #endif // _DEBUG
 
 	//描画後処理
-	dxCommon->EndDraw();
+	//dxCommon->EndDraw();
 }
 
 void Application::Finalize()
 {
-	delete postEffect_;
-
-#ifdef _DEBUG
-	imgui->Finalize();
-	delete imgui;
-
-	delete debugText;
-	debugText = nullptr;
-#endif // _DEBUG
-
-	ObjModelObject::StaticFinalize();
-	FbxModelObject::StaticFinalize();
-	FbxLoader::GetInstance()->Finalize();
-	Sprite::StaticFinalize();
-
-	SceneManager::Delete();
-	sceneManager = nullptr;
+//	delete postEffect_;
+//
+//#ifdef _DEBUG
+//	imgui->Finalize();
+//	delete imgui;
+//
+//	delete debugText;
+//	debugText = nullptr;
+//#endif // _DEBUG
+//
+//	ObjModelObject::StaticFinalize();
+//	FbxModelObject::StaticFinalize();
+//	FbxLoader::GetInstance()->Finalize();
+//	Sprite::StaticFinalize();
+//
+//	SceneManager::Delete();
+//	sceneManager = nullptr;
 
 	DirectXCommon::Delete();
 	dxCommon = nullptr;

@@ -23,6 +23,8 @@
 
 #include "PostEffect.h"
 
+#include "../Particle/GPUParticle.h"
+
 #ifdef _DEBUG
 
 #include "imguiManager.h"
@@ -69,4 +71,7 @@ private:
 	PostEffect* postEffect_ = nullptr;
 
 	bool isEnd = false;
+
+	//GPUパーティクル
+	GPUParticle* particle = nullptr;
 };
