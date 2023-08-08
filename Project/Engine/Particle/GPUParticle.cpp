@@ -593,96 +593,13 @@ void GPUParticle::Initialize(Camera* camera)
 
 void GPUParticle::Update()
 {
-	for(UINT i = 0; i < TriangleCount; i++){
-		const float offsetBounds = 2.5f;
-
-		constantBufferData[i].offset.x += constantBufferData[i].velocity.x;
-		if(constantBufferData[i].offset.x > offsetBounds){
-			constantBufferData[i].velocity.x = GetRandomFloat(0.01f,0.02f);
-			constantBufferData[i].offset.x = -offsetBounds;
-		}
-	}
-
-	UINT8* destination = cbvDataBegin + (TriangleCount * frameIndex * sizeof(Const));
-	memcpy(destination, &constantBufferData[0], TriangleCount*sizeof(Const));
+	
 }
 
 void GPUParticle::Draw()
 {
 	HRESULT result = {};
 
-	frameIndex = dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
-
-	//try{
-		//コマンドリスト
-		result = computeCommandAllocators[frameIndex]->Reset();
-		assert(SUCCEEDED(result));
-		result = computeCommandList->Reset(computeCommandAllocators[frameIndex].Get(), computePipelineState.Get());
-		assert(SUCCEEDED(result));
-		
-		UINT frameDescriptorOffset = frameIndex*CbvSrvUavDescriptorCountPerFrame;
-		D3D12_GPU_DESCRIPTOR_HANDLE cbvSrvUavHandle = cbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart();
-		
-		computeCommandList->SetComputeRootSignature(computeRootSignature.Get());
-
-		ID3D12DescriptorHeap* ppHeaps[] = {cbvSrvUavHeap.Get()};
-		computeCommandList->SetDescriptorHeaps(_countof(ppHeaps),ppHeaps);
-
-		computeCommandList->SetComputeRootDescriptorTable(
-			SrvUavTable,
-			CD3DX12_GPU_DESCRIPTOR_HANDLE(cbvSrvUavHandle, CbvSrvOffset+frameDescriptorOffset, cbvSrvUavDescriptorSize)
-		);
-
-		computeCommandList->SetComputeRoot32BitConstants(RootConstants,4,reinterpret_cast<void*>(&csRootConstants),0);
-	
-		computeCommandList->CopyBufferRegion(processedCommandBuffers[frameIndex].Get(), CommandBufferCounterOffset, processedCommandBufferCounterReset.Get(), 0, sizeof(UINT));
-
-		D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(processedCommandBuffers[frameIndex].Get(),D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-		computeCommandList->ResourceBarrier(1,&barrier);
-
-		computeCommandList->Dispatch(static_cast<UINT>(ceil(TriangleCount/float(ComputeThreadBlockSize))),1,1);
-
-		result = computeCommandList->Close();
-		assert(SUCCEEDED(result));
-
-		dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
-		dxCommon_->GetCommandList()->SetPipelineState(pipelineState.Get());
-
-		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-        dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertBufferView);
-
-		dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuffer->GetGPUVirtualAddress());
-
-		dxCommon_->GetCommandList()->IASetVertexBuffers(0,1,&vertBufferView);
-
-		dxCommon_->GetCommandList()->ExecuteIndirect(
-                commandSignature.Get(),
-                TriangleCount,
-                processedCommandBuffers[frameIndex].Get(),
-                0,
-                processedCommandBuffers[frameIndex].Get(),
-                CommandBufferCounterOffset);
-		// Draw all of the triangles.
-        /*dxCommon_->GetCommandList()->ExecuteIndirect(
-            commandSignature.Get(),
-            TriangleCount,
-            commandBuffer.Get(),
-            CommandSizePerFrame * frameIndex,
-            nullptr,
-            0);*/
-
-
-		ID3D12CommandList* ppCommandLists[] = {computeCommandList.Get()};
-		computeCommandQueue->ExecuteCommandLists(_countof(ppCommandLists),ppCommandLists);
-
-		computeCommandQueue->Signal(computeFence.Get(), fenceValues[frameIndex]);
-
-		computeCommandQueue->Wait(computeFence.Get(), fenceValues[frameIndex]);
-	//}
-	//catch(int a){
-	//	a;
-	//	throw;
-	//}	
 
 }
 
