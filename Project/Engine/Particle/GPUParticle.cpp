@@ -1,6 +1,5 @@
 #include "GPUParticle.h"
 #include "Window.h"
-
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -14,6 +13,34 @@ void GPUParticle::Initialize(Camera* camera)
 {
     HRESULT result = {};
 	UINT dxgiFactoryFlags = 0;
+
+    frameIndex = 0;
+    rtvDescriptorSize = 0;
+    cbvSrvUavDescriptorSize = 0;
+
+    m_enableCulling = true;
+
+    viewport.TopLeftX = 0.f;
+    viewport.TopLeftY = 0.f;
+    viewport.Width = Window::GetWindowWidth();
+    viewport.Height = Window::GetWindowHeight();
+
+    scissorRect.left = 0;
+    scissorRect.top = 0;
+    scissorRect.right = Window::GetWindowWidth();
+    scissorRect.bottom = Window::GetWindowHeight();
+
+    constantBufferData.resize(TriangleCount);
+
+    csRootConstants.offSetX = TriangleHalfWidth;
+    csRootConstants.offSetY = TriangleDepth;
+    csRootConstants.offSetCull = 0.5f;
+    csRootConstants.commandCount = TriangleCount;
+
+    float center = Window::GetWindowWidth() /2.f;
+    cullingScissorRect.left = (LONG)(center - (center*0.5));
+    cullingScissorRect.right = (LONG)(center+(center*0.5));
+    cullingScissorRect.bottom = (LONG)(Window::GetWindowHeight());
 
 #if defined(_DEBUG)
     // Enable the debug layer (requires the Graphics Tools "optional feature").
@@ -67,7 +94,7 @@ void GPUParticle::Initialize(Camera* camera)
 
     result = (device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue)));
     assert(SUCCEEDED(result));
-    NAME_D3D12_OBJECT(commandQueue);
+    //NAME_D3D12_OBJECT(commandQueue);
 
     D3D12_COMMAND_QUEUE_DESC computeQueueDesc = {};
     computeQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -75,7 +102,7 @@ void GPUParticle::Initialize(Camera* camera)
 
     result = (device->CreateCommandQueue(&computeQueueDesc, IID_PPV_ARGS(&computeCommandQueue)));
     assert(SUCCEEDED(result));
-    NAME_D3D12_OBJECT(computeCommandQueue);
+    //NAME_D3D12_OBJECT(computeCommandQueue);
 
     // Describe and create the swap chain.
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
@@ -137,7 +164,7 @@ void GPUParticle::Initialize(Camera* camera)
         cbvSrvUavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
         result = (device->CreateDescriptorHeap(&cbvSrvUavHeapDesc, IID_PPV_ARGS(&cbvSrvUavHeap)));
         assert(SUCCEEDED(result));
-        NAME_D3D12_OBJECT(cbvSrvUavHeap);
+       // NAME_D3D12_OBJECT(cbvSrvUavHeap);
 
         rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
         cbvSrvUavDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -155,7 +182,7 @@ void GPUParticle::Initialize(Camera* camera)
             device->CreateRenderTargetView(renderTargets[n].Get(), nullptr, rtvHandle);
             rtvHandle.Offset(1, rtvDescriptorSize);
 
-            NAME_D3D12_OBJECT_INDEXED(renderTargets, n);
+           // NAME_D3D12_OBJECT_INDEXED(renderTargets, n);
 
             result = (device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocators[n])));
             assert(SUCCEEDED(result));
@@ -194,7 +221,7 @@ void GPUParticle::Initialize(Camera* camera)
         assert(SUCCEEDED(result));
         result = (device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature)));
         assert(SUCCEEDED(result));
-        NAME_D3D12_OBJECT(rootSignature);
+        //NAME_D3D12_OBJECT(rootSignature);
 
 
         // Create compute signature.
@@ -213,7 +240,7 @@ void GPUParticle::Initialize(Camera* camera)
         assert(SUCCEEDED(result));
         result = (device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&computeRootSignature)));
         assert(SUCCEEDED(result));
-        NAME_D3D12_OBJECT(computeRootSignature);
+        //NAME_D3D12_OBJECT(computeRootSignature);
     }
 
     // Create the pipeline state, which includes compiling and loading shaders.
@@ -230,11 +257,34 @@ void GPUParticle::Initialize(Camera* camera)
         UINT compileFlags = 0;
 #endif
 
-        result = (D3DCompileFromFile(GetAssetFullPath(L"shaders.hlsl").c_str(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, &error));
+        result = D3DCompileFromFile(
+		L"Resources/shader/GPUParticleVS.hlsl",    // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "vs_5_0",    // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&vertexShader, &error);
         assert(SUCCEEDED(result));
-        result = (D3DCompileFromFile(GetAssetFullPath(L"shaders.hlsl").c_str(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, &error));
+
+        result = D3DCompileFromFile(
+		L"Resources/shader/GPUParticlePS.hlsl",    // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "ps_5_0",    // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&pixelShader, &error);
         assert(SUCCEEDED(result));
-        result = (D3DCompileFromFile(GetAssetFullPath(L"compute.hlsl").c_str(), nullptr, nullptr, "CSMain", "cs_5_0", compileFlags, 0, &computeShader, &error));
+
+        result = D3DCompileFromFile(
+		L"Resources/shader/GPUParticleCS.hlsl",    // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "cs_5_0",    // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&computeShader, &error);
         assert(SUCCEEDED(result));
 
         // Define the vertex input layout.
@@ -261,7 +311,7 @@ void GPUParticle::Initialize(Camera* camera)
 
         result = (device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState)));
         assert(SUCCEEDED(result));
-        NAME_D3D12_OBJECT(pipelineState);
+        //NAME_D3D12_OBJECT(pipelineState);
 
         // Describe and create the compute pipeline state object (PSO).
         D3D12_COMPUTE_PIPELINE_STATE_DESC computePsoDesc = {};
@@ -270,7 +320,7 @@ void GPUParticle::Initialize(Camera* camera)
 
         result = (device->CreateComputePipelineState(&computePsoDesc, IID_PPV_ARGS(&computePipelineState)));
         assert(SUCCEEDED(result));
-        NAME_D3D12_OBJECT(computePipelineState);
+        //NAME_D3D12_OBJECT(computePipelineState);
     }
 
     // Create the command list.
@@ -281,8 +331,8 @@ void GPUParticle::Initialize(Camera* camera)
     result = (computeCommandList->Close());
     assert(SUCCEEDED(result));
 
-    NAME_D3D12_OBJECT(commandList);
-    NAME_D3D12_OBJECT(computeCommandList);
+    //NAME_D3D12_OBJECT(commandList);
+    //NAME_D3D12_OBJECT(computeCommandList);
 
     // Note: ComPtr's are CPU objects but these resources need to stay in scope until
     // the command list that references them has finished executing on the GPU.
@@ -321,7 +371,7 @@ void GPUParticle::Initialize(Camera* camera)
             IID_PPV_ARGS(&vertexBufferUpload)));
         assert(SUCCEEDED(result));
 
-        NAME_D3D12_OBJECT(vertBuffer);
+        //NAME_D3D12_OBJECT(vertBuffer);
 
         // Copy data to the intermediate upload heap and then schedule a copy
         // from the upload heap to the vertex buffer.
@@ -361,7 +411,7 @@ void GPUParticle::Initialize(Camera* camera)
             ));
         assert(SUCCEEDED(result));
 
-        NAME_D3D12_OBJECT(depthStencil);
+        //NAME_D3D12_OBJECT(depthStencil);
 
         device->CreateDepthStencilView(depthStencil.Get(), &depthStencilDesc, dsvHeap->GetCPUDescriptorHandleForHeapStart());
     }
@@ -379,7 +429,7 @@ void GPUParticle::Initialize(Camera* camera)
             IID_PPV_ARGS(&constBuffer)));
         assert(SUCCEEDED(result));
 
-        NAME_D3D12_OBJECT(constBuffer);
+        //NAME_D3D12_OBJECT(constBuffer);
 
         // Initialize the constant buffers for each of the triangles.
         for (UINT n = 0; n < TriangleCount; n++)
@@ -431,7 +481,7 @@ void GPUParticle::Initialize(Camera* camera)
 
         result = (device->CreateCommandSignature(&commandSignatureDesc, rootSignature.Get(), IID_PPV_ARGS(&commandSignature)));
         assert(SUCCEEDED(result));
-        NAME_D3D12_OBJECT(commandSignature);
+        //NAME_D3D12_OBJECT(commandSignature);
     }
 
     // Create the command buffers and UAVs to store the results of the compute work.
@@ -459,7 +509,7 @@ void GPUParticle::Initialize(Camera* camera)
             IID_PPV_ARGS(&commandBufferUpload)));
         assert(SUCCEEDED(result));
 
-        NAME_D3D12_OBJECT(commandBuffer);
+        //NAME_D3D12_OBJECT(commandBuffer);
 
         D3D12_GPU_VIRTUAL_ADDRESS gpuAddress = constBuffer->GetGPUVirtualAddress();
         UINT commandIndex = 0;
@@ -522,7 +572,7 @@ void GPUParticle::Initialize(Camera* camera)
                 IID_PPV_ARGS(&processedCommandBuffers[frame])));
             assert(SUCCEEDED(result));
 
-            NAME_D3D12_OBJECT_INDEXED(processedCommandBuffers, frame);
+            //NAME_D3D12_OBJECT_INDEXED(processedCommandBuffers, frame);
 
             D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
             uavDesc.Format = DXGI_FORMAT_UNKNOWN;
@@ -593,18 +643,218 @@ void GPUParticle::Initialize(Camera* camera)
 
 void GPUParticle::Update()
 {
-	
+	for (UINT n = 0; n < TriangleCount; n++)
+    {
+        const float offsetBounds = 2.5f;
+
+        // Animate the triangles.
+        constantBufferData[n].offset.x += constantBufferData[n].velocity.x;
+        if (constantBufferData[n].offset.x > offsetBounds)
+        {
+            constantBufferData[n].velocity.x = GetRandomFloat(0.01f, 0.02f);
+            constantBufferData[n].offset.x = -offsetBounds;
+        }
+    }
+
+    UINT8* destination = cbvDataBegin + (TriangleCount * frameIndex * sizeof(Const));
+    memcpy(destination, &constantBufferData[0], TriangleCount * sizeof(Const));
 }
 
 void GPUParticle::Draw()
 {
-	HRESULT result = {};
+    HRESULT result = {};
+
+    //try
+    {
+        // Record all the commands we need to render the scene into the command list.
+        // Command list allocators can only be reset when the associated 
+        // command lists have finished execution on the GPU; apps should use 
+        // fences to determine GPU execution progress.
+        result = (computeCommandAllocators[frameIndex]->Reset());
+        assert(SUCCEEDED(result));
+        result = (commandAllocators[frameIndex]->Reset());
+        assert(SUCCEEDED(result));
+
+        // However, when ExecuteCommandList() is called on a particular command 
+        // list, that command list can then be reset at any time and must be before 
+        // re-recording.
+        result = (computeCommandList->Reset(computeCommandAllocators[frameIndex].Get(), computePipelineState.Get()));
+        assert(SUCCEEDED(result));
+        result = (commandList->Reset(commandAllocators[frameIndex].Get(), pipelineState.Get()));
+        assert(SUCCEEDED(result));
+
+        // Record the compute commands that will cull triangles and prevent them from being processed by the vertex shader.
+        if (m_enableCulling)
+        {
+            UINT frameDescriptorOffset = frameIndex * CbvSrvUavDescriptorCountPerFrame;
+            D3D12_GPU_DESCRIPTOR_HANDLE cbvSrvUavHandle = cbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart();
+
+            computeCommandList->SetComputeRootSignature(computeRootSignature.Get());
+
+            ID3D12DescriptorHeap* ppHeaps[] = { cbvSrvUavHeap.Get() };
+            computeCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+            computeCommandList->SetComputeRootDescriptorTable(
+                SrvUavTable,
+                CD3DX12_GPU_DESCRIPTOR_HANDLE(cbvSrvUavHandle, CbvSrvOffset + frameDescriptorOffset, cbvSrvUavDescriptorSize));
+
+            computeCommandList->SetComputeRoot32BitConstants(RootConstants, 4, reinterpret_cast<void*>(&csRootConstants), 0);
+
+            // Reset the UAV counter for this frame.
+            computeCommandList->CopyBufferRegion(processedCommandBuffers[frameIndex].Get(), CommandBufferCounterOffset, processedCommandBufferCounterReset.Get(), 0, sizeof(UINT));
+
+            D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(processedCommandBuffers[frameIndex].Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+            computeCommandList->ResourceBarrier(1, &barrier);
+
+            computeCommandList->Dispatch(static_cast<UINT>(ceil(TriangleCount / float(ComputeThreadBlockSize))), 1, 1);
+        }
+
+        result = (computeCommandList->Close());
+        assert(SUCCEEDED(result));
+
+        // Record the rendering commands.
+        {
+            // Set necessary state.
+            commandList->SetGraphicsRootSignature(rootSignature.Get());
+
+            ID3D12DescriptorHeap* ppHeaps[] = { cbvSrvUavHeap.Get() };
+            commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+            commandList->RSSetViewports(1, &viewport);
+            commandList->RSSetScissorRects(1, m_enableCulling ? &cullingScissorRect : &scissorRect);
+
+            // Indicate that the command buffer will be used for indirect drawing
+            // and that the back buffer will be used as a render target.
+            D3D12_RESOURCE_BARRIER barriers[2] = {
+                CD3DX12_RESOURCE_BARRIER::Transition(
+                    m_enableCulling ? processedCommandBuffers[frameIndex].Get() : commandBuffer.Get(),
+                    m_enableCulling ? D3D12_RESOURCE_STATE_UNORDERED_ACCESS : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+                    D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT),
+                CD3DX12_RESOURCE_BARRIER::Transition(
+                    renderTargets[frameIndex].Get(),
+                    D3D12_RESOURCE_STATE_PRESENT,
+                    D3D12_RESOURCE_STATE_RENDER_TARGET)
+            };
+
+            commandList->ResourceBarrier(_countof(barriers), barriers);
+
+            CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, rtvDescriptorSize);
+            CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsvHeap->GetCPUDescriptorHandleForHeapStart());
+            commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+
+            // Record commands.
+            const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+            commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+            commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+            commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+            commandList->IASetVertexBuffers(0, 1, &vertBufferView);
+
+            if (m_enableCulling)
+            {
+                //PIXBeginEvent(commandList.Get(), 0, L"Draw visible triangles");
+
+                // Draw the triangles that have not been culled.
+                commandList->ExecuteIndirect(
+                    commandSignature.Get(),
+                    TriangleCount,
+                    processedCommandBuffers[frameIndex].Get(),
+                    0,
+                    processedCommandBuffers[frameIndex].Get(),
+                    CommandBufferCounterOffset);
+            }
+            else
+            {
+                //PIXBeginEvent(commandList.Get(), 0, L"Draw all triangles");
+
+                // Draw all of the triangles.
+                commandList->ExecuteIndirect(
+                    commandSignature.Get(),
+                    TriangleCount,
+                    commandBuffer.Get(),
+                    CommandSizePerFrame * frameIndex,
+                    nullptr,
+                    0);
+            }
+            //PIXEndEvent(commandList.Get());
+
+            // Indicate that the command buffer may be used by the compute shader
+            // and that the back buffer will now be used to present.
+            barriers[0].Transition.StateBefore = D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT;
+            barriers[0].Transition.StateAfter = m_enableCulling ? D3D12_RESOURCE_STATE_COPY_DEST : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+            barriers[1].Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+            barriers[1].Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+
+            commandList->ResourceBarrier(_countof(barriers), barriers);
+
+            result = (commandList->Close());
+            assert(SUCCEEDED(result));
+        }
 
 
+
+        // Execute the compute work.
+        if (m_enableCulling)
+        {
+            //PIXBeginEvent(commandQueue.Get(), 0, L"Cull invisible triangles");
+
+            ID3D12CommandList* ppCommandLists[] = { computeCommandList.Get() };
+            computeCommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+            //PIXEndEvent(commandQueue.Get());
+
+            computeCommandQueue->Signal(computeFence.Get(), fenceValues[frameIndex]);
+
+            // Execute the rendering work only when the compute work is complete.
+            commandQueue->Wait(computeFence.Get(), fenceValues[frameIndex]);
+        }
+
+        //PIXBeginEvent(commandQueue.Get(), 0, L"Render");
+
+        // Execute the rendering work.
+        ID3D12CommandList* ppCommandLists[] = { commandList.Get() };
+        commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+        //PIXEndEvent(m_commandQueue.Get());
+
+        // Present the frame.
+        result = (swapChain->Present(1, 0));
+        assert(SUCCEEDED(result));
+
+        MoveToNextFrame();
+    }
+    //catch (HrException& e)
+    //{
+    //    if (e.Error() == DXGI_ERROR_DEVICE_REMOVED || e.Error() == DXGI_ERROR_DEVICE_RESET)
+    //    {
+    //        // Give GPU a chance to finish its execution in progress.
+    //        try
+    //        {
+    //            WaitForGpu();
+    //        }
+    //        catch (HrException&)
+    //        {
+    //            // Do nothing, currently attached adapter is unresponsive.
+    //        }
+    //        fence.Reset();
+    //        ResetComPtrArray(&renderTargets);
+    //        commandQueue.Reset();
+    //        swapChain.Reset();
+    //        device.Reset();
+    //        Initialize();
+    //    }
+    //    else
+    //    {
+    //        throw;
+    //    }
+    //}
 }
 
 void GPUParticle::Finalize()
 {
+    WaitForGpu();
+
+    CloseHandle(fenceEvent);
 }
 
 float GPUParticle::GetRandomFloat(float min, float max)
@@ -612,4 +862,45 @@ float GPUParticle::GetRandomFloat(float min, float max)
 	float scale = static_cast<float>(rand()) / RAND_MAX;
     float range = max - min;
     return scale * range + min;
+}
+
+void GPUParticle::WaitForGpu()
+{
+    HRESULT result = {};
+
+    // Schedule a Signal command in the queue.
+    result = (commandQueue->Signal(fence.Get(), fenceValues[frameIndex]));
+    assert(SUCCEEDED(result));
+
+    // Wait until the fence has been processed.
+    result = (fence->SetEventOnCompletion(fenceValues[frameIndex], fenceEvent));
+    assert(SUCCEEDED(result));
+    WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE);
+
+    // Increment the fence value for the current frame.
+    fenceValues[frameIndex]++;
+}
+
+void GPUParticle::MoveToNextFrame()
+{
+    HRESULT result = {};
+
+    // Schedule a Signal command in the queue.
+    const UINT64 currentFenceValue = fenceValues[frameIndex];
+    result = (commandQueue->Signal(fence.Get(), currentFenceValue));
+    assert(SUCCEEDED(result));
+
+    // Update the frame index.
+    frameIndex = swapChain->GetCurrentBackBufferIndex();
+
+    // If the next frame is not ready to be rendered yet, wait until it is ready.
+    if (fence->GetCompletedValue() < fenceValues[frameIndex])
+    {
+        result = (fence->SetEventOnCompletion(fenceValues[frameIndex], fenceEvent));
+        assert(SUCCEEDED(result));
+        WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE);
+    }
+
+    // Set the fence value for the next frame.
+    fenceValues[frameIndex] = currentFenceValue + 1;
 }

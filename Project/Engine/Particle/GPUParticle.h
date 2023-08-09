@@ -75,6 +75,10 @@ private:
 
 	float GetRandomFloat(float min, float max);
 
+	void WaitForGpu();
+
+	void MoveToNextFrame();
+
 	static inline UINT AlignForUavCounter(UINT bufferSize)
     {
         const UINT alignment = D3D12_UAV_COUNTER_PLACEMENT_ALIGNMENT;
@@ -104,6 +108,10 @@ private:
 	//DirectXCommon* dxCommon_ = nullptr;
 	//デバイス
 	ComPtr<ID3D12Device> device = nullptr;
+
+	CD3DX12_VIEWPORT viewport;
+    CD3DX12_RECT scissorRect;
+    D3D12_RECT cullingScissorRect;
 
 	ComPtr<IDXGISwapChain3> swapChain;
 
@@ -173,5 +181,7 @@ private:
 	ComPtr<ID3D12Resource> commandBuffer;
 	ComPtr<ID3D12Resource> processedCommandBuffers[FrameCount];
 	ComPtr<ID3D12Resource> processedCommandBufferCounterReset;
+
+	bool m_enableCulling;
 };
 
