@@ -1,5 +1,4 @@
 #include "GPUParticle.h"
-#include "Window.h"
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -9,8 +8,10 @@ const UINT GPUParticle::CommandBufferCounterOffset = AlignForUavCounter(GPUParti
 const float GPUParticle::TriangleHalfWidth = 0.05f;
 const float GPUParticle::TriangleDepth = 1.0f;
 
-void GPUParticle::Initialize(Camera* camera)
+void GPUParticle::Initialize(Window* window)
 {
+    window_ = window;
+
     HRESULT result = {};
 	UINT dxgiFactoryFlags = 0;
 
@@ -22,13 +23,13 @@ void GPUParticle::Initialize(Camera* camera)
 
     viewport.TopLeftX = 0.f;
     viewport.TopLeftY = 0.f;
-    viewport.Width = Window::GetWindowWidth();
-    viewport.Height = Window::GetWindowHeight();
+    viewport.Width = (FLOAT)window_->GetWindowWidth();
+    viewport.Height = (FLOAT)window_->GetWindowHeight();
 
     scissorRect.left = 0;
     scissorRect.top = 0;
-    scissorRect.right = Window::GetWindowWidth();
-    scissorRect.bottom = Window::GetWindowHeight();
+    scissorRect.right = (LONG)window_->GetWindowWidth();
+    scissorRect.bottom = (LONG)window_->GetWindowHeight();
 
     constantBufferData.resize(TriangleCount);
 
@@ -37,10 +38,13 @@ void GPUParticle::Initialize(Camera* camera)
     csRootConstants.offSetCull = 0.5f;
     csRootConstants.commandCount = TriangleCount;
 
-    float center = Window::GetWindowWidth() /2.f;
+    float center = window_->GetWindowWidth() /2.f;
     cullingScissorRect.left = (LONG)(center - (center*0.5));
     cullingScissorRect.right = (LONG)(center+(center*0.5));
-    cullingScissorRect.bottom = (LONG)(Window::GetWindowHeight());
+    cullingScissorRect.bottom = (LONG)(window_->GetWindowHeight());
+
+    result = DXGIDeclareAdapterRemovalSupport();
+    assert(SUCCEEDED(result));
 
 #if defined(_DEBUG)
     // Enable the debug layer (requires the Graphics Tools "optional feature").
@@ -61,7 +65,7 @@ void GPUParticle::Initialize(Camera* camera)
     result = (CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)));
     assert(SUCCEEDED(result));
 
-    if (m_useWarpDevice)
+   if (true)
     {
         ComPtr<IDXGIAdapter> warpAdapter;
         result = (factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)));
@@ -77,7 +81,7 @@ void GPUParticle::Initialize(Camera* camera)
     else
     {
         ComPtr<IDXGIAdapter1> hardwareAdapter;
-        GetHardwareAdapter(factory.Get(), &hardwareAdapter, true);
+        //GetHardwareAdapter(factory.Get(), &hardwareAdapter, true);
 
         result = (D3D12CreateDevice(
             hardwareAdapter.Get(),
@@ -107,8 +111,8 @@ void GPUParticle::Initialize(Camera* camera)
     // Describe and create the swap chain.
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
     swapChainDesc.BufferCount = FrameCount;
-    swapChainDesc.Width = Window::GetWindowWidth();
-    swapChainDesc.Height = Window::GetWindowHeight();
+    swapChainDesc.Width = window_->GetWindowWidth();
+    swapChainDesc.Height = window_->GetWindowHeight();
     swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
@@ -116,18 +120,18 @@ void GPUParticle::Initialize(Camera* camera)
 
     ComPtr<IDXGISwapChain1> lSwapChain;
 
-    result = (factory->CreateSwapChainForHwnd(
+    result = factory->CreateSwapChainForHwnd(
         commandQueue.Get(),        // Swap chain needs the queue so that it can force a flush on it.
-        Window::GetHwnd(),
+        window_->GetHwnd(),
         &swapChainDesc,
         nullptr,
         nullptr,
         &lSwapChain
-        ));
+        );
     assert(SUCCEEDED(result));
 
     // This sample does not support fullscreen transitions.
-    result = (factory->MakeWindowAssociation(Window::GetHwnd(), DXGI_MWA_NO_ALT_ENTER));
+    result = (factory->MakeWindowAssociation(window_->GetHwnd(), DXGI_MWA_NO_ALT_ENTER));
     assert(SUCCEEDED(result));
 
     result = (lSwapChain.As(&swapChain));
@@ -404,7 +408,7 @@ void GPUParticle::Initialize(Camera* camera)
         result = (device->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
             D3D12_HEAP_FLAG_NONE,
-            &CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, Window::GetWindowWidth(), Window::GetWindowHeight(), 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL),
+            &CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, window_->GetWindowWidth(), window_->GetWindowHeight(), 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL),
             D3D12_RESOURCE_STATE_DEPTH_WRITE,
             &depthOptimizedClearValue,
             IID_PPV_ARGS(&depthStencil)
@@ -437,7 +441,7 @@ void GPUParticle::Initialize(Camera* camera)
             constantBufferData[n].velocity = Vector4(GetRandomFloat(0.01f, 0.02f), 0.0f, 0.0f, 0.0f);
             constantBufferData[n].offset = Vector4(GetRandomFloat(-5.0f, -1.5f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(0.0f, 2.0f), 0.0f);
             constantBufferData[n].color = Vector4(GetRandomFloat(0.5f, 1.0f), GetRandomFloat(0.5f, 1.0f), GetRandomFloat(0.5f, 1.0f), 1.0f);
-            DirectX::XMStoreFloat4x4(&constantBufferData[n].projection, XMMatrixTranspose(XMMatrixPerspectiveFovLH(XM_PIDIV4, m_aspectRatio, 0.01f, 20.0f)));
+            DirectX::XMStoreFloat4x4(&constantBufferData[n].projection, DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, (float)(window_->GetWindowWidth()/window_->GetWindowHeight()), 0.01f, 20.0f)));
         }
 
         // Map and initialize the constant buffer. We don't unmap this until the
@@ -664,7 +668,7 @@ void GPUParticle::Draw()
 {
     HRESULT result = {};
 
-    //try
+    try
     {
         // Record all the commands we need to render the scene into the command list.
         // Command list allocators can only be reset when the associated 
@@ -823,31 +827,34 @@ void GPUParticle::Draw()
 
         MoveToNextFrame();
     }
-    //catch (HrException& e)
-    //{
-    //    if (e.Error() == DXGI_ERROR_DEVICE_REMOVED || e.Error() == DXGI_ERROR_DEVICE_RESET)
-    //    {
-    //        // Give GPU a chance to finish its execution in progress.
-    //        try
-    //        {
-    //            WaitForGpu();
-    //        }
-    //        catch (HrException&)
-    //        {
-    //            // Do nothing, currently attached adapter is unresponsive.
-    //        }
-    //        fence.Reset();
-    //        ResetComPtrArray(&renderTargets);
-    //        commandQueue.Reset();
-    //        swapChain.Reset();
-    //        device.Reset();
-    //        Initialize();
-    //    }
-    //    else
-    //    {
-    //        throw;
-    //    }
-    //}
+    catch (HRESULT& e)
+    {
+        if (e == DXGI_ERROR_DEVICE_REMOVED || e == DXGI_ERROR_DEVICE_RESET)
+        {
+            // Give GPU a chance to finish its execution in progress.
+            try
+            {
+                WaitForGpu();
+            }
+            catch (HRESULT&)
+            {
+                // Do nothing, currently attached adapter is unresponsive.
+            }
+            fence.Reset();
+            //ResetComPtrArray(&renderTargets);
+            for(auto &i : renderTargets){
+                i.Reset();
+            }
+            commandQueue.Reset();
+            swapChain.Reset();
+            device.Reset();
+            Initialize(window_);
+        }
+        else
+        {
+            throw;
+        }
+    }
 }
 
 void GPUParticle::Finalize()

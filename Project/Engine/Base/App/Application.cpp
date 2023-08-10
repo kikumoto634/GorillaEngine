@@ -59,7 +59,10 @@ void Application::Initialize()
 	window->Create("Engine", 1280, 720);
 
 	//DirectXCommon
-	dxCommon->Initialize(window);
+	//dxCommon->Initialize(window);
+
+	particle = new GPUParticle();
+	particle->Initialize(window);
 
 //	//テクスチャ
 //	TextureManager::GetInstance()->Initialize(dxCommon);
@@ -115,6 +118,8 @@ void Application::Initialize()
 
 void Application::Update()
 {
+
+	particle->Update();
 //#ifdef _DEBUG
 //	imgui->Begin();
 //#endif // _DEBUG
@@ -128,6 +133,8 @@ void Application::Update()
 
 void Application::Draw()
 {
+	particle->Draw();
+
 	//レンダーターゲットへの描画
 	/*postEffect_->PreDrawScene();
 	sceneManager->Draw();
@@ -154,6 +161,8 @@ void Application::Draw()
 
 void Application::Finalize()
 {
+	particle->Finalize();
+
 //	delete postEffect_;
 //
 //#ifdef _DEBUG

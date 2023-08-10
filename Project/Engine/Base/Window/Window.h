@@ -20,7 +20,7 @@ public:
 	void Create(const std::string& name = "DirectXGame", const int width = 1280, const int height = 720);
 	void Finalize();
 
-	static const HWND& GetHwnd()	{return hwnd;}
+	const HWND& GetHwnd()	{return hwnd;}
 	const WNDCLASSEX& GetWndClass()	{return w;}
 
 	inline static int GetWindowWidth()		{return window_width;}
@@ -31,7 +31,7 @@ public:
 
 
 private:
-	static HWND hwnd;	//ウィンドウハンドル
+	HWND hwnd;	//ウィンドウハンドル
 	WNDCLASSEX w{};		//ウィンドウクラス
 	static wchar_t kWindowClassName[];
 

@@ -2,6 +2,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Camera.h"
+#include "Window.h"
 
 #include <DirectXMath.h>
 #include <d3dx12.h>
@@ -23,7 +24,7 @@ public:
 		Vector4 velocity;
 		Vector4 offset;
 		Vector4 color;
-		DirectX::XMMATRIX projection;
+		DirectX::XMFLOAT4X4 projection;
 
 		float padding[36];
 	};
@@ -66,7 +67,7 @@ public:
 	};
 
 public:
-	void Initialize(Camera* camera);
+	void Initialize(Window* window);
 	void Update();
 	void Draw();
 	void Finalize();
@@ -105,7 +106,7 @@ private:
 	static const float TriangleDepth;    
 
 private:
-	//DirectXCommon* dxCommon_ = nullptr;
+	Window* window_ = nullptr;
 	//デバイス
 	ComPtr<ID3D12Device> device = nullptr;
 
