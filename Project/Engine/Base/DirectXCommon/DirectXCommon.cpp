@@ -40,7 +40,7 @@ void DirectXCommon::Initialize(Window *window)
 void DirectXCommon::BeginDraw()
 {
 	//リソースバリア
-	UINT bbIndex = swapChain->GetCurrentBackBufferIndex();
+	bbIndex = swapChain->GetCurrentBackBufferIndex();
 
 	//リソースバリア書き込み可能
 	commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(backBuffers[bbIndex].Get(),
@@ -72,7 +72,7 @@ void DirectXCommon::BeginDraw()
 void DirectXCommon::EndDraw()
 {
 	//リソースバリア
-	UINT bbIndex = swapChain->GetCurrentBackBufferIndex();
+	bbIndex = swapChain->GetCurrentBackBufferIndex();
 	commandList->ResourceBarrier(1,&CD3DX12_RESOURCE_BARRIER::Transition(backBuffers[bbIndex].Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 

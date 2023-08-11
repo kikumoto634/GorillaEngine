@@ -59,10 +59,10 @@ void Application::Initialize()
 	window->Create("Engine", 1280, 720);
 
 	//DirectXCommon
-	//dxCommon->Initialize(window);
+	dxCommon->Initialize(window);
 
 	particle = new GPUParticle();
-	particle->Initialize(window);
+	particle->Initialize(dxCommon);
 
 //	//テクスチャ
 //	TextureManager::GetInstance()->Initialize(dxCommon);
@@ -133,8 +133,6 @@ void Application::Update()
 
 void Application::Draw()
 {
-	particle->Draw();
-
 	//レンダーターゲットへの描画
 	/*postEffect_->PreDrawScene();
 	sceneManager->Draw();
@@ -142,7 +140,9 @@ void Application::Draw()
 
 
 	//描画前処理
-	//dxCommon->BeginDraw();
+	dxCommon->BeginDraw();
+
+	particle->Draw();
 
 	//postEffect_->Draw();
 	//Sprite::SetPipelineState();
@@ -156,12 +156,13 @@ void Application::Draw()
 #endif // _DEBUG
 
 	//描画後処理
-	//dxCommon->EndDraw();
+	dxCommon->EndDraw();
 }
 
 void Application::Finalize()
 {
 	particle->Finalize();
+	delete particle;
 
 //	delete postEffect_;
 //

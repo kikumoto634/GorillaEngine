@@ -1,4 +1,7 @@
 #include "GPUParticle.h"
+
+#include "Window.h"
+
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -8,20 +11,24 @@ const UINT GPUParticle::CommandBufferCounterOffset = AlignForUavCounter(GPUParti
 const float GPUParticle::TriangleHalfWidth = 0.05f;
 const float GPUParticle::TriangleDepth = 1.0f;
 
-void GPUParticle::Initialize(Window* window)
+void GPUParticle::Initialize(DirectXCommon* dxCommon)
 {
-    window_ = window;
+    //window_ = window;
+
+    dxCommon_ = dxCommon;
+    commandList = dxCommon->GetCommandList();
+    commandQueue = dxCommon->GetCommandQueue();
 
     HRESULT result = {};
 	UINT dxgiFactoryFlags = 0;
 
-    frameIndex = 0;
-    rtvDescriptorSize = 0;
+    /*frameIndex = 0;
+    rtvDescriptorSize = 0;*/
     cbvSrvUavDescriptorSize = 0;
 
     m_enableCulling = true;
 
-    viewport.TopLeftX = 0.f;
+    /*viewport.TopLeftX = 0.f;
     viewport.TopLeftY = 0.f;
     viewport.Width = (FLOAT)window_->GetWindowWidth();
     viewport.Height = (FLOAT)window_->GetWindowHeight();
@@ -29,7 +36,7 @@ void GPUParticle::Initialize(Window* window)
     scissorRect.left = 0;
     scissorRect.top = 0;
     scissorRect.right = (LONG)window_->GetWindowWidth();
-    scissorRect.bottom = (LONG)window_->GetWindowHeight();
+    scissorRect.bottom = (LONG)window_->GetWindowHeight();*/
 
     constantBufferData.resize(TriangleCount);
 
@@ -38,105 +45,105 @@ void GPUParticle::Initialize(Window* window)
     csRootConstants.offSetCull = 0.5f;
     csRootConstants.commandCount = TriangleCount;
 
-    float center = window_->GetWindowWidth() /2.f;
+   /* float center = window_->GetWindowWidth() /2.f;
     cullingScissorRect.left = (LONG)(center - (center*0.5));
     cullingScissorRect.right = (LONG)(center+(center*0.5));
-    cullingScissorRect.bottom = (LONG)(window_->GetWindowHeight());
+    cullingScissorRect.bottom = (LONG)(window_->GetWindowHeight());*/
 
-    result = DXGIDeclareAdapterRemovalSupport();
-    assert(SUCCEEDED(result));
+//    result = DXGIDeclareAdapterRemovalSupport();
+//    assert(SUCCEEDED(result));
+//
+//#if defined(_DEBUG)
+//    // Enable the debug layer (requires the Graphics Tools "optional feature").
+//    // NOTE: Enabling the debug layer after device creation will invalidate the active device.
+//    {
+//        ComPtr<ID3D12Debug> debugController;
+//        if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
+//        {
+//            debugController->EnableDebugLayer();
+//
+//            // Enable additional debug layers.
+//            dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+//        }
+//    }
+//#endif
+//
+//    ComPtr<IDXGIFactory4> factory;
+//    result = (CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)));
+//    assert(SUCCEEDED(result));
+//
+//   if (true)
+//    {
+//        ComPtr<IDXGIAdapter> warpAdapter;
+//        result = (factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)));
+//        assert(SUCCEEDED(result));
+//
+//        result = (D3D12CreateDevice(
+//            warpAdapter.Get(),
+//            D3D_FEATURE_LEVEL_11_0,
+//            IID_PPV_ARGS(&device)
+//            ));
+//        assert(SUCCEEDED(result));
+//    }
+//    else
+//    {
+//        ComPtr<IDXGIAdapter1> hardwareAdapter;
+//        //GetHardwareAdapter(factory.Get(), &hardwareAdapter, true);
+//
+//        result = (D3D12CreateDevice(
+//            hardwareAdapter.Get(),
+//            D3D_FEATURE_LEVEL_11_0,
+//            IID_PPV_ARGS(&device)
+//            ));
+//        assert(SUCCEEDED(result));
+//    }
 
-#if defined(_DEBUG)
-    // Enable the debug layer (requires the Graphics Tools "optional feature").
-    // NOTE: Enabling the debug layer after device creation will invalidate the active device.
-    {
-        ComPtr<ID3D12Debug> debugController;
-        if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
-        {
-            debugController->EnableDebugLayer();
+    //// Describe and create the command queues.
+    //D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+    //queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    //queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
-            // Enable additional debug layers.
-            dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
-        }
-    }
-#endif
+    //result = (device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue)));
+    //assert(SUCCEEDED(result));
+    ////NAME_D3D12_OBJECT(commandQueue);
 
-    ComPtr<IDXGIFactory4> factory;
-    result = (CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)));
-    assert(SUCCEEDED(result));
+    //D3D12_COMMAND_QUEUE_DESC computeQueueDesc = {};
+    //computeQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    //computeQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
 
-   if (true)
-    {
-        ComPtr<IDXGIAdapter> warpAdapter;
-        result = (factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)));
-        assert(SUCCEEDED(result));
+    //result = (device->CreateCommandQueue(&computeQueueDesc, IID_PPV_ARGS(&computeCommandQueue)));
+    //assert(SUCCEEDED(result));
+    ////NAME_D3D12_OBJECT(computeCommandQueue);
 
-        result = (D3D12CreateDevice(
-            warpAdapter.Get(),
-            D3D_FEATURE_LEVEL_11_0,
-            IID_PPV_ARGS(&device)
-            ));
-        assert(SUCCEEDED(result));
-    }
-    else
-    {
-        ComPtr<IDXGIAdapter1> hardwareAdapter;
-        //GetHardwareAdapter(factory.Get(), &hardwareAdapter, true);
+    //// Describe and create the swap chain.
+    //DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
+    //swapChainDesc.BufferCount = FrameCount;
+    //swapChainDesc.Width = window_->GetWindowWidth();
+    //swapChainDesc.Height = window_->GetWindowHeight();
+    //swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    //swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    //swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+    //swapChainDesc.SampleDesc.Count = 1;
 
-        result = (D3D12CreateDevice(
-            hardwareAdapter.Get(),
-            D3D_FEATURE_LEVEL_11_0,
-            IID_PPV_ARGS(&device)
-            ));
-        assert(SUCCEEDED(result));
-    }
+    //ComPtr<IDXGISwapChain1> lSwapChain;
 
-    // Describe and create the command queues.
-    D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-
-    result = (device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue)));
-    assert(SUCCEEDED(result));
-    //NAME_D3D12_OBJECT(commandQueue);
-
-    D3D12_COMMAND_QUEUE_DESC computeQueueDesc = {};
-    computeQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-    computeQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
-
-    result = (device->CreateCommandQueue(&computeQueueDesc, IID_PPV_ARGS(&computeCommandQueue)));
-    assert(SUCCEEDED(result));
-    //NAME_D3D12_OBJECT(computeCommandQueue);
-
-    // Describe and create the swap chain.
-    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-    swapChainDesc.BufferCount = FrameCount;
-    swapChainDesc.Width = window_->GetWindowWidth();
-    swapChainDesc.Height = window_->GetWindowHeight();
-    swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-    swapChainDesc.SampleDesc.Count = 1;
-
-    ComPtr<IDXGISwapChain1> lSwapChain;
-
-    result = factory->CreateSwapChainForHwnd(
-        commandQueue.Get(),        // Swap chain needs the queue so that it can force a flush on it.
-        window_->GetHwnd(),
-        &swapChainDesc,
-        nullptr,
-        nullptr,
-        &lSwapChain
-        );
-    assert(SUCCEEDED(result));
+    //result = factory->CreateSwapChainForHwnd(
+    //    commandQueue.Get(),        // Swap chain needs the queue so that it can force a flush on it.
+    //    window_->GetHwnd(),
+    //    &swapChainDesc,
+    //    nullptr,
+    //    nullptr,
+    //    &lSwapChain
+    //    );
+    //assert(SUCCEEDED(result));
 
     // This sample does not support fullscreen transitions.
-    result = (factory->MakeWindowAssociation(window_->GetHwnd(), DXGI_MWA_NO_ALT_ENTER));
+    /*result = (factory->MakeWindowAssociation(window_->GetHwnd(), DXGI_MWA_NO_ALT_ENTER));
     assert(SUCCEEDED(result));
 
     result = (lSwapChain.As(&swapChain));
     assert(SUCCEEDED(result));
-    frameIndex = swapChain->GetCurrentBackBufferIndex();
+    frameIndex = swapChain->GetCurrentBackBufferIndex();*/
 
 
 
@@ -145,19 +152,19 @@ void GPUParticle::Initialize(Window* window)
     // Create descriptor heaps.
     {
         // Describe and create a render target view (RTV) descriptor heap.
-        D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-        rtvHeapDesc.NumDescriptors = FrameCount;
-        rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-        rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-        result = (device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap)));
-        assert(SUCCEEDED(result));
+        //D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+        //rtvHeapDesc.NumDescriptors = FrameCount;
+        //rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+        //rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        //result = (device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap)));
+        //assert(SUCCEEDED(result));
 
-        // Describe and create a depth stencil view (DSV) descriptor heap.
-        D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-        dsvHeapDesc.NumDescriptors = 1;
-        dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-        dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-        result = (device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap)));
+        //// Describe and create a depth stencil view (DSV) descriptor heap.
+        //D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+        //dsvHeapDesc.NumDescriptors = 1;
+        //dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+        //dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        //result = (device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap)));
         assert(SUCCEEDED(result));
 
         // Describe and create a constant buffer view (CBV), Shader resource
@@ -166,31 +173,31 @@ void GPUParticle::Initialize(Window* window)
         cbvSrvUavHeapDesc.NumDescriptors = CbvSrvUavDescriptorCountPerFrame * FrameCount;
         cbvSrvUavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         cbvSrvUavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-        result = (device->CreateDescriptorHeap(&cbvSrvUavHeapDesc, IID_PPV_ARGS(&cbvSrvUavHeap)));
+        result = (dxCommon_->GetDevice()->CreateDescriptorHeap(&cbvSrvUavHeapDesc, IID_PPV_ARGS(&cbvSrvUavHeap)));
         assert(SUCCEEDED(result));
        // NAME_D3D12_OBJECT(cbvSrvUavHeap);
 
-        rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-        cbvSrvUavDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+       // rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+        cbvSrvUavDescriptorSize = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     }
 
     // Create frame resources.
     {
-        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart());
+        //CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart());
 
         // Create a RTV and command allocators for each frame.
         for (UINT n = 0; n < FrameCount; n++)
         {
-            result = (swapChain->GetBuffer(n, IID_PPV_ARGS(&renderTargets[n])));
+            /*result = (dxCommon_->GetSwapChain()->GetBuffer(n, IID_PPV_ARGS(&renderTargets[n])));
             assert(SUCCEEDED(result));
             device->CreateRenderTargetView(renderTargets[n].Get(), nullptr, rtvHandle);
-            rtvHandle.Offset(1, rtvDescriptorSize);
+            rtvHandle.Offset(1, rtvDescriptorSize);*/
 
            // NAME_D3D12_OBJECT_INDEXED(renderTargets, n);
 
-            result = (device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocators[n])));
-            assert(SUCCEEDED(result));
-            result = (device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_COMPUTE, IID_PPV_ARGS(&computeCommandAllocators[n])));
+            //result = (device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocators[n])));
+            //assert(SUCCEEDED(result));
+            result = (dxCommon_->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_COMPUTE, IID_PPV_ARGS(&computeCommandAllocators[n])));
             assert(SUCCEEDED(result));
         }
     }
@@ -208,7 +215,7 @@ void GPUParticle::Initialize(Window* window)
         // This is the highest version the sample supports. If CheckFeatureSupport succeeds, the HighestVersion returned will not be greater than this.
         featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
 
-        if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
+        if (FAILED(dxCommon_->GetDevice()->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
         {
             featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
         }
@@ -223,7 +230,7 @@ void GPUParticle::Initialize(Window* window)
         ComPtr<ID3DBlob> error;
         result = (D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, featureData.HighestVersion, &signature, &error));
         assert(SUCCEEDED(result));
-        result = (device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature)));
+        result = (dxCommon_->GetDevice()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature)));
         assert(SUCCEEDED(result));
         //NAME_D3D12_OBJECT(rootSignature);
 
@@ -242,7 +249,7 @@ void GPUParticle::Initialize(Window* window)
 
         result = (D3DX12SerializeVersionedRootSignature(&computeRootSignatureDesc, featureData.HighestVersion, &signature, &error));
         assert(SUCCEEDED(result));
-        result = (device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&computeRootSignature)));
+        result = (dxCommon_->GetDevice()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&computeRootSignature)));
         assert(SUCCEEDED(result));
         //NAME_D3D12_OBJECT(computeRootSignature);
     }
@@ -313,7 +320,7 @@ void GPUParticle::Initialize(Window* window)
         psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
         psoDesc.SampleDesc.Count = 1;
 
-        result = (device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState)));
+        result = (dxCommon_->GetDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState)));
         assert(SUCCEEDED(result));
         //NAME_D3D12_OBJECT(pipelineState);
 
@@ -322,15 +329,15 @@ void GPUParticle::Initialize(Window* window)
         computePsoDesc.pRootSignature = computeRootSignature.Get();
         computePsoDesc.CS = CD3DX12_SHADER_BYTECODE(computeShader.Get());
 
-        result = (device->CreateComputePipelineState(&computePsoDesc, IID_PPV_ARGS(&computePipelineState)));
+        result = (dxCommon_->GetDevice()->CreateComputePipelineState(&computePsoDesc, IID_PPV_ARGS(&computePipelineState)));
         assert(SUCCEEDED(result));
         //NAME_D3D12_OBJECT(computePipelineState);
     }
 
     // Create the command list.
-    result = (device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocators[frameIndex].Get(), pipelineState.Get(), IID_PPV_ARGS(&commandList)));
-    assert(SUCCEEDED(result));
-    result = (device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_COMPUTE, computeCommandAllocators[frameIndex].Get(), computePipelineState.Get(), IID_PPV_ARGS(&computeCommandList)));
+    //result = (dxCommon_->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocators[frameIndex].Get(), pipelineState.Get(), IID_PPV_ARGS(&commandList)));
+    //assert(SUCCEEDED(result));
+    result = (dxCommon_->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_COMPUTE, computeCommandAllocators[dxCommon_->GetBbIndex()].Get(), computePipelineState.Get(), IID_PPV_ARGS(&computeCommandList)));
     assert(SUCCEEDED(result));
     result = (computeCommandList->Close());
     assert(SUCCEEDED(result));
@@ -357,7 +364,7 @@ void GPUParticle::Initialize(Window* window)
 
         const UINT vertexBufferSize = sizeof(triangleVertices);
 
-        result = (device->CreateCommittedResource(
+        result = (dxCommon_->GetDevice()->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
             D3D12_HEAP_FLAG_NONE,
             &CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
@@ -366,7 +373,7 @@ void GPUParticle::Initialize(Window* window)
             IID_PPV_ARGS(&vertBuffer)));
         assert(SUCCEEDED(result));
 
-        result = (device->CreateCommittedResource(
+        result = (dxCommon_->GetDevice()->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
             D3D12_HEAP_FLAG_NONE,
             &CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
@@ -384,7 +391,7 @@ void GPUParticle::Initialize(Window* window)
         vertexData.RowPitch = vertexBufferSize;
         vertexData.SlicePitch = vertexData.RowPitch;
 
-        UpdateSubresources<1>(commandList.Get(), vertBuffer.Get(), vertexBufferUpload.Get(), 0, 0, 1, &vertexData);
+        UpdateSubresources<1>(commandList, vertBuffer.Get(), vertexBufferUpload.Get(), 0, 0, 1, &vertexData);
         commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(vertBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
 
         // Initialize the vertex buffer view.
@@ -395,7 +402,7 @@ void GPUParticle::Initialize(Window* window)
 
     // Create the depth stencil view.
     {
-        D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
+       /* D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
         depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
         depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
         depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
@@ -405,7 +412,7 @@ void GPUParticle::Initialize(Window* window)
         depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
         depthOptimizedClearValue.DepthStencil.Stencil = 0;
 
-        result = (device->CreateCommittedResource(
+        result = (dxCommon_->GetDevice()->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
             D3D12_HEAP_FLAG_NONE,
             &CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, window_->GetWindowWidth(), window_->GetWindowHeight(), 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL),
@@ -413,18 +420,18 @@ void GPUParticle::Initialize(Window* window)
             &depthOptimizedClearValue,
             IID_PPV_ARGS(&depthStencil)
             ));
-        assert(SUCCEEDED(result));
+        assert(SUCCEEDED(result));*/
 
         //NAME_D3D12_OBJECT(depthStencil);
 
-        device->CreateDepthStencilView(depthStencil.Get(), &depthStencilDesc, dsvHeap->GetCPUDescriptorHandleForHeapStart());
+        //device->CreateDepthStencilView(depthStencil.Get(), &depthStencilDesc, dsvHeap->GetCPUDescriptorHandleForHeapStart());
     }
 
     // Create the constant buffers.
     {
         const UINT constantBufferDataSize = TriangleResourceCount * sizeof(Const);
 
-        result = (device->CreateCommittedResource(
+        result = (dxCommon_->GetDevice()->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
             D3D12_HEAP_FLAG_NONE,
             &CD3DX12_RESOURCE_DESC::Buffer(constantBufferDataSize),
@@ -441,7 +448,7 @@ void GPUParticle::Initialize(Window* window)
             constantBufferData[n].velocity = Vector4(GetRandomFloat(0.01f, 0.02f), 0.0f, 0.0f, 0.0f);
             constantBufferData[n].offset = Vector4(GetRandomFloat(-5.0f, -1.5f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(0.0f, 2.0f), 0.0f);
             constantBufferData[n].color = Vector4(GetRandomFloat(0.5f, 1.0f), GetRandomFloat(0.5f, 1.0f), GetRandomFloat(0.5f, 1.0f), 1.0f);
-            DirectX::XMStoreFloat4x4(&constantBufferData[n].projection, DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, (float)(window_->GetWindowWidth()/window_->GetWindowHeight()), 0.01f, 20.0f)));
+            DirectX::XMStoreFloat4x4(&constantBufferData[n].projection, DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, (float)(Window::GetWindowWidth()/Window::GetWindowHeight()), 0.01f, 20.0f)));
         }
 
         // Map and initialize the constant buffer. We don't unmap this until the
@@ -465,7 +472,7 @@ void GPUParticle::Initialize(Window* window)
         for (UINT frame = 0; frame < FrameCount; frame++)
         {
             srvDesc.Buffer.FirstElement = frame * TriangleCount;
-            device->CreateShaderResourceView(constBuffer.Get(), &srvDesc, cbvSrvHandle);
+            dxCommon_->GetDevice()->CreateShaderResourceView(constBuffer.Get(), &srvDesc, cbvSrvHandle);
             cbvSrvHandle.Offset(CbvSrvUavDescriptorCountPerFrame, cbvSrvUavDescriptorSize);
         }
     }
@@ -483,7 +490,7 @@ void GPUParticle::Initialize(Window* window)
         commandSignatureDesc.NumArgumentDescs = _countof(argumentDescs);
         commandSignatureDesc.ByteStride = sizeof(IndirectCommand);
 
-        result = (device->CreateCommandSignature(&commandSignatureDesc, rootSignature.Get(), IID_PPV_ARGS(&commandSignature)));
+        result = (dxCommon_->GetDevice()->CreateCommandSignature(&commandSignatureDesc, rootSignature.Get(), IID_PPV_ARGS(&commandSignature)));
         assert(SUCCEEDED(result));
         //NAME_D3D12_OBJECT(commandSignature);
     }
@@ -495,7 +502,7 @@ void GPUParticle::Initialize(Window* window)
         const UINT commandBufferSize = CommandSizePerFrame * FrameCount;
 
         D3D12_RESOURCE_DESC commandBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(commandBufferSize);
-        result = (device->CreateCommittedResource(
+        result = (dxCommon_->GetDevice()->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
             D3D12_HEAP_FLAG_NONE,
             &commandBufferDesc,
@@ -504,7 +511,7 @@ void GPUParticle::Initialize(Window* window)
             IID_PPV_ARGS(&commandBuffer)));
         assert(SUCCEEDED(result));
 
-        result = (device->CreateCommittedResource(
+        result = (dxCommon_->GetDevice()->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
             D3D12_HEAP_FLAG_NONE,
             &CD3DX12_RESOURCE_DESC::Buffer(commandBufferSize),
@@ -540,7 +547,7 @@ void GPUParticle::Initialize(Window* window)
         commandData.RowPitch = commandBufferSize;
         commandData.SlicePitch = commandData.RowPitch;
 
-        UpdateSubresources<1>(commandList.Get(), commandBuffer.Get(), commandBufferUpload.Get(), 0, 0, 1, &commandData);
+        UpdateSubresources<1>(commandList, commandBuffer.Get(), commandBufferUpload.Get(), 0, 0, 1, &commandData);
         commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(commandBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE));
 
         // Create SRVs for the command buffers.
@@ -556,7 +563,7 @@ void GPUParticle::Initialize(Window* window)
         for (UINT frame = 0; frame < FrameCount; frame++)
         {
             srvDesc.Buffer.FirstElement = frame * TriangleCount;
-            device->CreateShaderResourceView(commandBuffer.Get(), &srvDesc, commandsHandle);
+            dxCommon_->GetDevice()->CreateShaderResourceView(commandBuffer.Get(), &srvDesc, commandsHandle);
             commandsHandle.Offset(CbvSrvUavDescriptorCountPerFrame, cbvSrvUavDescriptorSize);
         }
 
@@ -567,7 +574,7 @@ void GPUParticle::Initialize(Window* window)
             // Allocate a buffer large enough to hold all of the indirect commands
             // for a single frame as well as a UAV counter.
             commandBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(CommandBufferCounterOffset + sizeof(UINT), D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-            result = (device->CreateCommittedResource(
+            result = (dxCommon_->GetDevice()->CreateCommittedResource(
                 &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
                 D3D12_HEAP_FLAG_NONE,
                 &commandBufferDesc,
@@ -587,7 +594,7 @@ void GPUParticle::Initialize(Window* window)
             uavDesc.Buffer.CounterOffsetInBytes = CommandBufferCounterOffset;
             uavDesc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
 
-            device->CreateUnorderedAccessView(
+            dxCommon_->GetDevice()->CreateUnorderedAccessView(
                 processedCommandBuffers[frame].Get(),
                 processedCommandBuffers[frame].Get(),
                 &uavDesc,
@@ -598,7 +605,7 @@ void GPUParticle::Initialize(Window* window)
 
         // Allocate a buffer that can be used to reset the UAV counters and initialize
         // it to 0.
-        result = (device->CreateCommittedResource(
+        result = (dxCommon_->GetDevice()->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
             D3D12_HEAP_FLAG_NONE,
             &CD3DX12_RESOURCE_DESC::Buffer(sizeof(UINT)),
@@ -619,15 +626,15 @@ void GPUParticle::Initialize(Window* window)
     // the default heap.
     result = (commandList->Close());
     assert(SUCCEEDED(result));
-    ID3D12CommandList* ppCommandLists[] = { commandList.Get() };
+    ID3D12CommandList* ppCommandLists[] = { commandList };
     commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
     {
-        result = (device->CreateFence(fenceValues[frameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));
-        assert(SUCCEEDED(result));
-        result = (device->CreateFence(fenceValues[frameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&computeFence)));
-        fenceValues[frameIndex]++;
+        //result = (dxCommon_->GetDevice()->CreateFence(fenceValues[frameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));
+        //assert(SUCCEEDED(result));
+        result = (dxCommon_->GetDevice()->CreateFence(dxCommon_->GetFenceValue(), D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&computeFence)));
+        //fenceValues[dxCommon_->GetBbIndex()]++;
 
         // Create an event handle to use for frame synchronization.
         fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
@@ -660,7 +667,7 @@ void GPUParticle::Update()
         }
     }
 
-    UINT8* destination = cbvDataBegin + (TriangleCount * frameIndex * sizeof(Const));
+    UINT8* destination = cbvDataBegin + (TriangleCount * dxCommon_->GetBbIndex() * sizeof(Const));
     memcpy(destination, &constantBufferData[0], TriangleCount * sizeof(Const));
 }
 
@@ -674,23 +681,23 @@ void GPUParticle::Draw()
         // Command list allocators can only be reset when the associated 
         // command lists have finished execution on the GPU; apps should use 
         // fences to determine GPU execution progress.
-        result = (computeCommandAllocators[frameIndex]->Reset());
-        assert(SUCCEEDED(result));
-        result = (commandAllocators[frameIndex]->Reset());
-        assert(SUCCEEDED(result));
+        //result = (computeCommandAllocators[frameIndex]->Reset());
+        //assert(SUCCEEDED(result));
+        //result = (commandAllocators[frameIndex]->Reset());
+        //assert(SUCCEEDED(result));
 
         // However, when ExecuteCommandList() is called on a particular command 
         // list, that command list can then be reset at any time and must be before 
         // re-recording.
-        result = (computeCommandList->Reset(computeCommandAllocators[frameIndex].Get(), computePipelineState.Get()));
+        result = (computeCommandList->Reset(computeCommandAllocators[dxCommon_->GetBbIndex()].Get(), computePipelineState.Get()));
         assert(SUCCEEDED(result));
-        result = (commandList->Reset(commandAllocators[frameIndex].Get(), pipelineState.Get()));
-        assert(SUCCEEDED(result));
+        //result = (dxCommon_->GetCommandList()->Reset(commandAllocators[frameIndex].Get(), pipelineState.Get()));
+        //assert(SUCCEEDED(result));
 
         // Record the compute commands that will cull triangles and prevent them from being processed by the vertex shader.
         if (m_enableCulling)
         {
-            UINT frameDescriptorOffset = frameIndex * CbvSrvUavDescriptorCountPerFrame;
+            UINT frameDescriptorOffset = dxCommon_->GetBbIndex() * CbvSrvUavDescriptorCountPerFrame;
             D3D12_GPU_DESCRIPTOR_HANDLE cbvSrvUavHandle = cbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart();
 
             computeCommandList->SetComputeRootSignature(computeRootSignature.Get());
@@ -705,9 +712,9 @@ void GPUParticle::Draw()
             computeCommandList->SetComputeRoot32BitConstants(RootConstants, 4, reinterpret_cast<void*>(&csRootConstants), 0);
 
             // Reset the UAV counter for this frame.
-            computeCommandList->CopyBufferRegion(processedCommandBuffers[frameIndex].Get(), CommandBufferCounterOffset, processedCommandBufferCounterReset.Get(), 0, sizeof(UINT));
+            computeCommandList->CopyBufferRegion(processedCommandBuffers[dxCommon_->GetBbIndex()].Get(), CommandBufferCounterOffset, processedCommandBufferCounterReset.Get(), 0, sizeof(UINT));
 
-            D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(processedCommandBuffers[frameIndex].Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+            D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(processedCommandBuffers[dxCommon_->GetBbIndex()].Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
             computeCommandList->ResourceBarrier(1, &barrier);
 
             computeCommandList->Dispatch(static_cast<UINT>(ceil(TriangleCount / float(ComputeThreadBlockSize))), 1, 1);
@@ -724,12 +731,12 @@ void GPUParticle::Draw()
             ID3D12DescriptorHeap* ppHeaps[] = { cbvSrvUavHeap.Get() };
             commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-            commandList->RSSetViewports(1, &viewport);
-            commandList->RSSetScissorRects(1, m_enableCulling ? &cullingScissorRect : &scissorRect);
+            //dxCommon_->GetCommandList()->RSSetViewports(1, &viewport);
+            //dxCommon_->GetCommandList()->RSSetScissorRects(1, m_enableCulling ? &cullingScissorRect : &scissorRect);
 
             // Indicate that the command buffer will be used for indirect drawing
             // and that the back buffer will be used as a render target.
-            D3D12_RESOURCE_BARRIER barriers[2] = {
+            /*D3D12_RESOURCE_BARRIER barriers[2] = {
                 CD3DX12_RESOURCE_BARRIER::Transition(
                     m_enableCulling ? processedCommandBuffers[frameIndex].Get() : commandBuffer.Get(),
                     m_enableCulling ? D3D12_RESOURCE_STATE_UNORDERED_ACCESS : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
@@ -738,18 +745,18 @@ void GPUParticle::Draw()
                     renderTargets[frameIndex].Get(),
                     D3D12_RESOURCE_STATE_PRESENT,
                     D3D12_RESOURCE_STATE_RENDER_TARGET)
-            };
+            };*/
 
-            commandList->ResourceBarrier(_countof(barriers), barriers);
+            //commandList->ResourceBarrier(_countof(barriers), barriers);
 
-            CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, rtvDescriptorSize);
-            CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsvHeap->GetCPUDescriptorHandleForHeapStart());
-            commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+            //CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, rtvDescriptorSize);
+            //CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsvHeap->GetCPUDescriptorHandleForHeapStart());
+            //commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
             // Record commands.
-            const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
-            commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-            commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+            //const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+            //commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+            //commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
             commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
             commandList->IASetVertexBuffers(0, 1, &vertBufferView);
@@ -762,9 +769,9 @@ void GPUParticle::Draw()
                 commandList->ExecuteIndirect(
                     commandSignature.Get(),
                     TriangleCount,
-                    processedCommandBuffers[frameIndex].Get(),
+                    processedCommandBuffers[dxCommon_->GetBbIndex()].Get(),
                     0,
-                    processedCommandBuffers[frameIndex].Get(),
+                    processedCommandBuffers[dxCommon_->GetBbIndex()].Get(),
                     CommandBufferCounterOffset);
             }
             else
@@ -776,7 +783,7 @@ void GPUParticle::Draw()
                     commandSignature.Get(),
                     TriangleCount,
                     commandBuffer.Get(),
-                    CommandSizePerFrame * frameIndex,
+                    CommandSizePerFrame * dxCommon_->GetBbIndex(),
                     nullptr,
                     0);
             }
@@ -784,15 +791,15 @@ void GPUParticle::Draw()
 
             // Indicate that the command buffer may be used by the compute shader
             // and that the back buffer will now be used to present.
-            barriers[0].Transition.StateBefore = D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT;
+            /*barriers[0].Transition.StateBefore = D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT;
             barriers[0].Transition.StateAfter = m_enableCulling ? D3D12_RESOURCE_STATE_COPY_DEST : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
             barriers[1].Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
             barriers[1].Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 
-            commandList->ResourceBarrier(_countof(barriers), barriers);
+            commandList->ResourceBarrier(_countof(barriers), barriers);*/
 
-            result = (commandList->Close());
-            assert(SUCCEEDED(result));
+            //result = (commandList->Close());
+            //assert(SUCCEEDED(result));
         }
 
 
@@ -807,23 +814,23 @@ void GPUParticle::Draw()
 
             //PIXEndEvent(commandQueue.Get());
 
-            computeCommandQueue->Signal(computeFence.Get(), fenceValues[frameIndex]);
+            computeCommandQueue->Signal(computeFence.Get(), dxCommon_->GetFenceValue());
 
             // Execute the rendering work only when the compute work is complete.
-            commandQueue->Wait(computeFence.Get(), fenceValues[frameIndex]);
+            //commandQueue->Wait(computeFence.Get(), fenceValues[frameIndex]);
         }
 
         //PIXBeginEvent(commandQueue.Get(), 0, L"Render");
 
         // Execute the rendering work.
-        ID3D12CommandList* ppCommandLists[] = { commandList.Get() };
-        commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+        //ID3D12CommandList* ppCommandLists[] = { commandList.Get() };
+        //commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
         //PIXEndEvent(m_commandQueue.Get());
 
         // Present the frame.
-        result = (swapChain->Present(1, 0));
-        assert(SUCCEEDED(result));
+        //result = (swapChain->Present(1, 0));
+        //assert(SUCCEEDED(result));
 
         MoveToNextFrame();
     }
@@ -840,15 +847,15 @@ void GPUParticle::Draw()
             {
                 // Do nothing, currently attached adapter is unresponsive.
             }
-            fence.Reset();
+            //fence.Reset();
             //ResetComPtrArray(&renderTargets);
-            for(auto &i : renderTargets){
+            /*for(auto &i : renderTargets){
                 i.Reset();
             }
             commandQueue.Reset();
             swapChain.Reset();
-            device.Reset();
-            Initialize(window_);
+            device.Reset();*/
+            Initialize(dxCommon_);
         }
         else
         {
@@ -873,41 +880,41 @@ float GPUParticle::GetRandomFloat(float min, float max)
 
 void GPUParticle::WaitForGpu()
 {
-    HRESULT result = {};
+    //HRESULT result = {};
 
     // Schedule a Signal command in the queue.
-    result = (commandQueue->Signal(fence.Get(), fenceValues[frameIndex]));
-    assert(SUCCEEDED(result));
+    //result = (commandQueue->Signal(fence.Get(), fenceValues[frameIndex]));
+    //assert(SUCCEEDED(result));
 
     // Wait until the fence has been processed.
-    result = (fence->SetEventOnCompletion(fenceValues[frameIndex], fenceEvent));
-    assert(SUCCEEDED(result));
-    WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE);
+    //result = (fence->SetEventOnCompletion(fenceValues[frameIndex], fenceEvent));
+    //assert(SUCCEEDED(result));
+    //WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE);
 
     // Increment the fence value for the current frame.
-    fenceValues[frameIndex]++;
+    //fenceValues[frameIndex]++;
 }
 
 void GPUParticle::MoveToNextFrame()
 {
-    HRESULT result = {};
+    //HRESULT result = {};
 
-    // Schedule a Signal command in the queue.
-    const UINT64 currentFenceValue = fenceValues[frameIndex];
-    result = (commandQueue->Signal(fence.Get(), currentFenceValue));
-    assert(SUCCEEDED(result));
+    //// Schedule a Signal command in the queue.
+    //const UINT64 currentFenceValue = fenceValues[frameIndex];
+    //result = (commandQueue->Signal(fence.Get(), currentFenceValue));
+    //assert(SUCCEEDED(result));
 
-    // Update the frame index.
-    frameIndex = swapChain->GetCurrentBackBufferIndex();
+    //// Update the frame index.
+    //frameIndex = swapChain->GetCurrentBackBufferIndex();
 
-    // If the next frame is not ready to be rendered yet, wait until it is ready.
-    if (fence->GetCompletedValue() < fenceValues[frameIndex])
-    {
-        result = (fence->SetEventOnCompletion(fenceValues[frameIndex], fenceEvent));
-        assert(SUCCEEDED(result));
-        WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE);
-    }
+    //// If the next frame is not ready to be rendered yet, wait until it is ready.
+    //if (fence->GetCompletedValue() < fenceValues[frameIndex])
+    //{
+    //    result = (fence->SetEventOnCompletion(fenceValues[frameIndex], fenceEvent));
+    //    assert(SUCCEEDED(result));
+    //    WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE);
+    //}
 
-    // Set the fence value for the next frame.
-    fenceValues[frameIndex] = currentFenceValue + 1;
+    //// Set the fence value for the next frame.
+    //fenceValues[frameIndex] = currentFenceValue + 1;
 }

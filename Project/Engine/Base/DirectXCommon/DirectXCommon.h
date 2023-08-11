@@ -32,8 +32,11 @@ public:
 
 	ID3D12Device* GetDevice()		{return device.Get();}
 	ID3D12GraphicsCommandList* GetCommandList()		{return commandList.Get();}
+	ID3D12CommandQueue* GetCommandQueue()	{return commandQueue.Get();}
 	size_t GetBackBuffersCount()	{return backBuffers.size();}
 	IDXGISwapChain3* GetSwapChain(){return swapChain.Get();}
+	UINT GetBbIndex(){return bbIndex;}
+	UINT64 GetFenceValue(){return fenceVal;}
 
 private:
 	/// <summary>
@@ -85,5 +88,6 @@ private:
     std::chrono::steady_clock::time_point reference_;
 	std::chrono::microseconds elapsed;
 
+	UINT bbIndex = 0;
 };
 
