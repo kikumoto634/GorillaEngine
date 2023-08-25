@@ -118,6 +118,7 @@ protected:
 	//借り物
 	DebugText* debugText = nullptr;
 	DebugCamera* debugCamera = nullptr;
+	bool isDebugCamera = false;
 	imguiManager* imgui = nullptr;
 	bool show_demo_window = false;
 #endif // _DEBUG
@@ -130,31 +131,6 @@ protected:
 
 	//オブジェクト
 	ObjModelManager* model = nullptr;
-	static const int num = 1;
-	BaseObjObject* obj[num] = {};
-
-	//パーティクル
-	ParticleObject* particleObj = nullptr;
-
-	int num_ = 1;
-	Particle particle = {
-		60,
-		{},
-		{},
-		{},
-		0,
-		1,
-		1,
-		{1,1,1,1}
-	};
-
-	Vector3 MinVel_ = {0,0,0};
-	Vector3 MaxVel_ = {0,1,0};
-	
-	Vector3 MinAcc_ = {0,0,0};
-	Vector3 MaxAcc_ = {0,0,0};
-
-	float MinSize_ = 0;
-	float MaxSize_ = 1;
+	BaseObjObject* obj = nullptr;
 };
 

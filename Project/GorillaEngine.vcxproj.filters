@@ -433,7 +433,10 @@
       <Filter>ソース ファイル\Engine\Math\Matrix</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DebugProcess\DebugCamera\DebugCamera.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\DebugProcess\DebugCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\camera\FollowCamera.cpp">
+      <Filter>ソース ファイル\Engine\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -585,7 +588,10 @@
       <Filter>ヘッダー ファイル\Engine\Math\Matrix</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DebugProcess\DebugCamera\DebugCamera.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\DebugProcess\DebugCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\camera\FollowCamera.h">
+      <Filter>ヘッダー ファイル\Engine\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

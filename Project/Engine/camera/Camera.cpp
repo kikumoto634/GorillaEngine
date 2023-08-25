@@ -11,15 +11,15 @@ Camera *Camera::GetInstance()
 	return &instance;
 }
 
-void Camera::Initialize(Window* window)
+void Camera::Initialize(Vector3 pos, Vector3 rot)
 {
-	this->window = window;
+	window = Window::GetInstance();
 	//クラス名の文字列を取得
 	name = typeid(*this).name();
 
 	//カメラ
-	world.translation = {0,0,-distance};
-	world.rotation = {0,0,0};
+	world.translation = pos;
+	world.rotation = rot;
 	world.Initialize();
 
 	view.UpdateProjectionMatrix(window->GetWindowWidth(),window->GetWindowHeight());

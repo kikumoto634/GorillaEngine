@@ -180,6 +180,7 @@
     <ClCompile Include="Engine\Base\Manager\Texture\TextureManager.cpp" />
     <ClCompile Include="Engine\Base\Window\Window.cpp" />
     <ClCompile Include="Engine\camera\Camera.cpp" />
+    <ClCompile Include="Engine\camera\FollowCamera.cpp" />
     <ClCompile Include="Engine\Collision\CollisionSystem\Collision.cpp" />
     <ClCompile Include="Engine\Collision\CollisionSystem\CollisionManager.cpp" />
     <ClCompile Include="Engine\Collision\CollisionSystem\CollisionPrimitive.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="Engine\Base\Manager\Texture\TextureManager.h" />
     <ClInclude Include="Engine\Base\Window\Window.h" />
     <ClInclude Include="Engine\camera\Camera.h" />
+    <ClInclude Include="Engine\camera\FollowCamera.h" />
     <ClInclude Include="Engine\Collision\Base\BaseCollider.h" />
     <ClInclude Include="Engine\Collision\CollisionSystem\Collision.h" />
     <ClInclude Include="Engine\Collision\CollisionSystem\CollisionInfo.h" />

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Vector2.h"
+#include "Window.h"
 
 //キーボード入力
 #define DIRECTINPUT_VERSION 0x0800	//DirectInputのバージョン指定
@@ -21,7 +22,7 @@ public:
 	static Input* GetInstance();
 
 	//初期化
-	void Initialize(HWND hwnd);
+	void Initialize();
 
 	//更新
 	void Update();
@@ -91,7 +92,7 @@ public:
 #pragma endregion
 
 private:
-	HWND hwnd_;
+	Window* window;
 	IDirectInput8* directInput = nullptr;
 
 #pragma region キーボード

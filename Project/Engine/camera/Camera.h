@@ -21,7 +21,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Window* window);
+	virtual void Initialize(Vector3 pos = {0,0,-20}, Vector3 rot = {0,0,0});
 
 	/// <summary>
 	/// 更新
@@ -99,8 +99,6 @@ private:
 
 	//クラス名(デバック用)
 	const char* name = nullptr;
-	
-	float distance = 20.f;	//カメラの距離
 	//回転行列
 	XMMATRIX matRot = DirectX::XMMatrixIdentity();
 
