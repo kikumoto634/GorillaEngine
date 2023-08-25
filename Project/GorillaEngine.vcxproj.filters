@@ -313,6 +313,12 @@
     <Filter Include="ヘッダー ファイル\Engine\DebugProcess\DebugCamera">
       <UniqueIdentifier>{f5b4bc8c-aa9c-4d5c-b40e-07109299988b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\Math\Utility">
+      <UniqueIdentifier>{c59dd798-f3da-42a0-9e7b-39fb050c93d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Math\Utility">
+      <UniqueIdentifier>{7d2b1ff0-a9f0-4708-866c-be5e3f413251}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\input\Input.cpp">
@@ -437,6 +443,9 @@
     </ClCompile>
     <ClCompile Include="Engine\camera\FollowCamera.cpp">
       <Filter>ソース ファイル\Engine\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Utility\Utility.cpp">
+      <Filter>ソース ファイル\Engine\Math\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -593,6 +602,12 @@
     <ClInclude Include="Engine\camera\FollowCamera.h">
       <Filter>ヘッダー ファイル\Engine\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Utility\Utility.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">
@@ -648,5 +663,10 @@
     <None Include="Resources\shader\ObjLight.hlsli">
       <Filter>リソース ファイル\Obj</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GorillaEngine.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

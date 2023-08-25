@@ -12,7 +12,7 @@ BaseScene::BaseScene(DirectXCommon* dxCommon, Window* window)
 void BaseScene::Application()
 {
 	input = Input::GetInstance();
-	camera = Camera::GetInstance();
+	camera = FollowCamera::GetInstance();
 	postEffect = PostEffect::GetInstance();
 	postEffect = PostEffect::Create(white1x1_tex.number, {0,0}, {500,500});
 }
@@ -135,7 +135,7 @@ void BaseScene::Update()
 
 void BaseScene::EndUpdate()
 {
-	camera->Update();
+	camera->Update(obj->GetmatWorld());
 }
 
 void BaseScene::Draw()

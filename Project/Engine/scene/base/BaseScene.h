@@ -2,7 +2,9 @@
 #include "DirectXCommon.h"
 #include "Window.h"
 #include "Input.h"
+
 #include "Camera.h"
+#include "FollowCamera.h"
 
 #include "PostEffect.h"
 
@@ -102,7 +104,7 @@ protected:
 	
 	//作成
 	Input* input = nullptr;
-	Camera* camera = nullptr;
+	FollowCamera* camera = nullptr;
 
 	//借り物
 	//シーンマネージャー

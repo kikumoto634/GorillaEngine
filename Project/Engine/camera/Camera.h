@@ -38,8 +38,6 @@ public:
 		world.rotation += rot;
 		world.UpdateMatrix();
 	}
-	// カメラ追従
-	void Tracking(Vector3 target, Vector3 offset);
 
 	//シェイク
 	void ShakeStart();
