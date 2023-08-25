@@ -202,13 +202,17 @@ const Vector2 Input::GetMousePos()
 	POINT p;
 	GetCursorPos(&p);
 	ScreenToClient(hwnd_, &p);
-
 	return Vector2{(float)p.x,(float)p.y};
 }
 
 const Vector2 Input::GetMouseVelocity()
 {
 	return Vector2((float)mouseKey_.lX, (float)mouseKey_.lY);
+}
+
+const float Input::GetMouseWheel()
+{
+	return (float)mouseKey_.lZ;
 }
 
 

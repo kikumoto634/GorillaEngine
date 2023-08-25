@@ -60,6 +60,12 @@ void BaseScene::Initialize()
 	lightGroup_->SetDirLightActive(0, true);
 	lightGroup_->SetDirLightActive(1, false);
 	lightGroup_->SetDirLightActive(2, false);
+
+#ifdef _DEBUG
+	debugCamera = DebugCamera::GetInstance();
+	debugCamera->Initialize();
+#endif // _DEBUG
+
 }
 
 void BaseScene::Update()
@@ -167,6 +173,10 @@ void BaseScene::Update()
 
 		ImGui::End();
 	}
+
+	//デバックカメラ
+	debugCamera->Update();
+	camera->SetWorld(debugCamera->GetWorld());
 
 #endif // _DEBUG
 }

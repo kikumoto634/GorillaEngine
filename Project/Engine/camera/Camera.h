@@ -48,6 +48,8 @@ public:
 	//名前
 	const char* GetName()	{return name;}
 
+	const WorldTransform GetWorld()	{return world;}
+
 	//座標
 	const Vector3 GetPosition()	{return world.translation;}
 	//回転
@@ -82,6 +84,8 @@ public:
 	void SetEye(const Vector3& eye)	{this->view.eye = eye; }
 	void SetTarget(const Vector3& target)	{this->view.target = target; }
 	void SetUp(const Vector3& up)	{this->view.up = up; }
+
+	void SetWorld(const WorldTransform world)	{this->world = world;}
 
 	void SetShake(float frame, int power)	{shakeMaxFrame = frame, shakeMaxPower = power;}
 #pragma endregion

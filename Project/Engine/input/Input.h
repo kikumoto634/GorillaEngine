@@ -42,6 +42,8 @@ public:
 	const Vector2 GetMousePos();
 	//マウスの移動量
 	const Vector2 GetMouseVelocity();
+	//マウスホイール
+	const float GetMouseWheel();
 #pragma endregion
 
 #pragma region パッド
