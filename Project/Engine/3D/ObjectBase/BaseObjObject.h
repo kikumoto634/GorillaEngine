@@ -54,10 +54,6 @@ public:
 	//当たり判定時処理
 	virtual void ContactUpdate();
 
-	//光計算
-	inline void CaveLightOn()	{isLightCal_ = true;}
-	inline void CaveLightOff()	{isLightCal_ = false;}
-
 	//Getter
 	bool GetIsContactTrigger();
 	inline bool GetIsAlive()	{return isAlive_;}
@@ -96,8 +92,5 @@ protected:
 
 	//接触
 	bool isContactTrigger_ = false;
-
-	//光計算
-	bool isLightCal_ = false;
 };
 

@@ -61,8 +61,8 @@ void FollowCamera::Rotation()
 	if(!input_->GetIsPadConnect()) return;
 
 	float speed = 0.05f;
-	rotation.x += input_->PadLStick().x * speed;
-	rotation.y -= input_->PadLStick().y * speed;
+	rotation.x += input_->PadRStick().x * speed;
+	rotation.y -= input_->PadRStick().y * speed;
 	world.rotation.y = rotation.x;
 	world.rotation.x = rotation.y;
 

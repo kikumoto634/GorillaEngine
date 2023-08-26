@@ -34,14 +34,13 @@ void BaseScene::Initialize()
 	sp->SetAnchorPoint({0.5f,0.5f});
 	sp->SetSize({100,100});
 
-
-	//モデル
-	model = new ObjModelManager();
-	model->CreateModel("GroundBlock");
-
 	//オブジェクト
-	obj = new BaseObjObject();
-	obj->Initialize(model);
+	player = new Action();
+	player->Initialize();
+
+	//Skydome
+	skydome = new BaseObjObject();
+	skydome->Initialize("skydome");
 
 
 	//ライト
@@ -52,8 +51,8 @@ void BaseScene::Initialize()
 	ObjModelObject::SetLight(lightGroup_);
 
 	lightGroup_->SetDirLightActive(0, true);
-	lightGroup_->SetDirLightActive(1, false);
-	lightGroup_->SetDirLightActive(2, false);
+	lightGroup_->SetDirLightActive(1, true);
+	lightGroup_->SetDirLightActive(2, true);
 
 #ifdef _DEBUG
 	debugCamera = DebugCamera::GetInstance();
@@ -69,7 +68,11 @@ void BaseScene::Update()
 	input->Update();
 
 	sp->Update();
-	obj->Update(camera);
+
+	camera->Update(player->GetmatWorld());
+	player->Update(camera);
+
+	skydome->Update(camera);
 
 #ifdef _DEBUG
 	{
@@ -90,10 +93,10 @@ void BaseScene::Update()
 		ImGui::SetNextWindowPos(ImVec2{0,60});
 		//サイズ
 		ImGui::SetNextWindowSize(ImVec2{300,100});
-		ImGui::Begin(obj->GetName());
-		obj->SetPosition(imgui->ImGuiDragVector3("Pos", obj->GetPosition(),0.1f));
-		obj->SetRotation(imgui->ImGuiDragVector3("Rot", obj->GetRotation(), 0.1f));
-		obj->SetScale(imgui->ImGuiDragVector3("Sca", obj->GetScale(),0.1f));
+		ImGui::Begin(player->GetName());
+		player->SetPosition(imgui->ImGuiDragVector3("Pos", player->GetPosition(),0.1f));
+		player->SetRotation(imgui->ImGuiDragVector3("Rot", player->GetRotation(), 0.1f));
+		player->SetScale(imgui->ImGuiDragVector3("Sca", player->GetScale(),0.1f));
 		ImGui::End();
 	}
 
@@ -135,12 +138,12 @@ void BaseScene::Update()
 
 void BaseScene::EndUpdate()
 {
-	camera->Update(obj->GetmatWorld());
 }
 
 void BaseScene::Draw()
 {
-	obj->Draw();
+	player->Draw();
+	skydome->Draw();
 }
 
 void BaseScene::DrawBack()
@@ -158,6 +161,9 @@ void BaseScene::Finalize()
 	sp->Finalize();
 	delete sp;
 
-	obj->Finalize();
-	delete obj;
+	player->Finalize();
+	delete player;
+
+	skydome->Finalize();
+	delete skydome;
 }

@@ -15,6 +15,8 @@
 
 #include "ParticleObject.h"
 
+#include "Action/Action.h"
+
 #ifdef _DEBUG
 #include "DebugText.h"
 #include "DebugCamera.h"
@@ -132,7 +134,8 @@ protected:
 	BaseSprites* sp = nullptr;
 
 	//オブジェクト
-	ObjModelManager* model = nullptr;
-	BaseObjObject* obj = nullptr;
+	Action* player = nullptr;
+	//Skydome
+	BaseObjObject* skydome = nullptr;
 };
 

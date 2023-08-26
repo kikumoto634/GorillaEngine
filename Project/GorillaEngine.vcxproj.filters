@@ -319,6 +319,12 @@
     <Filter Include="ヘッダー ファイル\Engine\Math\Utility">
       <UniqueIdentifier>{7d2b1ff0-a9f0-4708-866c-be5e3f413251}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Game\3D\Player">
+      <UniqueIdentifier>{cd34650e-6df6-43fa-a106-a1b9ac05c81a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\3D\Player">
+      <UniqueIdentifier>{423069a9-380f-4da7-9011-fb3bbd1729a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\input\Input.cpp">
@@ -446,6 +452,9 @@
     </ClCompile>
     <ClCompile Include="Engine\math\Utility\Utility.cpp">
       <Filter>ソース ファイル\Engine\Math\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Action.cpp">
+      <Filter>ソース ファイル\Game\3D\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -606,7 +615,10 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\math\Utility\Utility.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\Math\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\3D\Player\Action\Action.h">
+      <Filter>ヘッダー ファイル\Game\3D\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
