@@ -51,7 +51,7 @@ void BaseScene::Initialize()
 
 	//GPU
 	gpuParticle = new GPUParticle();
-	gpuParticle->Initialize(dxCommon);
+	gpuParticle->Initialize();
 
 
 	//ライト

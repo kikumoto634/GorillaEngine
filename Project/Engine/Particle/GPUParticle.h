@@ -68,7 +68,7 @@ public:
 	};
 
 public:
-	void Initialize(DirectXCommon* dxCommon);
+	void Initialize();
 	void Update();
 	void Draw();
 	void Finalize();
@@ -107,7 +107,7 @@ private:
 	static const float TriangleDepth;    
 
 private:
-	//Window* window_ = nullptr;
+	Window* window_ = nullptr;
 	//デバイス
 	DirectXCommon* dxCommon_;
 
@@ -143,7 +143,7 @@ private:
 
 
 	//GPUパーティクル用のコマンドアロケータ
-	//ComPtr<ID3D12CommandAllocator> commandAllocators[FrameCount];
+	ComPtr<ID3D12CommandAllocator> commandAllocators[FrameCount];
 	ComPtr<ID3D12CommandAllocator> computeCommandAllocators[FrameCount];
 
 	//GPUパーティクル用のコマンドキュー
@@ -151,17 +151,17 @@ private:
     ComPtr<ID3D12CommandQueue> computeCommandQueue;
 
 	//GPUパーティクル用のフェンス
-	//ComPtr<ID3D12Fence> fence;
+	ComPtr<ID3D12Fence> fence;
     ComPtr<ID3D12Fence> computeFence;
-	//UINT64 fenceValues[FrameCount];
+	UINT64 fenceValues[FrameCount];
 	HANDLE fenceEvent;
 
 	//GPUパーティクル用のコマンドリスト
-	ID3D12GraphicsCommandList* commandList = nullptr;
+	ComPtr<ID3D12GraphicsCommandList> commandList;
 	ComPtr<ID3D12GraphicsCommandList> computeCommandList;
 
 	//バックバッファインデックス
-	//UINT frameIndex;
+	UINT frameIndex;
 
 
 	//三角形の定数情報
@@ -174,7 +174,7 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vertBufferView{};
 
 	//深度ステンシル
-	//ComPtr<ID3D12Resource> depthStencil;
+	ComPtr<ID3D12Resource> depthStencil;
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffer;

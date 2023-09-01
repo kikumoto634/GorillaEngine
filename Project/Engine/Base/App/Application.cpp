@@ -62,7 +62,7 @@ void Application::Initialize()
 	dxCommon->Initialize(window);
 
 	particle = new GPUParticle();
-	particle->Initialize(dxCommon);
+	particle->Initialize();
 
 //	//テクスチャ
 //	TextureManager::GetInstance()->Initialize(dxCommon);
