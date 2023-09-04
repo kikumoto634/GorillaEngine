@@ -432,6 +432,9 @@
     <ClCompile Include="Engine\Particle\GPUParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Particle\Particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\input\Input.h">
@@ -582,6 +585,9 @@
       <Filter>ヘッダー ファイル\Engine\Math\Matrix</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Particle\GPUParticle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Particle\Particle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

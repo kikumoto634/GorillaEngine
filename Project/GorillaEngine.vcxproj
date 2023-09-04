@@ -198,6 +198,7 @@
     <ClCompile Include="Engine\ObjectMatrix\ViewProjection.cpp" />
     <ClCompile Include="Engine\ObjectMatrix\WorldTransform.cpp" />
     <ClCompile Include="Engine\Particle\GPUParticle.cpp" />
+    <ClCompile Include="Engine\Particle\Particle.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
     <ClCompile Include="Engine\scene\base\BaseScene.cpp" />
     <ClCompile Include="Engine\scene\system\SceneManager.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="Engine\ObjectMatrix\ViewProjection.h" />
     <ClInclude Include="Engine\ObjectMatrix\WorldTransform.h" />
     <ClInclude Include="Engine\Particle\GPUParticle.h" />
+    <ClInclude Include="Engine\Particle\Particle.h" />
     <ClInclude Include="Engine\PostEffect\PostEffect.h" />
     <ClInclude Include="Engine\scene\base\BaseScene.h" />
     <ClInclude Include="Engine\scene\system\SceneManager.h" />

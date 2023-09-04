@@ -24,6 +24,7 @@
 #include "PostEffect.h"
 
 #include "../Particle/GPUParticle.h"
+#include "../Particle/Particle.h"
 
 #ifdef _DEBUG
 
@@ -73,5 +74,5 @@ private:
 	bool isEnd = false;
 
 	//GPUパーティクル
-	GPUParticle* particle = nullptr;
+	ParticleGPU* particle = nullptr;
 };

@@ -37,6 +37,7 @@ public:
 	IDXGISwapChain3* GetSwapChain(){return swapChain.Get();}
 	UINT GetBbIndex(){return bbIndex;}
 	UINT64 GetFenceValue(){return fenceVal;}
+	std::vector<ComPtr<ID3D12Resource>> GetBackBuffers()	{return backBuffers;}
 
 private:
 	/// <summary>

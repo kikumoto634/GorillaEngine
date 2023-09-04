@@ -2,8 +2,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Camera.h"
-//#include "Window.h"
-#include "DirectXCommon.h"
+#include "Window.h"
 
 #include <DirectXMath.h>
 #include <d3dx12.h>
@@ -99,25 +98,27 @@ private:
 	static const UINT ComputeThreadBlockSize = 128;
 
 	//三角形
-	static const UINT TriangleCount = 3024;
+	static const UINT TriangleCount = 1024;
     static const UINT TriangleResourceCount = TriangleCount * FrameCount;
 
 	//三角形情報
 	static const float TriangleHalfWidth;
 	static const float TriangleDepth;    
 
+	static DirectXCommon* dxCommon_;
+
 private:
 	Window* window_ = nullptr;
 	//デバイス
-	DirectXCommon* dxCommon_;
+	/*ComPtr<ID3D12Device> device = nullptr;*/
 
-	//CD3DX12_VIEWPORT viewport;
-    //CD3DX12_RECT scissorRect;
-    //D3D12_RECT cullingScissorRect;
+	CD3DX12_VIEWPORT viewport;
+    CD3DX12_RECT scissorRect;
+    D3D12_RECT cullingScissorRect;
 
-	//ComPtr<IDXGISwapChain3> swapChain;
+	/*ComPtr<IDXGISwapChain3> swapChain;
 
-	//ComPtr<ID3D12Resource> renderTargets[FrameCount];
+	ComPtr<ID3D12Resource> renderTargets[FrameCount];*/
 
 	//定数、コンピュートシェーダー
 	Compute csRootConstants;
@@ -134,20 +135,20 @@ private:
 	ComPtr<ID3D12PipelineState> computePipelineState;
 
 	//デスクリプタヒープ
-	//ComPtr<ID3D12DescriptorHeap> rtvHeap;
-	//ComPtr<ID3D12DescriptorHeap> dsvHeap;
+	ComPtr<ID3D12DescriptorHeap> rtvHeap;
+	ComPtr<ID3D12DescriptorHeap> dsvHeap;
 	ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap;
 	//デスクリプタサイズ
-	//UINT rtvDescriptorSize;
+	UINT rtvDescriptorSize;
 	UINT cbvSrvUavDescriptorSize;
 
 
 	//GPUパーティクル用のコマンドアロケータ
-	ComPtr<ID3D12CommandAllocator> commandAllocators[FrameCount];
+	//ComPtr<ID3D12CommandAllocator> commandAllocators[FrameCount];
 	ComPtr<ID3D12CommandAllocator> computeCommandAllocators[FrameCount];
 
 	//GPUパーティクル用のコマンドキュー
-    ComPtr<ID3D12CommandQueue> commandQueue;
+    //ComPtr<ID3D12CommandQueue> commandQueue;
     ComPtr<ID3D12CommandQueue> computeCommandQueue;
 
 	//GPUパーティクル用のフェンス
@@ -157,7 +158,7 @@ private:
 	HANDLE fenceEvent;
 
 	//GPUパーティクル用のコマンドリスト
-	ComPtr<ID3D12GraphicsCommandList> commandList;
+	//ComPtr<ID3D12GraphicsCommandList> commandList;
 	ComPtr<ID3D12GraphicsCommandList> computeCommandList;
 
 	//バックバッファインデックス

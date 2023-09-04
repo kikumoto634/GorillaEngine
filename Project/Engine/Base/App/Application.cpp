@@ -61,8 +61,10 @@ void Application::Initialize()
 	//DirectXCommon
 	dxCommon->Initialize(window);
 
-	particle = new GPUParticle();
-	particle->Initialize();
+	ParticleGPU::StaticInitialize();
+
+	particle = new ParticleGPU();
+	particle = ParticleGPU::Create();
 
 //	//テクスチャ
 //	TextureManager::GetInstance()->Initialize(dxCommon);
@@ -142,6 +144,7 @@ void Application::Draw()
 	//描画前処理
 	dxCommon->BeginDraw();
 
+	ParticleGPU::SetPipelineState();
 	particle->Draw();
 
 	//postEffect_->Draw();
@@ -161,8 +164,8 @@ void Application::Draw()
 
 void Application::Finalize()
 {
-	particle->Finalize();
 	delete particle;
+	ParticleGPU::StaticFinalize();
 
 //	delete postEffect_;
 //
