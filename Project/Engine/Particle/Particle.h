@@ -28,12 +28,13 @@ public:
 		const float TriangleDepth = 1.0f;
 
 		const UINT CommandSizePerFrame = TriangleCount*sizeof(IndirectCommand);
-		UINT CommandBufferCounterOffset = 0;//AlignForUavCounter(common->CommandSizePerFrame);
+		UINT CommandBufferCounterOffset = 0;
 
 		Window* window_ = nullptr;
 		DirectXCommon* dxCommon_ = nullptr;
 		ComPtr<ID3D12PipelineState> pipelineState;
 		ComPtr<ID3D12PipelineState> computePipelineState;
+
 		ComPtr<ID3D12RootSignature> rootSignature;
 		ComPtr<ID3D12RootSignature> computeRootSignature;
 
@@ -102,11 +103,20 @@ private:
 	std::vector<Const> constantBufferData;
 	UINT8* cbvDataBegin;
 
-	//コマンドシグネチャ
-	ComPtr<ID3D12CommandSignature> commandSignature;
-	//コマンドバッファ
-	ComPtr<ID3D12Resource> commandBuffer;
+	//深度バッファ
+	ComPtr<ID3D12Resource> depthBuff;
 
-	ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap;
+	//デスクリプタ
+	ComPtr<ID3D12DescriptorHeap> rtvHeap_;
+	ComPtr<ID3D12Resource> descHeapRTV_[3];
+
+    ComPtr<ID3D12DescriptorHeap> dsvHeap_;
+	ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap_;
+
+	UINT rtvDescriptorSize_;
+    UINT cbvSrvUavDescriptorSize_;
+
+	//コマンドシグネチャ
+	ComPtr<ID3D12CommandSignature> commandSignature_;
 };
 

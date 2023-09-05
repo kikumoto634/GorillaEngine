@@ -56,12 +56,41 @@ bool ParticleGPU::Initialize()
 
 	constantBufferData.resize(common->TriangleCount);
 
-	 D3D12_DESCRIPTOR_HEAP_DESC cbvSrvUavHeapDesc = {};
-	cbvSrvUavHeapDesc.NumDescriptors = 3 * 3;
-	cbvSrvUavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	cbvSrvUavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	result = (common->dxCommon_->GetDevice()->CreateDescriptorHeap(&cbvSrvUavHeapDesc, IID_PPV_ARGS(&cbvSrvUavHeap)));
-	assert(SUCCEEDED(result));
+	//デスクリプタ
+	{
+		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+        rtvHeapDesc.NumDescriptors = 3;
+        rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+        rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        common->dxCommon_->GetDevice()->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap_)));
+
+        D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+        dsvHeapDesc.NumDescriptors = 1;
+        dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+        dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        common->dxCommon_->GetDevice()->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap_)));
+
+		D3D12_DESCRIPTOR_HEAP_DESC cbvSrvUavHeapDesc = {};
+		cbvSrvUavHeapDesc.NumDescriptors = 3 * 3;
+		cbvSrvUavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+		cbvSrvUavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		common->dxCommon_->GetDevice()->CreateDescriptorHeap(&cbvSrvUavHeapDesc,IID_PPV_ARGS(&cbvSrvUavHeap_));
+	
+		rtvDescriptorSize_ = common->dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		cbvSrvUavDescriptorSize_ = common->dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	}
+
+	//RTV
+	{
+		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap_->GetCPUDescriptorHandleForHeapStart());
+
+		for(UINT n = 0; n < 3; n++){
+			result = common->dxCommon_->GetSwapChain()->GetBuffer(n, IID_PPV_ARGS(&descHeapRTV_[n]));
+			assert(SUCCEEDED(result));
+			common->dxCommon_->GetDevice()->CreateRenderTargetView(descHeapRTV_[n].Get(), nullptr,rtvHandle);
+			rtvHandle.Offset(1,rtvDescriptorSize_);
+		}
+	}
 
     //頂点
     {
@@ -138,60 +167,44 @@ bool ParticleGPU::Initialize()
         assert(SUCCEEDED(result));
         memcpy(cbvDataBegin, &constantBufferData[0], common->TriangleCount * sizeof(Const));
 
-        D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-        srvDesc.Format = DXGI_FORMAT_UNKNOWN;
-        srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-        srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-        srvDesc.Buffer.NumElements = common->TriangleCount;
-        srvDesc.Buffer.StructureByteStride = sizeof(Const);
-        srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-
-        CD3DX12_CPU_DESCRIPTOR_HANDLE cbvSrvHandle(cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart(), 0, common->dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-        for (UINT frame = 0; frame < 3; frame++)
-        {
-            srvDesc.Buffer.FirstElement = frame * common->TriangleCount;
-            common->dxCommon_->GetDevice()->CreateShaderResourceView(constBuff_.Get(), &srvDesc, cbvSrvHandle);
-            cbvSrvHandle.Offset(3, common->dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-        }
     }
 
-	//コマンドシグネチャ
+	//深度
 	{
-		D3D12_INDIRECT_ARGUMENT_DESC argumentDesc[2] = {};
-		argumentDesc[0].Type = D3D12_INDIRECT_ARGUMENT_TYPE_CONSTANT_BUFFER_VIEW;
-		argumentDesc[0].ConstantBufferView.RootParameterIndex = 0;
-		argumentDesc[1].Type = D3D12_INDIRECT_ARGUMENT_TYPE_DRAW;
+		D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
+		depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+		depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
 
-		D3D12_COMMAND_SIGNATURE_DESC commandSignatureDesc = {};
-		commandSignatureDesc.pArgumentDescs = argumentDesc;
-		commandSignatureDesc.NumArgumentDescs = _countof(argumentDesc);
-		commandSignatureDesc.ByteStride = sizeof(IndirectCommand);
-
-		result = (common->dxCommon_->GetDevice()->CreateCommandSignature(&commandSignatureDesc, common->rootSignature.Get(), IID_PPV_ARGS(&commandSignature)));
-		assert(SUCCEEDED(result));
-	}
-
-	//コマンドバッファ
-	{
-		std::vector<IndirectCommand> commands;
-		commands.resize(common->TriangleCount*3);
-		const UINT commandbufferSize = common->TriangleCount*sizeof(IndirectCommand);
+		D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
+		depthOptimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+		depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
+		depthOptimizedClearValue.DepthStencil.Stencil = 0;
 
 		// ヒーププロパティ
 		CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		// リソース設定
 		CD3DX12_RESOURCE_DESC resourceDesc =
-		  CD3DX12_RESOURCE_DESC::Buffer(commandbufferSize);
+		  CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT,Window::GetWindowWidth(),Window::GetWindowHeight(),1,0,1,0,D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 
 		result = common->dxCommon_->GetDevice()->CreateCommittedResource(
 			&heapProps,
 			D3D12_HEAP_FLAG_NONE,
 			&resourceDesc,
-			D3D12_RESOURCE_STATE_COPY_DEST,
-			nullptr,
-			IID_PPV_ARGS(&commandBuffer)
+			D3D12_RESOURCE_STATE_DEPTH_WRITE,
+			&depthOptimizedClearValue,
+			IID_PPV_ARGS(&depthBuff)
 		);
 		assert(SUCCEEDED(result));
+		common->dxCommon_->GetDevice()->CreateDepthStencilView(depthBuff.Get(),&depthStencilDesc,dsvHeap_->GetCPUDescriptorHandleForHeapStart());
+	}
+
+	//コマンドシグネチャ
+	{
+		D3D12_INDIRECT_ARGUMENT_DESC argumentDescs[2] = {};
+		argumentDescs[0].Type = D3D12_INDIRECT_ARGUMENT_TYPE_CONSTANT_BUFFER_VIEW;
+		argumentDescs[0].ConstantBufferView.RootParameterIndex = 0;
+		argumentDescs[1].Type = D3D12_INDIRECT_ARGUMENT_TYPE_DRAW;
 	}
 
     return true;
