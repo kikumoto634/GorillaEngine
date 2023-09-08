@@ -38,6 +38,7 @@ public:
 	UINT GetBbIndex(){return bbIndex;}
 	UINT64 GetFenceValue(){return fenceVal;}
 	std::vector<ComPtr<ID3D12Resource>> GetBackBuffers()	{return backBuffers;}
+	ID3D12DescriptorHeap* GetDsvHeap()	{return dsvHeap.Get();}
 
 private:
 	/// <summary>

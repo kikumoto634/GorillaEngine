@@ -107,10 +107,10 @@ private:
 	ComPtr<ID3D12Resource> depthBuff;
 
 	//デスクリプタ
-	ComPtr<ID3D12DescriptorHeap> rtvHeap_;
+	//ComPtr<ID3D12DescriptorHeap> rtvHeap_;
 	ComPtr<ID3D12Resource> descHeapRTV_[3];
 
-    ComPtr<ID3D12DescriptorHeap> dsvHeap_;
+    //ComPtr<ID3D12DescriptorHeap> dsvHeap_;
 	ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap_;
 
 	UINT rtvDescriptorSize_;
@@ -118,5 +118,9 @@ private:
 
 	//コマンドシグネチャ
 	ComPtr<ID3D12CommandSignature> commandSignature_;
+	//コマンドバッファ
+	ComPtr<ID3D12Resource> commandBuffer_;
+	ComPtr<ID3D12Resource> processedCommandBuffers[3];
+	ComPtr<ID3D12Resource> processedCommandBuffersCounterReset;
 };
 
