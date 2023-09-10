@@ -26,12 +26,20 @@ public:
 		const UINT TriangleCount = 1024;
 		const float TriangleHalfWidth = 0.05f;
 		const float TriangleDepth = 1.0f;
+		const float CullingCutoff = 0.5f;
 
 		const UINT CommandSizePerFrame = TriangleCount*sizeof(IndirectCommand);
 		UINT CommandBufferCounterOffset = 0;
 
+		const UINT ComputeThreadBlockSize = 128;
+
 		Window* window_ = nullptr;
 		DirectXCommon* dxCommon_ = nullptr;
+
+		ComPtr<ID3D12CommandAllocator> computeCommandAllocators[3];
+		ComPtr<ID3D12CommandQueue> computeCommandQueue_;
+		ComPtr<ID3D12GraphicsCommandList> computeCommandList_;
+
 		ComPtr<ID3D12PipelineState> pipelineState;
 		ComPtr<ID3D12PipelineState> computePipelineState;
 
@@ -62,9 +70,9 @@ public:
 
 	struct Compute{
 		float offsetX;
-		float offsetY;
-		float offsetZ;
-		float commandCount;
+        float offsetZ;
+        float cullOffset;
+        float commandCount;
 	};
 
 	//コマンドシグネチャ
@@ -107,10 +115,7 @@ private:
 	ComPtr<ID3D12Resource> depthBuff;
 
 	//デスクリプタ
-	//ComPtr<ID3D12DescriptorHeap> rtvHeap_;
 	ComPtr<ID3D12Resource> descHeapRTV_[3];
-
-    //ComPtr<ID3D12DescriptorHeap> dsvHeap_;
 	ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap_;
 
 	UINT rtvDescriptorSize_;
@@ -125,5 +130,7 @@ private:
 
 	ComPtr<ID3D12Resource> vertexBufferUpload;
 	ComPtr<ID3D12Resource> commandBufferUpload;
+
+	Compute compute;
 };
 

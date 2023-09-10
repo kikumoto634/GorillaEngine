@@ -56,20 +56,13 @@ bool ParticleGPU::Initialize()
 
 	constantBufferData.resize(common->TriangleCount);
 
+	compute.offsetX = common->TriangleHalfWidth;
+    compute.offsetZ = common->TriangleDepth;
+    compute.cullOffset = common->CullingCutoff;
+    compute.commandCount = (float)common->TriangleCount;
+
 	//デスクリプタ
 	{
-		/*D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-        rtvHeapDesc.NumDescriptors = 3;
-        rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-        rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-        common->dxCommon_->GetDevice()->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap_));
-
-        D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-        dsvHeapDesc.NumDescriptors = 1;
-        dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-        dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-        common->dxCommon_->GetDevice()->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap_));*/
-
 		D3D12_DESCRIPTOR_HEAP_DESC cbvSrvUavHeapDesc = {};
 		cbvSrvUavHeapDesc.NumDescriptors = 3 * 3;
 		cbvSrvUavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -78,18 +71,6 @@ bool ParticleGPU::Initialize()
 	
 		rtvDescriptorSize_ = common->dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 		cbvSrvUavDescriptorSize_ = common->dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	}
-
-	//RTV
-	{
-		/*CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap_->GetCPUDescriptorHandleForHeapStart());
-
-		for(UINT n = 0; n < 3; n++){
-			result = common->dxCommon_->GetSwapChain()->GetBuffer(n, IID_PPV_ARGS(&descHeapRTV_[n]));
-			assert(SUCCEEDED(result));
-			common->dxCommon_->GetDevice()->CreateRenderTargetView(descHeapRTV_[n].Get(), nullptr,rtvHandle);
-			rtvHandle.Offset(1,rtvDescriptorSize_);
-		}*/
 	}
 
     //頂点
@@ -179,6 +160,21 @@ bool ParticleGPU::Initialize()
         assert(SUCCEEDED(result));
         memcpy(cbvDataBegin, &constantBufferData[0], common->TriangleCount * sizeof(Const));
 
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+        srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+        srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+        srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        srvDesc.Buffer.NumElements = common->TriangleCount;
+        srvDesc.Buffer.StructureByteStride = sizeof(Const);
+        srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+
+        CD3DX12_CPU_DESCRIPTOR_HANDLE cbvSrvHandle(cbvSrvUavHeap_->GetCPUDescriptorHandleForHeapStart(), 0, cbvSrvUavDescriptorSize_);
+        for (UINT frame = 0; frame < 3; frame++)
+        {
+            srvDesc.Buffer.FirstElement = frame * common->TriangleCount;
+            common->dxCommon_->GetDevice()->CreateShaderResourceView(constBuff_.Get(), &srvDesc, cbvSrvHandle);
+            cbvSrvHandle.Offset(3, cbvSrvUavDescriptorSize_);
+        }
     }
 
 	//深度
@@ -374,24 +370,64 @@ void ParticleGPU::Update()
 
 void ParticleGPU::Draw()
 {
+	HRESULT result = {};
 	UINT frameIndex = common->dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
 
-    common->dxCommon_->GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(commandBuffer_.Get(),
-            D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT));
+	{
+		result = common->computeCommandAllocators[frameIndex]->Reset();
+		assert(SUCCEEDED(result));
+		result = common->computeCommandList_->Reset(common->computeCommandAllocators[frameIndex].Get(), common->computePipelineState.Get());
+		assert(SUCCEEDED(result));
+
+		UINT frameDescriptorOffset = frameIndex * 3;
+		D3D12_GPU_DESCRIPTOR_HANDLE cbvSrvUavHandle = cbvSrvUavHeap_->GetGPUDescriptorHandleForHeapStart();
+
+		common->computeCommandList_->SetComputeRootSignature(common->computeRootSignature.Get());
+
+		ID3D12DescriptorHeap* ppHeaps[] = { cbvSrvUavHeap_.Get() };
+		common->computeCommandList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+		common->computeCommandList_->SetComputeRootDescriptorTable(
+			0,
+			CD3DX12_GPU_DESCRIPTOR_HANDLE(cbvSrvUavHandle, 0 + frameDescriptorOffset, cbvSrvUavDescriptorSize_));
+
+		common->computeCommandList_->SetComputeRoot32BitConstants(1, 4, reinterpret_cast<void*>(&compute), 0);
+
+		// Reset the UAV counter for this frame.
+		common->computeCommandList_->CopyBufferRegion(processedCommandBuffers[frameIndex].Get(), common->CommandBufferCounterOffset, processedCommandBuffersCounterReset.Get(), 0, sizeof(UINT));
+
+		D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(processedCommandBuffers[frameIndex].Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+		common->computeCommandList_->ResourceBarrier(1, &barrier);
+
+		common->computeCommandList_->Dispatch(static_cast<UINT>(ceil(common->TriangleCount / float(common->ComputeThreadBlockSize))), 1, 1);
+
+		result = (common->computeCommandList_->Close());
+		assert(SUCCEEDED(result));
+	}
+
+
+    common->dxCommon_->GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(processedCommandBuffers[frameIndex].Get(),
+            D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT));
 
 	common->dxCommon_->GetCommandList()->IASetVertexBuffers(0,1, &vbView_);
 
 	common->dxCommon_->GetCommandList()->ExecuteIndirect(
 		commandSignature_.Get(),
 		common->TriangleCount,
-		commandBuffer_.Get(),
-		(common->TriangleCount * sizeof(IndirectCommand)) * frameIndex,
-		nullptr,
-		0
+		processedCommandBuffers[frameIndex].Get(),
+		0,
+		processedCommandBuffers[frameIndex].Get(),
+		common->CommandBufferCounterOffset
 	);
 
     common->dxCommon_->GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(commandBuffer_.Get(),
-            D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE));
+            D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+
+
+	ID3D12CommandList* ppCommandLists[] = { common->computeCommandList_.Get() };
+    common->computeCommandQueue_->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+	//common->computeCommandQueue_->Signal(common->dxCommon_->GetFence(), common->dxCommon_->GetFenceValue());
 }
 
 float ParticleGPU::RandomFloat(float min, float max)
@@ -403,7 +439,25 @@ float ParticleGPU::RandomFloat(float min, float max)
 
 void ParticleGPU::ParticleCommon::Initialize()
 {
-    HRESULT result = {};
+	HRESULT result = {};
+
+	D3D12_COMMAND_QUEUE_DESC computeQueueDesc = {};
+    computeQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    computeQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
+
+    result = dxCommon_->GetDevice()->CreateCommandQueue(&computeQueueDesc, IID_PPV_ARGS(&computeCommandQueue_));
+	assert(SUCCEEDED(result));
+
+
+	for(int i = 0; i < 3; i++){
+		dxCommon_->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_COMPUTE, IID_PPV_ARGS(&computeCommandAllocators[i]));
+	}
+
+	UINT frameIndex = dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
+	result = (dxCommon_->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_COMPUTE, computeCommandAllocators[frameIndex].Get(), computePipelineState.Get(), IID_PPV_ARGS(&computeCommandList_)));
+	assert(SUCCEEDED(result));
+    result = computeCommandList_->Close();
+	assert(SUCCEEDED(result));
 
     //シェーダ
     ID3DBlob* vsBlob = nullptr;
