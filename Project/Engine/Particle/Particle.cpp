@@ -460,28 +460,28 @@ void ParticleGPU::ParticleCommon::Initialize()
 	}
 
 	//コンピュートシェーダーの読み込みコンパイル
-	//result = D3DCompileFromFile(
-	//	L"Resources/shader/GPUParticleCS.hlsl",		//シェーダーファイル名
-	//	nullptr,
-	//	D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
-	//	"main", "cs_5_0",					//エントリーポイント名、シェーダーモデル指定
-	//	D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	//デバック用設定
-	//	0,
-	//	&csBlob, &errorBlob);
-	////エラーなら
-	//if(FAILED(result)){
-	//	//errorBlobからエラー内容をstring型にコピー
-	//	std::string error;
-	//	error.resize(errorBlob->GetBufferSize());
+	result = D3DCompileFromFile(
+		L"Resources/shader/GPUParticleCS.hlsl",		//シェーダーファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
+		"main", "cs_5_0",					//エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	//デバック用設定
+		0,
+		&csBlob, &errorBlob);
+	//エラーなら
+	if(FAILED(result)){
+		//errorBlobからエラー内容をstring型にコピー
+		std::string error;
+		error.resize(errorBlob->GetBufferSize());
 
-	//	std::copy_n((char*)errorBlob->GetBufferPointer(),
-	//				errorBlob->GetBufferSize(),
-	//				error.begin());
-	//	error += "\n";
-	//	//エラー内容を出力ウィンドウに表示
-	//	OutputDebugStringA(error.c_str());
-	//	assert(0);
-	//}
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+					errorBlob->GetBufferSize(),
+					error.begin());
+		error += "\n";
+		//エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(error.c_str());
+		assert(0);
+	}
 
 	//頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
@@ -542,35 +542,35 @@ void ParticleGPU::ParticleCommon::Initialize()
 	}
 
 	//コンピュート
-	//{
-	//	//パイプラインステート
-	//	D3D12_COMPUTE_PIPELINE_STATE_DESC computePipelineDesc{};
-	//	computePipelineDesc.CS = CD3DX12_SHADER_BYTECODE(csBlob);
+	{
+		//パイプラインステート
+		D3D12_COMPUTE_PIPELINE_STATE_DESC computePipelineDesc{};
+		computePipelineDesc.CS = CD3DX12_SHADER_BYTECODE(csBlob);
 
-	//	//レンジ
-	//	CD3DX12_DESCRIPTOR_RANGE1 ranges[2]{};
-	//	ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,2,0,0,D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
-	//	ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV,1,0,0,D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
+		//レンジ
+		CD3DX12_DESCRIPTOR_RANGE1 ranges[2]{};
+		ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,2,0,0,D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+		ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV,1,0,0,D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
 
-	//	//ルートパラメータ
-	//	CD3DX12_ROOT_PARAMETER1 computeRootParam[2] = {};
-	//	computeRootParam[0].InitAsDescriptorTable(2,ranges);
-	//	computeRootParam[1].InitAsConstants(4,0);
+		//ルートパラメータ
+		CD3DX12_ROOT_PARAMETER1 computeRootParam[2] = {};
+		computeRootParam[0].InitAsDescriptorTable(2,ranges);
+		computeRootParam[1].InitAsConstants(4,0);
 
-	//	//ルートシグネチャ
-	//	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC computeRootSignatureDesc{};
-	//	computeRootSignatureDesc.Init_1_1(_countof(computeRootParam),computeRootParam);
+		//ルートシグネチャ
+		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC computeRootSignatureDesc{};
+		computeRootSignatureDesc.Init_1_1(_countof(computeRootParam),computeRootParam);
 
-	//	//シグネチャ
-	//	ID3DBlob* signature;
-	//	result = D3DX12SerializeVersionedRootSignature(&computeRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_1, &signature, &errorBlob);
-	//	assert(SUCCEEDED(result));
-	//	result = dxCommon_->GetDevice()->CreateRootSignature(0,signature->GetBufferPointer(),signature->GetBufferSize(),IID_PPV_ARGS(&common->computeRootSignature));
-	//	assert(SUCCEEDED(result));
-	//	computePipelineDesc.pRootSignature = common->computeRootSignature.Get();
+		//シグネチャ
+		ID3DBlob* signature;
+		result = D3DX12SerializeVersionedRootSignature(&computeRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_1, &signature, &errorBlob);
+		assert(SUCCEEDED(result));
+		result = dxCommon_->GetDevice()->CreateRootSignature(0,signature->GetBufferPointer(),signature->GetBufferSize(),IID_PPV_ARGS(&common->computeRootSignature));
+		assert(SUCCEEDED(result));
+		computePipelineDesc.pRootSignature = common->computeRootSignature.Get();
 
-	//	//パイプライン生成
-	//	result = dxCommon_->GetDevice()->CreateComputePipelineState(&computePipelineDesc, IID_PPV_ARGS(&common->computePipelineState));
-	//	assert(SUCCEEDED(result));
-	//}
+		//パイプライン生成
+		result = dxCommon_->GetDevice()->CreateComputePipelineState(&computePipelineDesc, IID_PPV_ARGS(&common->computePipelineState));
+		assert(SUCCEEDED(result));
+	}
 }
