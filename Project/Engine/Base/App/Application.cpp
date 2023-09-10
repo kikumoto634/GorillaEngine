@@ -61,8 +61,10 @@ void Application::Initialize()
 	//DirectXCommon
 	dxCommon->Initialize(window);
 
-	ParticleGPU::StaticInitialize();
+	camera = Camera::GetInstance();
+	camera->Initialize(window);
 
+	ParticleGPU::StaticInitialize();
 	particle = new ParticleGPU();
 	particle = ParticleGPU::Create();
 
@@ -120,7 +122,7 @@ void Application::Initialize()
 
 void Application::Update()
 {
-
+	camera->Update();
 	particle->Update();
 //#ifdef _DEBUG
 //	imgui->Begin();

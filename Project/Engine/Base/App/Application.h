@@ -75,4 +75,6 @@ private:
 
 	//GPUパーティクル
 	ParticleGPU* particle = nullptr;
+
+	Camera* camera;
 };
