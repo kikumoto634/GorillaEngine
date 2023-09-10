@@ -96,7 +96,7 @@ private:
 	//クラス名(デバック用)
 	const char* name = nullptr;
 	
-	float distance = 20.f;	//カメラの距離
+	float distance = 2.f;	//カメラの距離
 	//回転行列
 	XMMATRIX matRot = DirectX::XMMatrixIdentity();
 
