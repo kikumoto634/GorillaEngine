@@ -122,5 +122,8 @@ private:
 	ComPtr<ID3D12Resource> commandBuffer_;
 	ComPtr<ID3D12Resource> processedCommandBuffers[3];
 	ComPtr<ID3D12Resource> processedCommandBuffersCounterReset;
+
+	ComPtr<ID3D12Resource> vertexBufferUpload;
+	ComPtr<ID3D12Resource> commandBufferUpload;
 };
 

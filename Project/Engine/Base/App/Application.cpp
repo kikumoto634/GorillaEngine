@@ -144,9 +144,6 @@ void Application::Draw()
 	//描画前処理
 	dxCommon->BeginDraw();
 
-	ParticleGPU::SetPipelineState();
-	particle->Draw();
-
 	//postEffect_->Draw();
 	//Sprite::SetPipelineState();
 	//sceneManager->DrawBack();
@@ -158,8 +155,12 @@ void Application::Draw()
 	//imgui->Draw();
 #endif // _DEBUG
 
+	ParticleGPU::SetPipelineState();
+	particle->Draw();
+
 	//描画後処理
 	dxCommon->EndDraw();
+	dxCommon->Reset();
 }
 
 void Application::Finalize()

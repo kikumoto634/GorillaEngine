@@ -54,9 +54,6 @@ bool ParticleGPU::Initialize()
     HRESULT result = {};
     camera_ = Camera::GetInstance();
 
-	ComPtr<ID3D12Resource> vertexBufferUpload;
-	ComPtr<ID3D12Resource> commandBufferUpload;
-
 	constantBufferData.resize(common->TriangleCount);
 
 	//デスクリプタ
@@ -140,6 +137,7 @@ bool ParticleGPU::Initialize()
 		vertexData.SlicePitch = vertexData.RowPitch;
 
 		UpdateSubresources<1>(common->dxCommon_->GetCommandList(), vertBuff_.Get(), vertexBufferUpload.Get(), 0,0,1,&vertexData);
+		common->dxCommon_->GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(vertBuff_.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
 
         //頂点バッファビュー
         vbView_.BufferLocation =vertBuff_->GetGPUVirtualAddress();
@@ -283,6 +281,7 @@ bool ParticleGPU::Initialize()
 		commandData.SlicePitch = commandData.RowPitch;
 
 		UpdateSubresources<1>(common->dxCommon_->GetCommandList(),commandBuffer_.Get(), commandBufferUpload.Get(), 0,0,1,&commandData);
+		common->dxCommon_->GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(commandBuffer_.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE));
 
 		//SRV
 		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -375,9 +374,10 @@ void ParticleGPU::Update()
 
 void ParticleGPU::Draw()
 {
-
-
 	UINT frameIndex = common->dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
+
+    common->dxCommon_->GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(commandBuffer_.Get(),
+            D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT));
 
 	common->dxCommon_->GetCommandList()->IASetVertexBuffers(0,1, &vbView_);
 
@@ -385,11 +385,13 @@ void ParticleGPU::Draw()
 		commandSignature_.Get(),
 		common->TriangleCount,
 		commandBuffer_.Get(),
-		(common->TriangleCount * sizeof(IndirectCommand)),
+		(common->TriangleCount * sizeof(IndirectCommand)) * frameIndex,
 		nullptr,
 		0
 	);
 
+    common->dxCommon_->GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(commandBuffer_.Get(),
+            D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE));
 }
 
 float ParticleGPU::RandomFloat(float min, float max)

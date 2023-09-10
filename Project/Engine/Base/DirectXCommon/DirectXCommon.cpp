@@ -79,6 +79,10 @@ void DirectXCommon::EndDraw()
 	//コマンドリスト
 	//命令クローズ
 	commandList->Close();
+}
+
+void DirectXCommon::Reset()
+{
 	//コマンドリストの実行
 	ID3D12CommandList* commandLists[] = {commandList.Get()};
 	commandQueue->ExecuteCommandLists(1, commandLists);
