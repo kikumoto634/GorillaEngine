@@ -35,12 +35,12 @@ void GPUParticleManager::SetPipelineState()
 	common->computeCommandList_->SetComputeRootSignature(common->computeRootSignature.Get());
 }
 
-GPUParticleManager *GPUParticleManager::Create()
+GPUParticleManager *GPUParticleManager::Create(Camera* camera)
 {
     GPUParticleManager* temp = new GPUParticleManager();
     if(!temp) return nullptr;
 
-    if(!temp->Initialize()){
+    if(!temp->Initialize(camera)){
         delete temp;
         assert(0);
         return nullptr;
@@ -52,10 +52,9 @@ GPUParticleManager::GPUParticleManager()
 {
 }
 
-bool GPUParticleManager::Initialize()
+bool GPUParticleManager::Initialize(Camera* camera)
 {
     HRESULT result = {};
-    camera_ = Camera::GetInstance();
 
 	constantBufferData.resize(common->TriangleCount);
 
@@ -155,7 +154,7 @@ bool GPUParticleManager::Initialize()
 			constantBufferData[i].velocity = Vector4(RandomFloat(0.01f,0.02f),0.f,0.f,0.f);
 			constantBufferData[i].offset = Vector4(RandomFloat(-5.f,-1.5f),RandomFloat(-1.f,1.f),RandomFloat(0.f,2.f),0.f);
 			constantBufferData[i].color = Vector4(RandomFloat(0.5f,1.f),RandomFloat(0.5f,1.f),RandomFloat(0.5f,1.f),1.f);
-			constantBufferData[i].projection = camera_->GetViewProjectionMatrix();
+			constantBufferData[i].projection = camera->GetViewProjectionMatrix();
 		}
 
 		CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
@@ -358,7 +357,7 @@ bool GPUParticleManager::Initialize()
     return true;
 }
 
-void GPUParticleManager::Update()
+void GPUParticleManager::Update(Camera* camera)
 {
 	for (UINT n = 0; n < common->TriangleCount; n++)
     {
@@ -371,6 +370,8 @@ void GPUParticleManager::Update()
             constantBufferData[n].velocity.x = RandomFloat(0.01f, 0.02f);
             constantBufferData[n].offset.x = -offsetBounds;
         }
+
+		constantBufferData[n].projection = camera->GetViewProjectionMatrix();
     }
 
     UINT8* destination = cbvDataBegin + (common->TriangleCount * common->dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex() * sizeof(Const));

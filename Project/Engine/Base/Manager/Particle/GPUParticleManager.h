@@ -85,22 +85,20 @@ public:
 	static void StaticInitialize();
 	static void StaticFinalize();
 	static void SetPipelineState();
-	static GPUParticleManager* Create();
+	static GPUParticleManager* Create(Camera* camera);
 
 private:
 	static ParticleCommon* common;
 
 public:
 	GPUParticleManager();
-	bool Initialize();
-	void Update();
+	bool Initialize(Camera* camera);
+	void Update(Camera* camera);
 	void Draw();
 private:
 	float RandomFloat(float min, float max);
 
 private:
-	Camera* camera_ = nullptr;
-
 	//頂点
 	ComPtr<ID3D12Resource> vertBuff_;
 	Vertex* vertMap_ = nullptr;
