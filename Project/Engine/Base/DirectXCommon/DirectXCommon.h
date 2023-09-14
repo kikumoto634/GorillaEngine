@@ -37,6 +37,7 @@ public:
 	size_t GetBackBuffersCount()	{return backBuffers.size();}
 	IDXGISwapChain3* GetSwapChain(){return swapChain.Get();}
 	UINT GetBbIndex(){return bbIndex;}
+
 	ID3D12Fence* GetFence()	{return fence.Get();}
 	UINT64 GetFenceValue(){return fenceVal;}
 	std::vector<ComPtr<ID3D12Resource>> GetBackBuffers()	{return backBuffers;}

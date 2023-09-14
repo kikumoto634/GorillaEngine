@@ -36,7 +36,7 @@ public:
 		Window* window_ = nullptr;
 		DirectXCommon* dxCommon_ = nullptr;
 
-		ComPtr<ID3D12CommandAllocator> computeCommandAllocators[3];
+		ComPtr<ID3D12CommandAllocator> computeCommandAllocators;
 		ComPtr<ID3D12CommandQueue> computeCommandQueue_;
 		ComPtr<ID3D12GraphicsCommandList> computeCommandList_;
 
@@ -132,5 +132,9 @@ private:
 	ComPtr<ID3D12Resource> commandBufferUpload;
 
 	Compute compute;
+
+    ComPtr<ID3D12Fence> computeFence_;
+    UINT64 fenceValues_;
+    HANDLE fenceEvent_;
 };
 
