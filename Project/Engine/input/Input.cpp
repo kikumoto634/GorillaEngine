@@ -22,11 +22,11 @@ Input *Input::GetInstance()
 	return &instance;
 }
 
-void Input::Initialize(HWND hwnd)
+void Input::Initialize()
 {
 	HRESULT result;
 
-	hwnd_ = hwnd;
+	window = Window::GetInstance();
 
 	///DirectInPut
 	//初期化 (他入力方法追加でもこのオブジェクトは一つのみ)
@@ -70,13 +70,13 @@ void Input::Initialize(HWND hwnd)
 	//DISCL_NONEXCLUSIVE	デバイスをこのアプリだけで専有しない
 	//DISCL_NOWINKEY		Windowsキーを無効にする
 	result = keyboard_->SetCooperativeLevel(
-		hwnd_,
+		window->GetHwnd(),
 		DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
 	);
 	assert(SUCCEEDED(result));
 	//マウス
 	result = mouse_->SetCooperativeLevel(
-		hwnd_,
+		window->GetHwnd(),
 		DISCL_NONEXCLUSIVE | DISCL_FOREGROUND
 	);
 	assert(SUCCEEDED(result));
@@ -201,14 +201,18 @@ const Vector2 Input::GetMousePos()
 {
 	POINT p;
 	GetCursorPos(&p);
-	ScreenToClient(hwnd_, &p);
-
+	ScreenToClient(window->GetHwnd(), &p);
 	return Vector2{(float)p.x,(float)p.y};
 }
 
 const Vector2 Input::GetMouseVelocity()
 {
 	return Vector2((float)mouseKey_.lX, (float)mouseKey_.lY);
+}
+
+const float Input::GetMouseWheel()
+{
+	return (float)mouseKey_.lZ;
 }
 
 

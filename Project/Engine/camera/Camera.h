@@ -21,7 +21,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Window* window);
+	virtual void Initialize(Vector3 pos = {0,0,-20}, Vector3 rot = {0,0,0});
 
 	/// <summary>
 	/// 更新
@@ -38,8 +38,6 @@ public:
 		world.rotation += rot;
 		world.UpdateMatrix();
 	}
-	// カメラ追従
-	void Tracking(Vector3 target, Vector3 offset);
 
 	//シェイク
 	void ShakeStart();
@@ -47,6 +45,8 @@ public:
 #pragma region Getter
 	//名前
 	const char* GetName()	{return name;}
+
+	const WorldTransform GetWorld()	{return world;}
 
 	//座標
 	const Vector3 GetPosition()	{return world.translation;}
@@ -83,6 +83,8 @@ public:
 	void SetTarget(const Vector3& target)	{this->view.target = target; }
 	void SetUp(const Vector3& up)	{this->view.up = up; }
 
+	void SetWorld(const WorldTransform world)	{this->world = world;}
+
 	void SetShake(float frame, int power)	{shakeMaxFrame = frame, shakeMaxPower = power;}
 #pragma endregion
 
@@ -95,8 +97,6 @@ private:
 
 	//クラス名(デバック用)
 	const char* name = nullptr;
-	
-	float distance = 2.f;	//カメラの距離
 	//回転行列
 	XMMATRIX matRot = DirectX::XMMatrixIdentity();
 

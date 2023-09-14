@@ -2,7 +2,9 @@
 #include "DirectXCommon.h"
 #include "Window.h"
 #include "Input.h"
+
 #include "Camera.h"
+#include "FollowCamera.h"
 
 #include "PostEffect.h"
 
@@ -12,10 +14,12 @@
 #include "BaseObjObject.h"
 
 #include "ParticleObject.h"
-#include "../Particle/GPUParticle.h"
+
+#include "Action/Action.h"
 
 #ifdef _DEBUG
 #include "DebugText.h"
+#include "DebugCamera.h"
 #include "imguiManager.h"
 
 #include <imgui.h>
@@ -102,7 +106,7 @@ protected:
 	
 	//作成
 	Input* input = nullptr;
-	Camera* camera = nullptr;
+	FollowCamera* camera = nullptr;
 
 	//借り物
 	//シーンマネージャー
@@ -117,6 +121,8 @@ protected:
 #ifdef _DEBUG
 	//借り物
 	DebugText* debugText = nullptr;
+	DebugCamera* debugCamera = nullptr;
+	bool isDebugCamera = false;
 	imguiManager* imgui = nullptr;
 	bool show_demo_window = false;
 #endif // _DEBUG
@@ -128,34 +134,8 @@ protected:
 	BaseSprites* sp = nullptr;
 
 	//オブジェクト
-	ObjModelManager* model = nullptr;
-	static const int num = 1;
-	BaseObjObject* obj[num] = {};
-
-	//パーティクル
-	ParticleObject* particleObj = nullptr;
-
-	int num_ = 1;
-	Particle particle = {
-		60,
-		{},
-		{},
-		{},
-		0,
-		1,
-		1,
-		{1,1,1,1}
-	};
-
-	Vector3 MinVel_ = {0,0,0};
-	Vector3 MaxVel_ = {0,1,0};
-	
-	Vector3 MinAcc_ = {0,0,0};
-	Vector3 MaxAcc_ = {0,0,0};
-
-	float MinSize_ = 0;
-	float MaxSize_ = 1;
-
-	GPUParticle* gpuParticle = nullptr;
+	Action* player = nullptr;
+	//Skydome
+	BaseObjObject* skydome = nullptr;
 };
 

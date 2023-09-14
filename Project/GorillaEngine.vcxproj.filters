@@ -307,8 +307,23 @@
     <Filter Include="ソース ファイル\Engine\Math\Matrix">
       <UniqueIdentifier>{bb20fcc1-502d-48da-b3f6-0af1049e0e9d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\GPUParticle">
-      <UniqueIdentifier>{15375cb9-ce3f-4535-9cdb-ef1e82ee9c00}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\Engine\DebugProcess\DebugCamera">
+      <UniqueIdentifier>{bd93878f-656d-4895-99a4-cc3e210d448b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\DebugProcess\DebugCamera">
+      <UniqueIdentifier>{f5b4bc8c-aa9c-4d5c-b40e-07109299988b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\Math\Utility">
+      <UniqueIdentifier>{c59dd798-f3da-42a0-9e7b-39fb050c93d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Math\Utility">
+      <UniqueIdentifier>{7d2b1ff0-a9f0-4708-866c-be5e3f413251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\3D\Player">
+      <UniqueIdentifier>{cd34650e-6df6-43fa-a106-a1b9ac05c81a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\3D\Player">
+      <UniqueIdentifier>{423069a9-380f-4da7-9011-fb3bbd1729a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -429,11 +444,17 @@
     <ClCompile Include="Engine\math\Matrix\Matrix4x4.cpp">
       <Filter>ソース ファイル\Engine\Math\Matrix</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\GPUParticle.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\DebugProcess\DebugCamera\DebugCamera.cpp">
+      <Filter>ソース ファイル\Engine\DebugProcess\DebugCamera</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\Particle.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\camera\FollowCamera.cpp">
+      <Filter>ソース ファイル\Engine\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Utility\Utility.cpp">
+      <Filter>ソース ファイル\Engine\Math\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Action.cpp">
+      <Filter>ソース ファイル\Game\3D\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -584,11 +605,20 @@
     <ClInclude Include="Engine\math\Matrix\Matrix4x4.h">
       <Filter>ヘッダー ファイル\Engine\Math\Matrix</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\GPUParticle.h">
+    <ClInclude Include="Engine\DebugProcess\DebugCamera\DebugCamera.h">
+      <Filter>ヘッダー ファイル\Engine\DebugProcess\DebugCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\camera\FollowCamera.h">
+      <Filter>ヘッダー ファイル\Engine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\Particle.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\math\Utility\Utility.h">
+      <Filter>ヘッダー ファイル\Engine\Math\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\3D\Player\Action\Action.h">
+      <Filter>ヘッダー ファイル\Game\3D\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -625,15 +655,6 @@
     <FxCompile Include="Resources\shader\PostEffectPS.hlsl">
       <Filter>リソース ファイル\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\GPUParticleCS.hlsl">
-      <Filter>リソース ファイル\GPUParticle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\GPUParticlePS.hlsl">
-      <Filter>リソース ファイル\GPUParticle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\GPUParticleVS.hlsl">
-      <Filter>リソース ファイル\GPUParticle</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Sprite.hlsli">
@@ -654,8 +675,10 @@
     <None Include="Resources\shader\ObjLight.hlsli">
       <Filter>リソース ファイル\Obj</Filter>
     </None>
-    <None Include="Resources\shader\GPUParticle.hlsli">
-      <Filter>リソース ファイル\GPUParticle</Filter>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GorillaEngine.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
