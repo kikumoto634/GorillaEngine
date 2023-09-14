@@ -1,10 +1,10 @@
-#include "Particle.h"
+#include "GPUParticleManager.h"
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
-ParticleGPU::ParticleCommon* ParticleGPU::common = nullptr;
+GPUParticleManager::ParticleCommon* GPUParticleManager::common = nullptr;
 
-void ParticleGPU::StaticInitialize()
+void GPUParticleManager::StaticInitialize()
 {
     common = new ParticleCommon();
     common->window_ = Window::GetInstance();
@@ -15,14 +15,14 @@ void ParticleGPU::StaticInitialize()
     common->Initialize();
 }
 
-void ParticleGPU::StaticFinalize()
+void GPUParticleManager::StaticFinalize()
 {
     if(!common) return;
     delete common;
     common = nullptr;
 }
 
-void ParticleGPU::SetPipelineState()
+void GPUParticleManager::SetPipelineState()
 {
     //パイプラインステートの設定
     common->dxCommon_->GetCommandList()->SetPipelineState(common->pipelineState.Get());
@@ -35,9 +35,9 @@ void ParticleGPU::SetPipelineState()
 	common->computeCommandList_->SetComputeRootSignature(common->computeRootSignature.Get());
 }
 
-ParticleGPU *ParticleGPU::Create()
+GPUParticleManager *GPUParticleManager::Create()
 {
-    ParticleGPU* temp = new ParticleGPU();
+    GPUParticleManager* temp = new GPUParticleManager();
     if(!temp) return nullptr;
 
     if(!temp->Initialize()){
@@ -48,11 +48,11 @@ ParticleGPU *ParticleGPU::Create()
     return temp;
 }
 
-ParticleGPU::ParticleGPU()
+GPUParticleManager::GPUParticleManager()
 {
 }
 
-bool ParticleGPU::Initialize()
+bool GPUParticleManager::Initialize()
 {
     HRESULT result = {};
     camera_ = Camera::GetInstance();
@@ -358,7 +358,7 @@ bool ParticleGPU::Initialize()
     return true;
 }
 
-void ParticleGPU::Update()
+void GPUParticleManager::Update()
 {
 	for (UINT n = 0; n < common->TriangleCount; n++)
     {
@@ -377,7 +377,7 @@ void ParticleGPU::Update()
     memcpy(destination, &constantBufferData[0], common->TriangleCount * sizeof(Const));
 }
 
-void ParticleGPU::Draw()
+void GPUParticleManager::Draw()
 {
 	HRESULT result = {};
 	UINT frameIndex = common->dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
@@ -446,14 +446,14 @@ void ParticleGPU::Draw()
 	common->computeCommandList_->Reset(common->computeCommandAllocators.Get(), nullptr);
 }
 
-float ParticleGPU::RandomFloat(float min, float max)
+float GPUParticleManager::RandomFloat(float min, float max)
 {
 	float scale = static_cast<float>(rand()) / RAND_MAX;
     float range = max - min;
     return scale * range + min;
 }
 
-void ParticleGPU::ParticleCommon::Initialize()
+void GPUParticleManager::ParticleCommon::Initialize()
 {
 	HRESULT result = {};
 

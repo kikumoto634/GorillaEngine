@@ -325,6 +325,9 @@
     <Filter Include="ソース ファイル\Game\3D\Player">
       <UniqueIdentifier>{423069a9-380f-4da7-9011-fb3bbd1729a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\GPUParticle">
+      <UniqueIdentifier>{5ea2de26-7463-4318-b70a-c6c71fd81b79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\input\Input.cpp">
@@ -455,6 +458,9 @@
     </ClCompile>
     <ClCompile Include="Action.cpp">
       <Filter>ソース ファイル\Game\3D\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Base\Manager\Particle\GPUParticleManager.cpp">
+      <Filter>ソース ファイル\Engine\Base\Manager\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -620,6 +626,9 @@
     <ClInclude Include="Game\3D\Player\Action\Action.h">
       <Filter>ヘッダー ファイル\Game\3D\Player</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Base\Manager\Particle\GPUParticleManager.h">
+      <Filter>ヘッダー ファイル\Engine\Base\Manager\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">
@@ -655,6 +664,15 @@
     <FxCompile Include="Resources\shader\PostEffectPS.hlsl">
       <Filter>リソース ファイル\PostEffect</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticleVS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticleCS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticlePS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Sprite.hlsli">
@@ -674,6 +692,9 @@
     </None>
     <None Include="Resources\shader\ObjLight.hlsli">
       <Filter>リソース ファイル\Obj</Filter>
+    </None>
+    <None Include="Resources\shader\GPUParticle.hlsli">
+      <Filter>リソース ファイル\GPUParticle</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

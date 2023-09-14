@@ -14,6 +14,7 @@
 #include "BaseObjObject.h"
 
 #include "ParticleObject.h"
+#include "GPUParticleManager.h"
 
 #include "Action/Action.h"
 
@@ -137,5 +138,8 @@ protected:
 	Action* player = nullptr;
 	//Skydome
 	BaseObjObject* skydome = nullptr;
+
+	//GPUパーティクル
+	GPUParticleManager* particle = nullptr;
 };
 

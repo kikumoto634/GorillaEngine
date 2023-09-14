@@ -42,6 +42,9 @@ void BaseScene::Initialize()
 	skydome = new BaseObjObject();
 	skydome->Initialize("skydome");
 
+	GPUParticleManager::StaticInitialize();
+	particle = new GPUParticleManager();
+	particle = GPUParticleManager::Create();
 
 	//ライト
 	lightGroup_ = LightGroup::Create();
@@ -73,6 +76,8 @@ void BaseScene::Update()
 	player->Update(camera);
 
 	skydome->Update(camera);
+
+	particle->Update();
 
 #ifdef _DEBUG
 	{
@@ -142,6 +147,9 @@ void BaseScene::EndUpdate()
 
 void BaseScene::Draw()
 {
+	GPUParticleManager::SetPipelineState();
+	particle->Draw();
+
 	player->Draw();
 	skydome->Draw();
 }
@@ -166,4 +174,7 @@ void BaseScene::Finalize()
 
 	skydome->Finalize();
 	delete skydome;
+
+	GPUParticleManager::StaticFinalize();
+	delete particle;
 }

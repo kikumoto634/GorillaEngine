@@ -23,8 +23,7 @@
 
 #include "PostEffect.h"
 
-#include "../Particle/GPUParticle.h"
-#include "../Particle/Particle.h"
+//#include "GPUParticleManager.h"
 
 #ifdef _DEBUG
 
@@ -72,9 +71,6 @@ private:
 	PostEffect* postEffect_ = nullptr;
 
 	bool isEnd = false;
-
-	//GPUパーティクル
-	ParticleGPU* particle = nullptr;
 
 	Camera* camera;
 };

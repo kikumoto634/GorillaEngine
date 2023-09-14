@@ -177,6 +177,7 @@
     <ClCompile Include="Engine\Base\Manager\.Fbx\FbxModelManager.cpp" />
     <ClCompile Include="Engine\Base\Manager\.Obj\ObjModelManager.cpp" />
     <ClCompile Include="Engine\Base\Manager\.Obj\ObjModelMesh.cpp" />
+    <ClCompile Include="Engine\Base\Manager\Particle\GPUParticleManager.cpp" />
     <ClCompile Include="Engine\Base\Manager\Particle\ParticleManager.cpp" />
     <ClCompile Include="Engine\Base\Manager\Texture\TextureManager.cpp" />
     <ClCompile Include="Engine\Base\Window\Window.cpp" />
@@ -201,8 +202,6 @@
     <ClCompile Include="Engine\math\Vector\Vector4.cpp" />
     <ClCompile Include="Engine\ObjectMatrix\ViewProjection.cpp" />
     <ClCompile Include="Engine\ObjectMatrix\WorldTransform.cpp" />
-    <ClCompile Include="Engine\Particle\GPUParticle.cpp" />
-    <ClCompile Include="Engine\Particle\Particle.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
     <ClCompile Include="Engine\scene\base\BaseScene.cpp" />
     <ClCompile Include="Engine\scene\system\SceneManager.cpp" />
@@ -223,6 +222,7 @@
     <ClInclude Include="Engine\Base\Manager\.Fbx\FbxModelManager.h" />
     <ClInclude Include="Engine\Base\Manager\.Obj\ObjModelManager.h" />
     <ClInclude Include="Engine\Base\Manager\.Obj\ObjModelMesh.h" />
+    <ClInclude Include="Engine\Base\Manager\Particle\GPUParticleManager.h" />
     <ClInclude Include="Engine\Base\Manager\Particle\ParticleManager.h" />
     <ClInclude Include="Engine\Base\Manager\Texture\TextureManager.h" />
     <ClInclude Include="Engine\Base\Window\Window.h" />
@@ -256,8 +256,6 @@
     <ClInclude Include="Engine\math\Vector\Vector4.h" />
     <ClInclude Include="Engine\ObjectMatrix\ViewProjection.h" />
     <ClInclude Include="Engine\ObjectMatrix\WorldTransform.h" />
-    <ClInclude Include="Engine\Particle\GPUParticle.h" />
-    <ClInclude Include="Engine\Particle\Particle.h" />
     <ClInclude Include="Engine\PostEffect\PostEffect.h" />
     <ClInclude Include="Engine\scene\base\BaseScene.h" />
     <ClInclude Include="Engine\scene\system\SceneManager.h" />

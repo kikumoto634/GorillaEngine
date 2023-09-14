@@ -8,7 +8,7 @@
 
 #include "Camera.h"
 
-class ParticleGPU
+class GPUParticleManager
 {
 public:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -19,7 +19,7 @@ public:
 	//サブクラス
 public:
 	class ParticleCommon{
-		friend ParticleGPU;
+		friend GPUParticleManager;
 
 	private:
 		//三角形
@@ -85,13 +85,13 @@ public:
 	static void StaticInitialize();
 	static void StaticFinalize();
 	static void SetPipelineState();
-	static ParticleGPU* Create();
+	static GPUParticleManager* Create();
 
 private:
 	static ParticleCommon* common;
 
 public:
-	ParticleGPU();
+	GPUParticleManager();
 	bool Initialize();
 	void Update();
 	void Draw();
