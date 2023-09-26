@@ -31,10 +31,12 @@ public:
 		const UINT CommandSizePerFrame = TriangleCount*sizeof(IndirectCommand);
 		UINT CommandBufferCounterOffset = 0;
 
-		const UINT ComputeThreadBlockSize = 128;
+		const UINT ComputeThreadBlockSize = 256;
 
 		Window* window_ = nullptr;
 		DirectXCommon* dxCommon_ = nullptr;
+
+		UINT FrameCount = 2;
 
 		ComPtr<ID3D12CommandAllocator> computeCommandAllocators;
 		ComPtr<ID3D12CommandQueue> computeCommandQueue_;
@@ -64,7 +66,7 @@ public:
 		Vector4 velocity;
 		Vector4 offset;
 		Vector4 color;
-		XMMATRIX projection;
+		DirectX::XMFLOAT4X4 projection;
 		float padding[36];
 	};
 

@@ -2,6 +2,8 @@
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
+using namespace DirectX;
+
 GPUParticleManager::ParticleCommon* GPUParticleManager::common = nullptr;
 
 void GPUParticleManager::StaticInitialize()
@@ -9,6 +11,8 @@ void GPUParticleManager::StaticInitialize()
     common = new ParticleCommon();
     common->window_ = Window::GetInstance();
     common->dxCommon_ = DirectXCommon::GetInstance();
+
+	common->FrameCount = (UINT)common->dxCommon_->GetBackBuffersCount();
 
 	common->CommandBufferCounterOffset = common->AlignForUavCounter(common->CommandSizePerFrame);
 
@@ -66,7 +70,7 @@ bool GPUParticleManager::Initialize(Camera* camera)
 	//デスクリプタ
 	{
 		D3D12_DESCRIPTOR_HEAP_DESC cbvSrvUavHeapDesc = {};
-		cbvSrvUavHeapDesc.NumDescriptors = 3 * 3;
+		cbvSrvUavHeapDesc.NumDescriptors = 3 * common->FrameCount;
 		cbvSrvUavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 		cbvSrvUavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 		common->dxCommon_->GetDevice()->CreateDescriptorHeap(&cbvSrvUavHeapDesc,IID_PPV_ARGS(&cbvSrvUavHeap_));
@@ -76,15 +80,18 @@ bool GPUParticleManager::Initialize(Camera* camera)
 	}
 
     //頂点
+	// Define the geometry for a triangle.
+    Vertex triangleVertices[] =
     {
-        // Define the geometry for a triangle.
-        Vertex triangleVertices[] =
-        {
-            { { 0.0f, common->TriangleHalfWidth, common->TriangleDepth } },
-            { { common->TriangleHalfWidth, -common->TriangleHalfWidth, common->TriangleDepth } },
-            { { -common->TriangleHalfWidth, -common->TriangleHalfWidth, common->TriangleDepth } },
-        };
+        { { -common->TriangleHalfWidth, common->TriangleHalfWidth, common->TriangleDepth } },
+        { { common->TriangleHalfWidth, common->TriangleHalfWidth, common->TriangleDepth } },
+        { { -common->TriangleHalfWidth, -common->TriangleHalfWidth, common->TriangleDepth } },
 
+        { { common->TriangleHalfWidth, common->TriangleHalfWidth, common->TriangleDepth } },
+		{ { common->TriangleHalfWidth, -common->TriangleHalfWidth, common->TriangleDepth } },
+        { { -common->TriangleHalfWidth, -common->TriangleHalfWidth, common->TriangleDepth } },
+    };
+    {
         const UINT vertexBuffSize = sizeof(triangleVertices);
 
         // ヒーププロパティ
@@ -154,7 +161,10 @@ bool GPUParticleManager::Initialize(Camera* camera)
 			constantBufferData[i].velocity = Vector4(RandomFloat(0.01f,0.02f),0.f,0.f,0.f);
 			constantBufferData[i].offset = Vector4(RandomFloat(-5.f,-1.5f),RandomFloat(-1.f,1.f),RandomFloat(0.f,2.f),0.f);
 			constantBufferData[i].color = Vector4(RandomFloat(0.5f,1.f),RandomFloat(0.5f,1.f),RandomFloat(0.5f,1.f),1.f);
-			constantBufferData[i].projection = camera->GetViewProjectionMatrix();
+
+
+			//constantBufferData[i].projection = camera->GetViewProjectionMatrix();
+			XMStoreFloat4x4(&constantBufferData[i].projection, XMMatrixTranspose( XMMatrixPerspectiveFovLH(XM_PIDIV4, float(Window::GetWindowWidth()/Window::GetWindowHeight()), 0.01f, 20.0f)));
 		}
 
 		CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
@@ -171,7 +181,7 @@ bool GPUParticleManager::Initialize(Camera* camera)
         srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
         CD3DX12_CPU_DESCRIPTOR_HANDLE cbvSrvHandle(cbvSrvUavHeap_->GetCPUDescriptorHandleForHeapStart(), 0, cbvSrvUavDescriptorSize_);
-        for (UINT frame = 0; frame < 3; frame++)
+        for (UINT frame = 0; frame < common->FrameCount; frame++)
         {
             srvDesc.Buffer.FirstElement = frame * common->TriangleCount;
             common->dxCommon_->GetDevice()->CreateShaderResourceView(constBuff_.Get(), &srvDesc, cbvSrvHandle);
@@ -228,8 +238,8 @@ bool GPUParticleManager::Initialize(Camera* camera)
 	//コマンドバッファ
 	{
 		std::vector<IndirectCommand> commands;
-		commands.resize(common->TriangleCount*3);
-		const UINT commandBufferSize = (common->TriangleCount*sizeof(IndirectCommand)) * 3;
+		commands.resize(common->TriangleCount*common->FrameCount);
+		const UINT commandBufferSize = (common->TriangleCount*sizeof(IndirectCommand)) * common->FrameCount;
 
 		// ヒーププロパティ
 		CD3DX12_HEAP_PROPERTIES heapProps_D = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
@@ -260,10 +270,10 @@ bool GPUParticleManager::Initialize(Camera* camera)
 		D3D12_GPU_VIRTUAL_ADDRESS gpuAddress = constBuff_->GetGPUVirtualAddress();
 		UINT commandIndex = 0;
 
-		for(UINT i = 0; i < 3; i++){
+		for(UINT i = 0; i < common->FrameCount; i++){
 			for(UINT j = 0; j < common->TriangleCount; j++){
 				commands[commandIndex].cbv = gpuAddress;
-				commands[commandIndex].drawArguments.VertexCountPerInstance = 3;
+				commands[commandIndex].drawArguments.VertexCountPerInstance = _countof(triangleVertices);
 				commands[commandIndex].drawArguments.InstanceCount = 1;
 				commands[commandIndex].drawArguments.StartVertexLocation = 0;
 				commands[commandIndex].drawArguments.StartInstanceLocation = 0;
@@ -291,14 +301,14 @@ bool GPUParticleManager::Initialize(Camera* camera)
 		srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
 		CD3DX12_CPU_DESCRIPTOR_HANDLE commandHandle(cbvSrvUavHeap_->GetCPUDescriptorHandleForHeapStart(), 1, cbvSrvUavDescriptorSize_);
-		for(UINT i = 0; i < 3; i++){
+		for(UINT i = 0; i < common->FrameCount; i++){
 			srvDesc.Buffer.FirstElement = i * common->TriangleCount;
 			common->dxCommon_->GetDevice()->CreateShaderResourceView(commandBuffer_.Get(), &srvDesc, commandHandle);
 			commandHandle.Offset(3, cbvSrvUavDescriptorSize_);
 		}
 
 		CD3DX12_CPU_DESCRIPTOR_HANDLE processedCommandshandle(cbvSrvUavHeap_->GetCPUDescriptorHandleForHeapStart(), 2, cbvSrvUavDescriptorSize_);
-		for(UINT i = 0; i < 3; i++){
+		for(UINT i = 0; i < common->FrameCount; i++){
 			commandBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(common->CommandBufferCounterOffset+sizeof(UINT),D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 
 			result = common->dxCommon_->GetDevice()->CreateCommittedResource(
@@ -371,7 +381,7 @@ void GPUParticleManager::Update(Camera* camera)
             constantBufferData[n].offset.x = -offsetBounds;
         }
 
-		constantBufferData[n].projection = camera->GetViewProjectionMatrix();
+		//constantBufferData[n].projection = camera->GetViewProjectionMatrix();
     }
 
     UINT8* destination = cbvDataBegin + (common->TriangleCount * common->dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex() * sizeof(Const));
