@@ -584,6 +584,11 @@ void GPUParticleManager::ParticleCommon::Initialize()
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		//入力データ種別 (標準はD3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA)
 			0												//一度に描画するインスタンス数
 		},
+		{ // uv座標(1行で書いたほうが見やすい)
+			"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+		},
 	};
 
 	//グラフィックス
@@ -592,7 +597,7 @@ void GPUParticleManager::ParticleCommon::Initialize()
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 		pipelineDesc.VS = CD3DX12_SHADER_BYTECODE(vsBlob);
 		pipelineDesc.PS = CD3DX12_SHADER_BYTECODE(psBlob);
-		//pipelineDesc.GS = CD3DX12_SHADER_BYTECODE(gsBlob);
+		pipelineDesc.GS = CD3DX12_SHADER_BYTECODE(gsBlob);
 		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 		pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 		pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
