@@ -46,6 +46,8 @@ void BaseScene::Initialize()
 	particle = new GPUParticleManager();
 	particle = GPUParticleManager::Create(camera);
 
+	world.Initialize();
+
 	//ライト
 	lightGroup_ = LightGroup::Create();
 	//色設定
@@ -77,7 +79,7 @@ void BaseScene::Update()
 
 	skydome->Update(camera);
 
-	particle->Update(camera);
+	particle->Update(world,camera);
 
 #ifdef _DEBUG
 	{
@@ -147,10 +149,12 @@ void BaseScene::EndUpdate()
 
 void BaseScene::Draw()
 {
+player->Draw();
+
 	GPUParticleManager::SetPipelineState();
 	particle->Draw();
 
-	player->Draw();
+	
 	//skydome->Draw();
 }
 

@@ -141,5 +141,6 @@ protected:
 
 	//GPUパーティクル
 	GPUParticleManager* particle = nullptr;
+	WorldTransform world;
 };
 

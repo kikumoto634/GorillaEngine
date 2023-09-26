@@ -31,7 +31,7 @@ public:
 		const UINT CommandSizePerFrame = TriangleCount*sizeof(IndirectCommand);
 		UINT CommandBufferCounterOffset = 0;
 
-		const UINT ComputeThreadBlockSize = 256;
+		const UINT ComputeThreadBlockSize = 128;
 
 		Window* window_ = nullptr;
 		DirectXCommon* dxCommon_ = nullptr;
@@ -66,7 +66,10 @@ public:
 		Vector4 velocity;
 		Vector4 offset;
 		Vector4 color;
-		DirectX::XMFLOAT4X4 projection;
+		//DirectX::XMFLOAT4X4 projection;
+		XMMATRIX projection;
+		XMMATRIX matBillboard;
+		XMMATRIX mat;
 		float padding[36];
 	};
 
@@ -95,7 +98,7 @@ private:
 public:
 	GPUParticleManager();
 	bool Initialize(Camera* camera);
-	void Update(Camera* camera);
+	void Update(WorldTransform world,Camera* camera);
 	void Draw();
 private:
 	float RandomFloat(float min, float max);

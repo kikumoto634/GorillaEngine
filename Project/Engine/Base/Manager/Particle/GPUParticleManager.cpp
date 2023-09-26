@@ -33,7 +33,7 @@ void GPUParticleManager::SetPipelineState()
     //ルートシグネチャの設定
 	common->dxCommon_->GetCommandList()->SetGraphicsRootSignature(common->rootSignature.Get());
 	//プリミティブ形状を設定
-	common->dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	common->dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	common->computeCommandList_->SetPipelineState(common->computePipelineState.Get());
 	common->computeCommandList_->SetComputeRootSignature(common->computeRootSignature.Get());
@@ -86,13 +86,10 @@ bool GPUParticleManager::Initialize(Camera* camera)
         { { -common->TriangleHalfWidth, common->TriangleHalfWidth, common->TriangleDepth } },
         { { common->TriangleHalfWidth, common->TriangleHalfWidth, common->TriangleDepth } },
         { { -common->TriangleHalfWidth, -common->TriangleHalfWidth, common->TriangleDepth } },
-
-        { { common->TriangleHalfWidth, common->TriangleHalfWidth, common->TriangleDepth } },
 		{ { common->TriangleHalfWidth, -common->TriangleHalfWidth, common->TriangleDepth } },
-        { { -common->TriangleHalfWidth, -common->TriangleHalfWidth, common->TriangleDepth } },
     };
     {
-        const UINT vertexBuffSize = sizeof(triangleVertices);
+        const UINT vertexBuffSize = sizeof(triangleVertices)*_countof(triangleVertices);
 
         // ヒーププロパティ
 		CD3DX12_HEAP_PROPERTIES heapProps_D = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
@@ -163,8 +160,9 @@ bool GPUParticleManager::Initialize(Camera* camera)
 			constantBufferData[i].color = Vector4(RandomFloat(0.5f,1.f),RandomFloat(0.5f,1.f),RandomFloat(0.5f,1.f),1.f);
 
 
-			//constantBufferData[i].projection = camera->GetViewProjectionMatrix();
-			XMStoreFloat4x4(&constantBufferData[i].projection, XMMatrixTranspose( XMMatrixPerspectiveFovLH(XM_PIDIV4, float(Window::GetWindowWidth()/Window::GetWindowHeight()), 0.01f, 20.0f)));
+			constantBufferData[i].projection = camera->GetViewProjectionMatrix();
+			//XMStoreFloat4x4(&constantBufferData[i].projection, XMMatrixTranspose( XMMatrixPerspectiveFovLH(XM_PIDIV4, float(Window::GetWindowWidth()/Window::GetWindowHeight()), 0.01f, 20.0f)));
+			constantBufferData[i].matBillboard = camera->GetBillboard();
 		}
 
 		CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
@@ -367,7 +365,7 @@ bool GPUParticleManager::Initialize(Camera* camera)
     return true;
 }
 
-void GPUParticleManager::Update(Camera* camera)
+void GPUParticleManager::Update(WorldTransform world, Camera* camera)
 {
 	for (UINT n = 0; n < common->TriangleCount; n++)
     {
@@ -381,7 +379,9 @@ void GPUParticleManager::Update(Camera* camera)
             constantBufferData[n].offset.x = -offsetBounds;
         }
 
-		//constantBufferData[n].projection = camera->GetViewProjectionMatrix();
+		constantBufferData[n].projection = camera->GetViewProjectionMatrix();
+		constantBufferData[n].matBillboard = camera->GetBillboard();
+		constantBufferData[n].mat = world.matWorld;
     }
 
     UINT8* destination = cbvDataBegin + (common->TriangleCount * common->dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex() * sizeof(Const));
@@ -471,6 +471,7 @@ void GPUParticleManager::ParticleCommon::Initialize()
     //シェーダ
     ID3DBlob* vsBlob = nullptr;
     ID3DBlob* psBlob = nullptr;
+    ID3DBlob* gsBlob = nullptr;
     ID3DBlob* csBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
 
@@ -522,6 +523,31 @@ void GPUParticleManager::ParticleCommon::Initialize()
 		assert(0);
 	}
 
+	//ジオメトリシェーダー
+	result = D3DCompileFromFile(
+		L"Resources/shader/GPUParticleGS.hlsl",		//シェーダーファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
+		"main", "gs_5_0",					//エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	//デバック用設定
+		0,
+		&gsBlob, &errorBlob);
+	//エラーなら
+	if(FAILED(result)){
+		//errorBlobからエラー内容をstring型にコピー
+		std::string error;
+		error.resize(errorBlob->GetBufferSize());
+
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+					errorBlob->GetBufferSize(),
+					error.begin());
+		error += "\n";
+		//エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(error.c_str());
+		assert(0);
+	}
+
+
 	//コンピュートシェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
 		L"Resources/shader/GPUParticleCS.hlsl",		//シェーダーファイル名
@@ -566,23 +592,37 @@ void GPUParticleManager::ParticleCommon::Initialize()
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 		pipelineDesc.VS = CD3DX12_SHADER_BYTECODE(vsBlob);
 		pipelineDesc.PS = CD3DX12_SHADER_BYTECODE(psBlob);
+		//pipelineDesc.GS = CD3DX12_SHADER_BYTECODE(gsBlob);
 		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 		pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 		pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-		pipelineDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+		//レンダーターゲットのブレンド設定
+		D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
+		blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	//RGBAすべてのチャンネルを描画
+		//共通設定
+		blenddesc.BlendEnable = true;						//ブレンドを有効にする
+		blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;		//加算
+		blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;			//ソースの値を100% 使う	(ソースカラー			 ： 今から描画しようとしている色)
+		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;		//デストの値を  0% 使う	(デスティネーションカラー： 既にキャンバスに描かれている色)
+	
+		//半透明合成
+		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		
 		pipelineDesc.InputLayout = {inputLayout, _countof(inputLayout)};
 		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		pipelineDesc.NumRenderTargets = 1;
 		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		pipelineDesc.SampleDesc.Count = 1;
 		pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-		pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-		pipelineDesc.DepthStencilState.DepthEnable = false;
 		pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+		pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
 		//ルートパラメータ
 		CD3DX12_ROOT_PARAMETER1 rootParam[1] = {};
 		rootParam[0].InitAsConstantBufferView(0,0,D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,D3D12_SHADER_VISIBILITY_VERTEX);
+
 
 		///テクスチャサンプラー
 		CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
