@@ -44,7 +44,7 @@ void BaseScene::Initialize()
 
 	GPUParticleManager::StaticInitialize();
 	particle = new GPUParticleManager();
-	particle = GPUParticleManager::Create(camera);
+	particle = GPUParticleManager::Create();
 
 	world.Initialize();
 

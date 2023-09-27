@@ -33,18 +33,19 @@ void GPUParticleManager::SetPipelineState()
     //ルートシグネチャの設定
 	common->dxCommon_->GetCommandList()->SetGraphicsRootSignature(common->rootSignature.Get());
 	//プリミティブ形状を設定
-	common->dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	//common->dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	common->dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	common->computeCommandList_->SetPipelineState(common->computePipelineState.Get());
 	common->computeCommandList_->SetComputeRootSignature(common->computeRootSignature.Get());
 }
 
-GPUParticleManager *GPUParticleManager::Create(Camera* camera)
+GPUParticleManager *GPUParticleManager::Create()
 {
     GPUParticleManager* temp = new GPUParticleManager();
     if(!temp) return nullptr;
 
-    if(!temp->Initialize(camera)){
+    if(!temp->Initialize()){
         delete temp;
         assert(0);
         return nullptr;
@@ -56,7 +57,7 @@ GPUParticleManager::GPUParticleManager()
 {
 }
 
-bool GPUParticleManager::Initialize(Camera* camera)
+bool GPUParticleManager::Initialize()
 {
     HRESULT result = {};
 
@@ -83,10 +84,7 @@ bool GPUParticleManager::Initialize(Camera* camera)
 	// Define the geometry for a triangle.
     Vertex triangleVertices[] =
     {
-        { { -common->TriangleHalfWidth, common->TriangleHalfWidth, common->TriangleDepth } },
-        { { common->TriangleHalfWidth, common->TriangleHalfWidth, common->TriangleDepth } },
-        { { -common->TriangleHalfWidth, -common->TriangleHalfWidth, common->TriangleDepth } },
-		{ { common->TriangleHalfWidth, -common->TriangleHalfWidth, common->TriangleDepth } },
+        { { 0,0,0 } }
     };
     {
         const UINT vertexBuffSize = sizeof(triangleVertices)*_countof(triangleVertices);
@@ -158,11 +156,6 @@ bool GPUParticleManager::Initialize(Camera* camera)
 			constantBufferData[i].velocity = Vector4(RandomFloat(0.01f,0.02f),0.f,0.f,0.f);
 			constantBufferData[i].offset = Vector4(RandomFloat(-5.f,-1.5f),RandomFloat(-1.f,1.f),RandomFloat(0.f,2.f),0.f);
 			constantBufferData[i].color = Vector4(RandomFloat(0.5f,1.f),RandomFloat(0.5f,1.f),RandomFloat(0.5f,1.f),1.f);
-
-
-			constantBufferData[i].projection = camera->GetViewProjectionMatrix();
-			//XMStoreFloat4x4(&constantBufferData[i].projection, XMMatrixTranspose( XMMatrixPerspectiveFovLH(XM_PIDIV4, float(Window::GetWindowWidth()/Window::GetWindowHeight()), 0.01f, 20.0f)));
-			constantBufferData[i].matBillboard = camera->GetBillboard();
 		}
 
 		CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
@@ -378,11 +371,9 @@ void GPUParticleManager::Update(WorldTransform world, Camera* camera)
             constantBufferData[n].velocity.x = RandomFloat(0.01f, 0.02f);
             constantBufferData[n].offset.x = -offsetBounds;
         }
-
-		constantBufferData[n].projection = camera->GetViewProjectionMatrix();
 		constantBufferData[n].matBillboard = camera->GetBillboard();
-		constantBufferData[n].mat = world.matWorld;
-    }
+		constantBufferData[n].mat = world.matWorld * camera->GetViewProjectionMatrix();
+	}
 
     UINT8* destination = cbvDataBegin + (common->TriangleCount * common->dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex() * sizeof(Const));
     memcpy(destination, &constantBufferData[0], common->TriangleCount * sizeof(Const));
@@ -584,11 +575,6 @@ void GPUParticleManager::ParticleCommon::Initialize()
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		//入力データ種別 (標準はD3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA)
 			0												//一度に描画するインスタンス数
 		},
-		{ // uv座標(1行で書いたほうが見やすい)
-			"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
 	};
 
 	//グラフィックス
@@ -598,9 +584,10 @@ void GPUParticleManager::ParticleCommon::Initialize()
 		pipelineDesc.VS = CD3DX12_SHADER_BYTECODE(vsBlob);
 		pipelineDesc.PS = CD3DX12_SHADER_BYTECODE(psBlob);
 		pipelineDesc.GS = CD3DX12_SHADER_BYTECODE(gsBlob);
+		
 		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 		pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+
 		//レンダーターゲットのブレンド設定
 		D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
 		blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	//RGBAすべてのチャンネルを描画
@@ -616,7 +603,8 @@ void GPUParticleManager::ParticleCommon::Initialize()
 		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 		
 		pipelineDesc.InputLayout = {inputLayout, _countof(inputLayout)};
-		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		//pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 		pipelineDesc.NumRenderTargets = 1;
 		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		pipelineDesc.SampleDesc.Count = 1;
@@ -625,8 +613,12 @@ void GPUParticleManager::ParticleCommon::Initialize()
 		pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
 		//ルートパラメータ
-		CD3DX12_ROOT_PARAMETER1 rootParam[1] = {};
-		rootParam[0].InitAsConstantBufferView(0,0,D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,D3D12_SHADER_VISIBILITY_VERTEX);
+		CD3DX12_DESCRIPTOR_RANGE1 descRangeSRV{};
+		descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0,D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE);
+
+		CD3DX12_ROOT_PARAMETER1 rootParam[2] = {};
+		rootParam[0].InitAsConstantBufferView(0);
+		rootParam[1].InitAsDescriptorTable(1, &descRangeSRV);
 
 
 		///テクスチャサンプラー

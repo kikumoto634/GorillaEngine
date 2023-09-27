@@ -66,8 +66,6 @@ public:
 		Vector4 velocity;
 		Vector4 offset;
 		Vector4 color;
-		//DirectX::XMFLOAT4X4 projection;
-		XMMATRIX projection;
 		XMMATRIX matBillboard;
 		XMMATRIX mat;
 		float padding[36];
@@ -90,14 +88,14 @@ public:
 	static void StaticInitialize();
 	static void StaticFinalize();
 	static void SetPipelineState();
-	static GPUParticleManager* Create(Camera* camera);
+	static GPUParticleManager* Create();
 
 private:
 	static ParticleCommon* common;
 
 public:
 	GPUParticleManager();
-	bool Initialize(Camera* camera);
+	bool Initialize();
 	void Update(WorldTransform world,Camera* camera);
 	void Draw();
 private:

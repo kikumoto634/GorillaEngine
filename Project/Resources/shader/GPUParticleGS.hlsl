@@ -22,7 +22,7 @@ static const float2 uv_array[vnum] =
 //三角形の入力から、点を1つ出力サンプル
 [maxvertexcount(vnum)]
 void main(
-	point GSOutput input[1] : SV_POSITION,
+	point VSOutput input[1] : SV_POSITION,
 	//点ストリーム
 	inout TriangleStream<GSOutput> output
 )
@@ -32,7 +32,7 @@ void main(
     for (uint i = 0; i < vnum; i++)
     {
 		//中心からオフセットをスケーリング
-        float4 offset = offset_array[i];
+        float4 offset = offset_array[i] * input[0].scale;
 		//中心からオフセットをビルボード回転
         offset = mul(matBillboard, offset);
 		//オフセット分ずらす

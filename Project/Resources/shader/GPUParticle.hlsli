@@ -3,15 +3,19 @@ cbuffer SceneConstantBuffer : register(b0)
     float4 velocity;
     float4 offset;
     float4 color;
-    float4x4 projection;
     matrix matBillboard;
     matrix mat;
 };
 
-struct PSInput
+struct Material
 {
-    float4 position : SV_POSITION;
     float4 color : COLOR;
+};
+
+struct VSOutput
+{
+    float4 svpos : SV_POSITION;
+    float scale : TEXCOORD;
 };
 
 struct GSOutput
