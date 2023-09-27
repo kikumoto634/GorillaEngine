@@ -92,7 +92,6 @@ void Application::Initialize()
 
 	// パーティクルマネージャ初期化
 	ParticleManager::GetInstance()->Initialize(dxCommon);
-	//GPUParticleManager::StaticInitialize();
 
 #ifdef _DEBUG
 	debugText = new DebugScreenText();
@@ -147,8 +146,6 @@ void Application::Draw()
 	
 	Sprite::SetPipelineState();
 	sceneManager->DrawBack();
-	//GPUParticleManager::SetPipelineState();
-	//sceneManager->Draw();
 	sceneManager->DrawNear();
 
 #ifdef _DEBUG
@@ -163,8 +160,6 @@ void Application::Draw()
 
 void Application::Finalize()
 {
-	//GPUParticleManager::StaticFinalize();
-
 	delete postEffect_;
 
 #ifdef _DEBUG

@@ -75,6 +75,17 @@ void BaseScene::Update()
 	sp->Update();
 
 	camera->Update(player->GetmatWorld());
+#ifdef _DEBUG
+	//デバックカメラ
+	if(isDebugCamera){
+		debugCamera->Update();
+		//camera->SetWorld(debugCamera->GetWorld());
+
+		camera->Update(debugCamera->GetWorld());
+	}
+#endif // _DEBUG
+
+
 	player->Update(camera);
 
 	skydome->Update(camera);
@@ -135,10 +146,8 @@ void BaseScene::Update()
 	}
 
 
-	//デバックカメラ
-	if(isDebugCamera){
-		debugCamera->Update();
-		camera->SetWorld(debugCamera->GetWorld());
+	{
+		debugText->Printf3D(player->GetPosition(), 1.0f, camera, "X:%f Y:%f Z:%f",player->GetPosition().x,player->GetPosition().y,player->GetPosition().z);
 	}
 #endif // _DEBUG
 }

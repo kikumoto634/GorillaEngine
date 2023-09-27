@@ -2,8 +2,6 @@
 #include "Sprite.h"
 #include "Vector4.h"
 #include "Vector2.h"
-#include "Camera.h"
-
 class BaseSprites
 {
 public:
@@ -52,11 +50,7 @@ public:
 	bool ScaleChange(Vector2 sizeMax = {1.f,1.f}, Vector2 sizeMin = {0.7f,0.7f}, float EndTime = 0.25f);
 
 	//3D->2D変換
-	Vector2 ChangeTransformation(Vector3 target, Camera* camera);
-
-private:
-	//ベクトル*行列
-	Vector3 Vector3Transform( Vector3 &v,  DirectX::XMMATRIX &m);
+	Vector2 Vector2Transform(Vector3 target, Camera* camera)	{sprite->Vector2Transform(target,camera);}
 
 private:
 	Window* window = nullptr;

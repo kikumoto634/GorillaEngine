@@ -4,6 +4,7 @@
 #include <d3d12.h>
 
 #include "Sprite.h"
+#include "Camera.h"
 
 //デバック用文字列クラスの定義
 class DebugScreenText
@@ -20,16 +21,19 @@ public:
 
 	void Initialize(UINT texnumber);
 
-	void Print(const std::string& text, float x, float y, float scale = 1.f);
-	void Printf(float x, float y, float scale, const char* fmt, ...);
+	void Print2D(const std::string& text, Vector2 pos, float scale = 1.f);
+	void Printf2D(Vector2 pos, float scale, const char* fmt, ...);
+
+	void Print3D(const std::string& text, Vector3 pos, Camera* camera, float scale = 1.f);
+	void Printf3D(Vector3 pos, float scale, Camera* camera,const char* fmt, ...);
 
 	void DrawAll();
 
 private:
 	Sprite* sprites[maxCharCount] {};
 	int spriteIndex = 0;
-	float posX;
-	float posY;
+	Vector2 pos2D;
+	Vector3 pos3D;
 	float scale;
 	const char* text = {};
 	// 書式付き文字列展開用バッファ

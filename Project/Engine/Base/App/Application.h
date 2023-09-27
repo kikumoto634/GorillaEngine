@@ -23,9 +23,8 @@
 
 #include "PostEffect.h"
 
-//#include "GPUParticleManager.h"
-
 #ifdef _DEBUG
+#include "DebugScreenText.h"
 
 #include "imguiManager.h"
 #include <imgui.h>

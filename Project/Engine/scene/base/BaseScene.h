@@ -122,8 +122,10 @@ protected:
 #ifdef _DEBUG
 	//借り物
 	DebugScreenText* debugText = nullptr;
+
 	DebugCamera* debugCamera = nullptr;
 	bool isDebugCamera = false;
+	
 	imguiManager* imgui = nullptr;
 	bool show_demo_window = false;
 #endif // _DEBUG

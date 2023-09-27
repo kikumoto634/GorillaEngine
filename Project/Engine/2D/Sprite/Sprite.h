@@ -7,6 +7,7 @@
 #include "TextureManager.h"
 #include "Vector2.h"
 #include "Vector3.h"
+#include "Camera.h"
 
 /// <summary>
 /// スプライト
@@ -151,6 +152,13 @@ public://メンバ関数
 	/// </summary>
 	UINT GetTexNumber()	{return texNumber;}
 	void SetTexNumber(UINT texNumber);
+
+	//3D->2D変換
+	Vector2 Vector2Transform(Vector3 target, Camera* camera);
+
+private:
+	//ベクトル*行列
+	Vector3 Vector3Transform( Vector3 &v,  DirectX::XMMATRIX &m);
 
 protected://メンバ変数
 	///頂点バッファ

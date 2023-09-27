@@ -162,7 +162,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Action.cpp" />
     <ClCompile Include="Engine\2D\SpriteBase\BaseSprites.cpp" />
     <ClCompile Include="Engine\2D\Sprite\Sprite.cpp" />
     <ClCompile Include="Engine\3D\Model\FbxModelObject.cpp" />
@@ -205,6 +204,7 @@
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
     <ClCompile Include="Engine\scene\base\BaseScene.cpp" />
     <ClCompile Include="Engine\scene\system\SceneManager.cpp" />
+    <ClCompile Include="Game\3D\Player\Action\Action.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

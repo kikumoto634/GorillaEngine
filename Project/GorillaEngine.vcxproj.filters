@@ -453,14 +453,14 @@
     <ClCompile Include="Engine\math\Utility\Utility.cpp">
       <Filter>ソース ファイル\Engine\Math\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Action.cpp">
-      <Filter>ソース ファイル\Game\3D\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Base\Manager\Particle\GPUParticleManager.cpp">
       <Filter>ソース ファイル\Engine\Base\Manager\Particle</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DebugProcess\DebugText\DebugScreenText.cpp">
       <Filter>ソース ファイル\Engine\DebugProcess\DebugText</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\3D\Player\Action\Action.cpp">
+      <Filter>ソース ファイル\Game\3D\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

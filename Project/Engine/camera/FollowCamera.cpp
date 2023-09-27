@@ -58,23 +58,15 @@ void FollowCamera::Movement()
 
 void FollowCamera::Rotation()
 {
-	if(!input_->GetIsPadConnect()) {
-		if(!input_->MousePush(2)) return;
-		float speed = 0.01f;
-		
-		rotation.x += input_->GetMouseVelocity().x * speed;
-		rotation.y -= input_->GetMouseVelocity().y * speed;
-		world.rotation.y = rotation.x;
-		world.rotation.x = rotation.y;
-	}
-	else{
-		float speed = 0.05f;
+	if(!input_->GetIsPadConnect()) return;
+
+	float speed = 0.05f;
 	
-		rotation.x += input_->PadRStick().x * speed;
-		rotation.y -= input_->PadRStick().y * speed;
-		world.rotation.y = rotation.x;
-		world.rotation.x = rotation.y;
-	}
+	rotation.x += input_->PadRStick().x * speed;
+	rotation.y -= input_->PadRStick().y * speed;
+	world.rotation.y = rotation.x;
+	world.rotation.x = rotation.y;
+
 	//回転行列
 	XMMATRIX matRot;
 	matRot = XMMatrixIdentity();

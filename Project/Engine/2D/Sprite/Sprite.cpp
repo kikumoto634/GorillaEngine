@@ -1,4 +1,4 @@
-﻿#include "Sprite.h"
+#include "Sprite.h"
 
 #include <d3dcompiler.h>
 
@@ -312,6 +312,34 @@ void Sprite::SetTexNumber(UINT texNumber)
 {
 	this->texNumber = texNumber;
 	SpriteTransferVertexBuffer();
+}
+
+Vector2 Sprite::Vector2Transform(Vector3 target, Camera *camera)
+{
+	DirectX::XMMATRIX matViewport = 
+	{
+		(float)Window::GetWindowWidth()/2, 0								  , 0, 0,
+		0								 , -((float)Window::GetWindowHeight())/2, 0, 0,
+		0								 , 0								  , 1, 0, 
+		(float)Window::GetWindowWidth()/2, (float)Window::GetWindowHeight()/2 , 0, 1,
+	};
+	DirectX::XMMATRIX matViewProjectionViewPort = camera->GetMatView() * camera->GetMatProjection() * matViewport;
+	Vector3 positionreticle = Vector3Transform(target, matViewProjectionViewPort);
+	return Vector2{positionreticle.x, positionreticle.y};
+}
+
+Vector3 Sprite::Vector3Transform(Vector3 &v, DirectX::XMMATRIX &m)
+{
+	float w = v.x * m.r[0].m128_f32[3] + v.y * m.r[1].m128_f32[3] + v.z * m.r[2].m128_f32[3] + m.r[3].m128_f32[3];
+
+	Vector3 result
+	{
+		(v.x*m.r[0].m128_f32[0] + v.y*m.r[1].m128_f32[0] + v.z*m.r[2].m128_f32[0] + m.r[3].m128_f32[0])/w,
+		(v.x*m.r[0].m128_f32[1] + v.y*m.r[1].m128_f32[1] + v.z*m.r[2].m128_f32[1] + m.r[3].m128_f32[1])/w,
+		(v.x*m.r[0].m128_f32[2] + v.y*m.r[1].m128_f32[2] + v.z*m.r[2].m128_f32[2] + m.r[3].m128_f32[2])/w
+	};
+
+	return result;
 }
 
 void Sprite::Common::InitializeGraphicsPipeline(const std::string& directoryPath)
