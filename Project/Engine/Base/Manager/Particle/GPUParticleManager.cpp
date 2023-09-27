@@ -468,7 +468,7 @@ void GPUParticleManager::ParticleCommon::Initialize()
 
     //頂点シェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/GPUParticleVS.hlsl",		//シェーダーファイル名
+		L"Resources/shader/GPUParticle/GPUParticleVS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "vs_5_0",					//エントリーポイント名、シェーダーモデル指定
@@ -492,7 +492,7 @@ void GPUParticleManager::ParticleCommon::Initialize()
 
 	//ピクセルシェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/GPUParticlePS.hlsl",		//シェーダーファイル名
+		L"Resources/shader/GPUParticle/GPUParticlePS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "ps_5_0",					//エントリーポイント名、シェーダーモデル指定
@@ -516,7 +516,7 @@ void GPUParticleManager::ParticleCommon::Initialize()
 
 	//ジオメトリシェーダー
 	result = D3DCompileFromFile(
-		L"Resources/shader/GPUParticleGS.hlsl",		//シェーダーファイル名
+		L"Resources/shader/GPUParticle/GPUParticleGS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "gs_5_0",					//エントリーポイント名、シェーダーモデル指定
@@ -541,7 +541,7 @@ void GPUParticleManager::ParticleCommon::Initialize()
 
 	//コンピュートシェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/GPUParticleCS.hlsl",		//シェーダーファイル名
+		L"Resources/shader/GPUParticle/GPUParticleCS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "cs_5_0",					//エントリーポイント名、シェーダーモデル指定

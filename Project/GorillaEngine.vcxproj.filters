@@ -16,9 +16,6 @@
     <Filter Include="リソース ファイル\Sprite">
       <UniqueIdentifier>{626b5611-8691-4cca-9bac-0cba214f6893}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\Geometry">
-      <UniqueIdentifier>{e1f1ce9c-eda9-4957-8ccd-a66780b038c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="リソース ファイル\Fbx">
       <UniqueIdentifier>{9712e96f-6e1a-43e9-95c5-b4eea0854433}</UniqueIdentifier>
     </Filter>
@@ -328,6 +325,9 @@
     <Filter Include="リソース ファイル\GPUParticle">
       <UniqueIdentifier>{5ea2de26-7463-4318-b70a-c6c71fd81b79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Particle">
+      <UniqueIdentifier>{e1f1ce9c-eda9-4957-8ccd-a66780b038c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\input\Input.cpp">
@@ -631,76 +631,76 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\shader\SpritePS.hlsl">
-      <Filter>リソース ファイル\Sprite</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\SpriteVS.hlsl">
-      <Filter>リソース ファイル\Sprite</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\ParticlePS.hlsl">
-      <Filter>リソース ファイル\Geometry</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\ParticleVS.hlsl">
-      <Filter>リソース ファイル\Geometry</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\FBXVS.hlsl">
+    <FxCompile Include="Resources\shader\FBX\FBXPS.hlsl">
       <Filter>リソース ファイル\Fbx</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\FBXPS.hlsl">
+    <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
       <Filter>リソース ファイル\Fbx</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\ParticleGS.hlsl">
-      <Filter>リソース ファイル\Geometry</Filter>
+    <FxCompile Include="Resources\shader\Particle\ParticleGS.hlsl">
+      <Filter>リソース ファイル\Particle</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\ObjPS.hlsl">
+    <FxCompile Include="Resources\shader\Particle\ParticlePS.hlsl">
+      <Filter>リソース ファイル\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Particle\ParticleVS.hlsl">
+      <Filter>リソース ファイル\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticle\GPUParticleCS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticle\GPUParticleGS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticle\GPUParticlePS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GPUParticle\GPUParticleVS.hlsl">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\OBJ\ObjPS.hlsl">
       <Filter>リソース ファイル\Obj</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\ObjVS.hlsl">
+    <FxCompile Include="Resources\shader\OBJ\ObjVS.hlsl">
       <Filter>リソース ファイル\Obj</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffectVS.hlsl">
+    <FxCompile Include="Resources\shader\OBJ\ObjWirePS.hlsl">
+      <Filter>リソース ファイル\Obj</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\PostEffectVS.hlsl">
       <Filter>リソース ファイル\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffectPS.hlsl">
+    <FxCompile Include="Resources\shader\PostEffect\PostEffectPS.hlsl">
       <Filter>リソース ファイル\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\GPUParticleVS.hlsl">
-      <Filter>リソース ファイル\GPUParticle</Filter>
+    <FxCompile Include="Resources\shader\Sprite\SpritePS.hlsl">
+      <Filter>リソース ファイル\Sprite</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\GPUParticleCS.hlsl">
-      <Filter>リソース ファイル\GPUParticle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\GPUParticlePS.hlsl">
-      <Filter>リソース ファイル\GPUParticle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\GPUParticleGS.hlsl">
-      <Filter>リソース ファイル\GPUParticle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\ObjWirePS.hlsl">
-      <Filter>リソース ファイル\Obj</Filter>
+    <FxCompile Include="Resources\shader\Sprite\SpriteVS.hlsl">
+      <Filter>リソース ファイル\Sprite</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\shader\Sprite.hlsli">
-      <Filter>リソース ファイル\Sprite</Filter>
-    </None>
-    <None Include="Resources\shader\Particle.hlsli">
-      <Filter>リソース ファイル\Geometry</Filter>
-    </None>
-    <None Include="Resources\shader\FBX.hlsli">
+    <None Include="Resources\shader\FBX\FBX.hlsli">
       <Filter>リソース ファイル\Fbx</Filter>
     </None>
-    <None Include="Resources\shader\Obj.hlsli">
+    <None Include="Resources\shader\Particle\Particle.hlsli">
+      <Filter>リソース ファイル\Particle</Filter>
+    </None>
+    <None Include="Resources\shader\GPUParticle\GPUParticle.hlsli">
+      <Filter>リソース ファイル\GPUParticle</Filter>
+    </None>
+    <None Include="Resources\shader\OBJ\ObjLight.hlsli">
       <Filter>リソース ファイル\Obj</Filter>
     </None>
-    <None Include="Resources\shader\PostEffect.hlsli">
+    <None Include="Resources\shader\OBJ\Obj.hlsli">
+      <Filter>リソース ファイル\Obj</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\PostEffect.hlsli">
       <Filter>リソース ファイル\PostEffect</Filter>
     </None>
-    <None Include="Resources\shader\ObjLight.hlsli">
-      <Filter>リソース ファイル\Obj</Filter>
-    </None>
-    <None Include="Resources\shader\GPUParticle.hlsli">
-      <Filter>リソース ファイル\GPUParticle</Filter>
+    <None Include="Resources\shader\Sprite\Sprite.hlsli">
+      <Filter>リソース ファイル\Sprite</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

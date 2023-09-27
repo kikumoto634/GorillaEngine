@@ -378,7 +378,7 @@ void PostEffect::CreateGraphicsPipelineState()
 
 	//頂点シェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/PostEffectVS.hlsl",		//シェーダーファイル名
+		L"Resources/shader/PostEffect/PostEffectVS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "vs_5_0",					//エントリーポイント名、シェーダーモデル指定
@@ -402,7 +402,7 @@ void PostEffect::CreateGraphicsPipelineState()
 
 	//ピクセルシェーダーの読み込みコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/PostEffectPS.hlsl",		//シェーダーファイル名
+		L"Resources/shader/PostEffect/PostEffectPS.hlsl",		//シェーダーファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,	//インクルード可能にする
 		"main", "ps_5_0",					//エントリーポイント名、シェーダーモデル指定

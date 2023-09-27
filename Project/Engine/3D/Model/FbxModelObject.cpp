@@ -1,4 +1,4 @@
-﻿#include "FbxModelObject.h"
+#include "FbxModelObject.h"
 
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
@@ -166,7 +166,7 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/FBXVS.hlsl",    // シェーダファイル名
+		L"Resources/shader/FBX/FBXVS.hlsl",    // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",    // エントリーポイント名、シェーダーモデル指定
@@ -189,7 +189,7 @@ void FbxModelObject::CommonFbx::InitializeGraphicsPipeline()
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/FBXPS.hlsl",    // シェーダファイル名
+		L"Resources/shader/FBX/FBXPS.hlsl",    // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0",    // エントリーポイント名、シェーダーモデル指定

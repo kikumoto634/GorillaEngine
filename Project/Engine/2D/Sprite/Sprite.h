@@ -58,7 +58,7 @@ public://静的メンバ関数
 	/// 静的メンバの初期化
 	/// </summary>
 	static void StaticInitialize(DirectXCommon* dxCommon,
-		int window_width, int window_height, const std::string& directoryPath = "Resources/shader");
+		int window_width, int window_height, const std::string& directoryPath = "Resources/shader/Sprite");
 
 	/// <summary>
 	/// 静的メンバの解放

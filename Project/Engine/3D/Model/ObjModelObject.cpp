@@ -143,7 +143,7 @@ void ObjModelObject::CommonObj::InitializeGraphicsPipeline()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/ObjVS.hlsl",	// シェーダファイル名
+		L"Resources/shader/OBJ/ObjVS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -226,7 +226,7 @@ void ObjModelObject::CommonObj::InitializeGraphicsPipeline()
 	{
 		// ピクセルシェーダの読み込みとコンパイル
 		result = D3DCompileFromFile(
-			L"Resources/shader/ObjPS.hlsl",	// シェーダファイル名
+			L"Resources/shader/OBJ/ObjPS.hlsl",	// シェーダファイル名
 			nullptr,
 			D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 			"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -283,7 +283,7 @@ void ObjModelObject::CommonObj::InitializeGraphicsPipeline()
 	{
 		// ピクセルシェーダの読み込みとコンパイル
 		result = D3DCompileFromFile(
-			L"Resources/shader/ObjWirePS.hlsl",	// シェーダファイル名
+			L"Resources/shader/OBJ/ObjWirePS.hlsl",	// シェーダファイル名
 			nullptr,
 			D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 			"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
