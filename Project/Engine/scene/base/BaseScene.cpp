@@ -149,7 +149,7 @@ void BaseScene::EndUpdate()
 
 void BaseScene::Draw()
 {
-player->Draw();
+	player->Draw();
 
 	GPUParticleManager::SetPipelineState();
 	particle->Draw();

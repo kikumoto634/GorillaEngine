@@ -31,7 +31,7 @@ void SceneManager::Update()
 	if(nextScene){
 
 #ifdef _DEBUG
-		DebugText* text = nextScene->GetDebugText();
+		DebugScreenText* text = nextScene->GetDebugText();
 		imguiManager* imgui = nextScene->GetImGui();
 #endif // _DEBUG
 		

@@ -189,7 +189,7 @@
     <ClCompile Include="Engine\Collision\Mesh\MeshCollider.cpp" />
     <ClCompile Include="Engine\Collision\Sphere\SphereCollider.cpp" />
     <ClCompile Include="Engine\DebugProcess\DebugCamera\DebugCamera.cpp" />
-    <ClCompile Include="Engine\DebugProcess\DebugText\DebugText.cpp" />
+    <ClCompile Include="Engine\DebugProcess\DebugText\DebugScreenText.cpp" />
     <ClCompile Include="Engine\DebugProcess\ImGui\imguiManager.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
     <ClCompile Include="Engine\light\LightGroup.cpp" />
@@ -239,7 +239,7 @@
     <ClInclude Include="Engine\Collision\Ray\RaycastHit.h" />
     <ClInclude Include="Engine\Collision\Sphere\SphereCollider.h" />
     <ClInclude Include="Engine\DebugProcess\DebugCamera\DebugCamera.h" />
-    <ClInclude Include="Engine\DebugProcess\DebugText\DebugText.h" />
+    <ClInclude Include="Engine\DebugProcess\DebugText\DebugScreenText.h" />
     <ClInclude Include="Engine\DebugProcess\ImGui\imguiManager.h" />
     <ClInclude Include="Engine\input\Input.h" />
     <ClInclude Include="Engine\light\circleShadow\CircleShadow.h" />

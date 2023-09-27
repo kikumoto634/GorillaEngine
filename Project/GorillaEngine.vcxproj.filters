@@ -405,9 +405,6 @@
     <ClCompile Include="Engine\DebugProcess\ImGui\imguiManager.cpp">
       <Filter>ソース ファイル\Engine\DebugProcess\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\DebugProcess\DebugText\DebugText.cpp">
-      <Filter>ソース ファイル\Engine\DebugProcess\DebugText</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Collision\Sphere\SphereCollider.cpp">
       <Filter>ソース ファイル\Engine\Collision\Sphere</Filter>
     </ClCompile>
@@ -461,6 +458,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Base\Manager\Particle\GPUParticleManager.cpp">
       <Filter>ソース ファイル\Engine\Base\Manager\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DebugProcess\DebugText\DebugScreenText.cpp">
+      <Filter>ソース ファイル\Engine\DebugProcess\DebugText</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -560,9 +560,6 @@
     <ClInclude Include="Engine\DebugProcess\ImGui\imguiManager.h">
       <Filter>ヘッダー ファイル\Engine\DebugProcess\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\DebugProcess\DebugText\DebugText.h">
-      <Filter>ヘッダー ファイル\Engine\DebugProcess\DebugText</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Collision\Sphere\SphereCollider.h">
       <Filter>ヘッダー ファイル\Engine\Collision\Sphere</Filter>
     </ClInclude>
@@ -628,6 +625,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Base\Manager\Particle\GPUParticleManager.h">
       <Filter>ヘッダー ファイル\Engine\Base\Manager\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DebugProcess\DebugText\DebugScreenText.h">
+      <Filter>ヘッダー ファイル\Engine\DebugProcess\DebugText</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
-﻿#include "DebugText.h"
+#include "DebugScreenText.h"
 
-DebugText::~DebugText()
+DebugScreenText::~DebugScreenText()
 {
 	for(int i = 0; i < _countof(sprites); i++)
 	{
@@ -10,7 +10,7 @@ DebugText::~DebugText()
 	}
 }
 
-void DebugText::Initialize(UINT texnumber)
+void DebugScreenText::Initialize(UINT texnumber)
 {
 	for(int i = 0; i < _countof(sprites); i++)
 	{
@@ -23,7 +23,7 @@ void DebugText::Initialize(UINT texnumber)
 }
 
 //一文字追加
-void DebugText::Print(const std::string& text, float x, float y, float scale)
+void DebugScreenText::Print(const std::string& text, float x, float y, float scale)
 {
 	this->posX = x;
 	this->posY = y;
@@ -61,7 +61,7 @@ void DebugText::Print(const std::string& text, float x, float y, float scale)
 	}
 }
 
-void DebugText::Printf(float x, float y, float scale, const char *fmt, ...)
+void DebugScreenText::Printf(float x, float y, float scale, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -70,7 +70,7 @@ void DebugText::Printf(float x, float y, float scale, const char *fmt, ...)
 	va_end(args);
 }
 
-void DebugText::DrawAll()
+void DebugScreenText::DrawAll()
 {
 	//すべての文字のスプライトについて
 	for(int i = 0; i < spriteIndex; i++)

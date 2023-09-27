@@ -95,7 +95,7 @@ void Application::Initialize()
 	//GPUParticleManager::StaticInitialize();
 
 #ifdef _DEBUG
-	debugText = new DebugText();
+	debugText = new DebugScreenText();
 	debugText->Initialize(0);
 
 	imgui = new imguiManager();

@@ -19,7 +19,7 @@
 #include "Action/Action.h"
 
 #ifdef _DEBUG
-#include "DebugText.h"
+#include "DebugScreenText.h"
 #include "DebugCamera.h"
 #include "imguiManager.h"
 
@@ -87,10 +87,10 @@ public:
 	virtual void Finalize();
 
 #ifdef _DEBUG
-	void SetDebugText(DebugText* text)	{this->debugText = text;}
+	void SetDebugText(DebugScreenText* text)	{this->debugText = text;}
 	void SetImGui(imguiManager* imgui)	{this->imgui = imgui;}
 
-	DebugText* GetDebugText()	{return debugText;}
+	DebugScreenText* GetDebugText()	{return debugText;}
 	imguiManager* GetImGui()	{return imgui;}
 #endif // _DEBUG
 
@@ -121,7 +121,7 @@ protected:
 
 #ifdef _DEBUG
 	//借り物
-	DebugText* debugText = nullptr;
+	DebugScreenText* debugText = nullptr;
 	DebugCamera* debugCamera = nullptr;
 	bool isDebugCamera = false;
 	imguiManager* imgui = nullptr;
