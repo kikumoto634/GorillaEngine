@@ -34,10 +34,6 @@ class SceneManager;
 
 class BaseScene
 {
-private:
-	//ライト色
-	const Vector3 LightColor = {0.15f,0.15f,0.15f};
-
 //メンバ関数
 public:
 	/// <summary>
@@ -140,8 +136,6 @@ protected:
 
 	//オブジェクト
 	Action* player = nullptr;
-	//Skydome
-	BaseObjObject* skydome = nullptr;
 
 	//GPUパーティクル
 	GPUParticleManager* particle = nullptr;

@@ -66,6 +66,8 @@ public: // メンバ関数
 	/// 更新
 	/// </summary>
 	void Update();
+
+	void DebugUpdate();
 	
 	/// <summary>
 	/// 描画

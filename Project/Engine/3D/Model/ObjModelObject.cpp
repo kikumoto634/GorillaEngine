@@ -129,7 +129,9 @@ void ObjModelObject::Draw()
 	common->dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
 	//ライト
-	if(common->light != nullptr)common->light->Draw(common->dxCommon->GetCommandList(), 3);
+	if(common->light != nullptr){
+		common->light->Draw(common->dxCommon->GetCommandList(), 3);
+	}
 	//モデル
 	model->Draw(common->dxCommon->GetCommandList());
 }

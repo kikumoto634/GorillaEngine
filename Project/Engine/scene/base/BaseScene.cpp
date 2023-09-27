@@ -38,10 +38,6 @@ void BaseScene::Initialize()
 	player = new Action();
 	player->Initialize();
 
-	//Skydome
-	skydome = new BaseObjObject();
-	skydome->Initialize("skydome");
-
 	GPUParticleManager::StaticInitialize();
 	particle = new GPUParticleManager();
 	particle = GPUParticleManager::Create();
@@ -50,19 +46,12 @@ void BaseScene::Initialize()
 
 	//ライト
 	lightGroup_ = LightGroup::Create();
-	//色設定
-	lightGroup_->SetAmbientColor(LightColor);
 	//3Dオブジェクト(.obj)にセット
 	ObjModelObject::SetLight(lightGroup_);
-
-	lightGroup_->SetDirLightActive(0, true);
-	lightGroup_->SetDirLightActive(1, true);
-	lightGroup_->SetDirLightActive(2, true);
 
 #ifdef _DEBUG
 	debugCamera = DebugCamera::GetInstance();
 	debugCamera->Initialize();
-	isDebugCamera = true;
 #endif // _DEBUG
 
 	levelData = LevelLoader::Load("levelSample");
@@ -108,14 +97,13 @@ void BaseScene::Update()
 
 
 	player->Update(camera);
-
-	skydome->Update(camera);
-
 	particle->Update(world,camera);
 
 	for(auto& object : objects){
 		object->Update(camera);
 	}
+
+	lightGroup_->Update();
 
 #ifdef _DEBUG
 	{
@@ -170,6 +158,8 @@ void BaseScene::Update()
 		ImGui::End();
 	}
 
+	lightGroup_->DebugUpdate();
+
 
 	{
 		debugText->Printf3D(player->GetPosition(), 1.0f, camera, "T X:%f Y:%f Z:%f",player->GetPosition().x,player->GetPosition().y,player->GetPosition().z);
@@ -191,9 +181,6 @@ void BaseScene::Draw()
 
 	GPUParticleManager::SetPipelineState();
 	particle->Draw();
-
-	
-	//skydome->Draw();
 }
 
 void BaseScene::DrawBack()
@@ -218,9 +205,6 @@ void BaseScene::Finalize()
 
 	player->Finalize();
 	delete player;
-
-	skydome->Finalize();
-	delete skydome;
 
 	GPUParticleManager::StaticFinalize();
 	delete particle;
