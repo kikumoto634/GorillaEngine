@@ -3,14 +3,27 @@
 #include <DirectXMath.h>
 #include <cmath>
 
+#include "CollisionAttribute.h"
+#include "CollisionManager.h"
+
 using namespace std;
 using namespace DirectX;
+
+Action::~Action()
+{
+	CollisionManager::GetInstance()->RemoveCollider(meshCollider);
+}
 
 void Action::Initialize()
 {
 	input = Input::GetInstance();
 
 	BaseObjObject::Initialize("GroundBlock");
+
+	meshCollider = new MeshCollider();
+	SetCollider(meshCollider);
+	meshCollider->SetAttribute(COLLISION_ATTR_ALLIES);
+	meshCollider->ConstructTriangles(model_);
 }
 
 void Action::Update(Camera *camera)

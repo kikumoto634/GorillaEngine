@@ -34,6 +34,7 @@ public: // サブクラス
 		ComPtr<ID3D12RootSignature> rootsignature;
 		// パイプラインステートオブジェクト
 		ComPtr<ID3D12PipelineState> pipelinestate;
+		ComPtr<ID3D12PipelineState> wirePipelineState;
 		//ライト
 		LightGroup* light;
 	};
@@ -70,8 +71,9 @@ public: // 静的メンバ関数
 	/// <returns></returns>
 	static ObjModelObject* Create(ObjModelManager* model);
 
-	//Getter
+	void TogglePipeline()	{isUsePipeline_ = !isUsePipeline_;}
 
+	//Getter
 	/// <summary>
 	/// モデル取得
 	/// </summary>
@@ -88,6 +90,8 @@ public: // 静的メンバ関数
 	inline void SetModel(ObjModelManager* model){this->model = model;}
 	inline void SetColor(Vector4 _color)	{this->color = _color;}
 
+private:
+	void PipelineSet();
 
 private: // 静的メンバ変数
 	static CommonObj* common;
@@ -121,5 +125,8 @@ private: // メンバ変数
 
 	//光レイヤー
 	float lightLayer = 0.0f;
+
+	//使用するパイプライン
+	bool isUsePipeline_= false;
 };
 

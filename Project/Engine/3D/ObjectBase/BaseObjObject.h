@@ -54,6 +54,8 @@ public:
 	//当たり判定時処理
 	virtual void ContactUpdate();
 
+	void ToggleWireFrame()	{isWireObjectDraw = !isWireObjectDraw;}
+
 	//Getter
 	bool GetIsContactTrigger();
 	inline bool GetIsAlive()	{return isAlive_;}
@@ -79,10 +81,12 @@ protected:
 	bool isLendModel_ = false;
 	ObjModelManager* model_ = nullptr;
 	ObjModelObject* object_ = nullptr;
-	WorldTransform world_ = {};
 
-	//コライダー
-	BaseCollider* baseCollider_ = nullptr;
+#ifdef _DEBUG
+	bool isWireObjectDraw = true;
+	ObjModelObject* wireObject_ = nullptr;
+#endif // _DEBUG
+	WorldTransform world_ = {};
 
 	//カメラ(借り物)
 	Camera* camera_ = nullptr;
@@ -92,5 +96,9 @@ protected:
 
 	//接触
 	bool isContactTrigger_ = false;
+
+private:
+	//コライダー
+	BaseCollider* baseCollider_ = nullptr;
 };
 

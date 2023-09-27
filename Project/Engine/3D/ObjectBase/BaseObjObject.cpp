@@ -54,6 +54,14 @@ void BaseObjObject::Draw()
 {
 	if(!isAlive_) return;
 	object_->Draw();
+
+#ifdef _DEBUG
+	if(baseCollider_ && isWireObjectDraw){
+		wireObject_ = object_;
+		wireObject_->TogglePipeline();
+		wireObject_->Draw();
+	}
+#endif // _DEBUG
 }
 
 void BaseObjObject::Finalize()

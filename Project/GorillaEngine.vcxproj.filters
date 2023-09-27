@@ -676,6 +676,9 @@
     <FxCompile Include="Resources\shader\GPUParticleGS.hlsl">
       <Filter>リソース ファイル\GPUParticle</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\ObjWirePS.hlsl">
+      <Filter>リソース ファイル\Obj</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Sprite.hlsli">
