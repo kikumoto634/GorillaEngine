@@ -153,8 +153,8 @@ bool GPUParticleManager::Initialize()
 
 
 		for(UINT i = 0; i < common->TriangleCount; i++){
-			constantBufferData[i].velocity = Vector4(RandomFloat(0.01f,0.02f),0.f,0.f,0.f);
-			constantBufferData[i].offset = Vector4(RandomFloat(-5.f,-1.5f),RandomFloat(-1.f,1.f),RandomFloat(0.f,2.f),0.f);
+			constantBufferData[i].velocity = Vector4(RandomFloat(0.01f,10.f),0.f,0.f,0.f);
+			constantBufferData[i].offset = Vector4(RandomFloat(-320.f,-320.f),RandomFloat(-20.f,20.f),RandomFloat(5.f,10.f),0.f);
 			constantBufferData[i].color = Vector4(RandomFloat(0.5f,1.f),RandomFloat(0.5f,1.f),RandomFloat(0.5f,1.f),1.f);
 		}
 
@@ -362,13 +362,13 @@ void GPUParticleManager::Update(WorldTransform world, Camera* camera)
 {
 	for (UINT n = 0; n < common->TriangleCount; n++)
     {
-        const float offsetBounds = 2.5f;
+        const float offsetBounds = 320.f;
 
         // Animate the triangles.
         constantBufferData[n].offset.x += constantBufferData[n].velocity.x;
         if (constantBufferData[n].offset.x > offsetBounds)
         {
-            constantBufferData[n].velocity.x = RandomFloat(0.01f, 0.02f);
+            constantBufferData[n].velocity.x = RandomFloat(0.01f, 10.0f);
             constantBufferData[n].offset.x = -offsetBounds;
         }
 		constantBufferData[n].matBillboard = camera->GetBillboard();

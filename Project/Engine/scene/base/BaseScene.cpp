@@ -12,7 +12,7 @@ BaseScene::BaseScene(DirectXCommon* dxCommon, Window* window)
 void BaseScene::Application()
 {
 	input = Input::GetInstance();
-	camera = FollowCamera::GetInstance();
+	camera = Camera::GetInstance();
 	postEffect = PostEffect::GetInstance();
 	postEffect = PostEffect::Create(white1x1_tex.number, {0,0}, {500,500});
 }
@@ -65,6 +65,29 @@ void BaseScene::Initialize()
 	isDebugCamera = true;
 #endif // _DEBUG
 
+	levelData = LevelLoader::Load("levelSample");
+
+	//レベルデータからオブジェクトを生成
+	for(auto& objectData : levelData->objects){
+		//ファイル名からモデルを生成
+		ObjModelManager* model_ = new ObjModelManager();
+		model_->CreateModel(objectData.fileName);
+
+		//モデルを指定して3Dオブジェクトを生成
+		BaseObjObject* newObj_ = new BaseObjObject();
+		newObj_->Initialize(model_);
+
+		//座標
+		newObj_->SetPosition(objectData.translation);
+		//回転
+		newObj_->SetRotation(objectData.rotation);
+		//スケール
+		newObj_->SetScale(objectData.scaling);
+
+		//配列に登録
+		objects.push_back(newObj_);
+	}
+
 }
 
 void BaseScene::Update()
@@ -74,14 +97,12 @@ void BaseScene::Update()
 
 	sp->Update();
 
-	camera->Update(player->GetmatWorld());
+	camera->Update();
 #ifdef _DEBUG
 	//デバックカメラ
 	if(isDebugCamera){
 		debugCamera->Update();
-		//camera->SetWorld(debugCamera->GetWorld());
-
-		camera->Update(debugCamera->GetWorld());
+		camera->SetWorld(debugCamera->GetWorld());
 	}
 #endif // _DEBUG
 
@@ -91,6 +112,10 @@ void BaseScene::Update()
 	skydome->Update(camera);
 
 	particle->Update(world,camera);
+
+	for(auto& object : objects){
+		object->Update(camera);
+	}
 
 #ifdef _DEBUG
 	{
@@ -147,7 +172,7 @@ void BaseScene::Update()
 
 
 	{
-		debugText->Printf3D(player->GetPosition(), 1.0f, camera, "X:%f Y:%f Z:%f",player->GetPosition().x,player->GetPosition().y,player->GetPosition().z);
+		debugText->Printf3D(player->GetPosition(), 1.0f, camera, "T X:%f Y:%f Z:%f",player->GetPosition().x,player->GetPosition().y,player->GetPosition().z);
 	}
 #endif // _DEBUG
 }
@@ -158,6 +183,10 @@ void BaseScene::EndUpdate()
 
 void BaseScene::Draw()
 {
+	for(auto& object : objects){
+		object->Draw();
+	}
+
 	player->Draw();
 
 	GPUParticleManager::SetPipelineState();
@@ -179,6 +208,11 @@ void BaseScene::DrawNear()
 
 void BaseScene::Finalize()
 {
+	for(auto& object : objects){
+		object->Finalize();
+		delete object;
+	}
+
 	sp->Finalize();
 	delete sp;
 

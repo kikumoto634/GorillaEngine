@@ -24,6 +24,8 @@ void Action::Initialize()
 	SetCollider(meshCollider);
 	meshCollider->SetAttribute(COLLISION_ATTR_ALLIES);
 	meshCollider->ConstructTriangles(model_);
+
+	SetPosition({0,0,-3});
 }
 
 void Action::Update(Camera *camera)

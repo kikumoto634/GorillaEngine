@@ -16,6 +16,8 @@
 #include "ParticleObject.h"
 #include "GPUParticleManager.h"
 
+#include "LevelLoader.h"
+
 #include "Action/Action.h"
 
 #ifdef _DEBUG
@@ -107,7 +109,7 @@ protected:
 	
 	//作成
 	Input* input = nullptr;
-	FollowCamera* camera = nullptr;
+	Camera* camera = nullptr;
 
 	//借り物
 	//シーンマネージャー
@@ -144,5 +146,9 @@ protected:
 	//GPUパーティクル
 	GPUParticleManager* particle = nullptr;
 	WorldTransform world;
+
+	//json
+	LevelData* levelData = nullptr;
+	std::vector<BaseObjObject*>objects;
 };
 

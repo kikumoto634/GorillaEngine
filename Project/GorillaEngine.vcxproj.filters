@@ -136,15 +136,6 @@
     <Filter Include="ソース ファイル\Engine\Math\Easing">
       <UniqueIdentifier>{58f3fda8-68f6-4077-8f5a-622afe7f52e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Engine\Scene">
-      <UniqueIdentifier>{3b2e25ea-2294-4287-8eb8-7daafa9e21d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Scene\Base">
-      <UniqueIdentifier>{592fb324-f7cb-4ad2-8c73-34246c385946}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Scene\System">
-      <UniqueIdentifier>{16d041c5-c1c3-4068-bfba-e3d20377fe96}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Engine\Audio">
       <UniqueIdentifier>{607e6687-321f-4920-9107-a3cd651dd52f}</UniqueIdentifier>
     </Filter>
@@ -328,6 +319,15 @@
     <Filter Include="リソース ファイル\Particle">
       <UniqueIdentifier>{e1f1ce9c-eda9-4957-8ccd-a66780b038c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\Scene">
+      <UniqueIdentifier>{3b2e25ea-2294-4287-8eb8-7daafa9e21d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\Scene\Base">
+      <UniqueIdentifier>{592fb324-f7cb-4ad2-8c73-34246c385946}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\Scene\System">
+      <UniqueIdentifier>{16d041c5-c1c3-4068-bfba-e3d20377fe96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\input\Input.cpp">
@@ -461,6 +461,9 @@
     </ClCompile>
     <ClCompile Include="Game\3D\Player\Action\Action.cpp">
       <Filter>ソース ファイル\Game\3D\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\loader\LevelLoader.cpp">
+      <Filter>ソース ファイル\Engine\Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -628,6 +631,9 @@
     </ClInclude>
     <ClInclude Include="Engine\DebugProcess\DebugText\DebugScreenText.h">
       <Filter>ヘッダー ファイル\Engine\DebugProcess\DebugText</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\loader\LevelLoader.h">
+      <Filter>ヘッダー ファイル\Engine\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
