@@ -48,7 +48,8 @@ void BaseScene::Initialize()
 	lightGroup_ = LightGroup::Create();
 	//3Dオブジェクト(.obj)にセット
 	ObjModelObject::SetLight(lightGroup_);
-	lightGroup_->CircleShadowSet(0,player->GetPosition());
+	//lightGroup_->CircleShadowSet(0,player->GetPosition());
+
 
 #ifdef _DEBUG
 	debugCamera = DebugCamera::GetInstance();
@@ -104,7 +105,7 @@ void BaseScene::Update()
 		object->Update(camera);
 	}
 
-	lightGroup_->SetCircleShadowCasterPos(0, player->GetPosition());
+	//lightGroup_->SetCircleShadowCasterPos(0, player->GetPosition());
 	lightGroup_->Update();
 
 #ifdef _DEBUG
@@ -161,7 +162,6 @@ void BaseScene::Update()
 	}
 
 	lightGroup_->DebugUpdate();
-
 
 	{
 		debugText->Printf3D(player->GetPosition(), 1.0f, camera, "T X:%f Y:%f Z:%f",player->GetPosition().x,player->GetPosition().y,player->GetPosition().z);

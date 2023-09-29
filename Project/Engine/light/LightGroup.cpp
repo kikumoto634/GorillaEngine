@@ -148,7 +148,7 @@ void LightGroup::DebugUpdate()
 		static bool isActive[3] = {false,false,false};
 		static float col[3][3] = {{1.0f,1.0f,1.0f}, {1.0f,1.0f,1.0f}, {1.0f,1.0f,1.0f}};
 		static float pos[3][3] = {{0.0f,0.0f,0.0f}, {0.0f,0.0f,0.0f}, {0.0f,0.0f,0.0f}};
-		static float dir[3][3] = {{0.0f,-1.0f,0.0f}, {0.0f,-1.0f,0.0f}, {0.0f,-1.0f,0.0f}};
+		static float dir[3][3] = {{1.0f,-1.0f,1.0f}, {0.0f,-1.0f,0.0f}, {0.0f,-1.0f,0.0f}};
 		static float att[3][3] = {{1.0f,1.0f,1.0f}, {1.0f,1.0f,1.0f}, {1.0f,1.0f,1.0f}};
 		static float ang[3][2] = {{0.5f,0.2f},{0.5f,0.2f},{0.5f,0.2f}};
 
@@ -156,21 +156,21 @@ void LightGroup::DebugUpdate()
 		ImGui::Checkbox("act 1", &isActive[0]);
 		ImGui::ColorEdit3("color 1", col[0]);
 		ImGui::DragFloat3("pos 1", pos[0], 0.5f,-100.f,100.f);
-		ImGui::DragFloat3("dir 1", dir[0], 0.01f,-10.f,10.f);
+		ImGui::DragFloat3("dir 1", dir[0], 1.f,-360.f,360.f);
 		ImGui::DragFloat3("att 1", att[0], 0.01f,-1.f,1.f);
 		ImGui::DragFloat2("ang 1", ang[0], 0.01f,-10.f,10.f);
 	
 		ImGui::Checkbox("act 2", &isActive[1]);
 		ImGui::ColorEdit3("color 2", col[1]);
 		ImGui::DragFloat3("pos 2", pos[1], 0.5f,-100.f,100.f);
-		ImGui::DragFloat3("dir 2", dir[1], 0.01f,-10.f,10.f);
+		ImGui::DragFloat3("dir 2", dir[1], 1.f,-360.f,360.f);
 		ImGui::DragFloat3("att 2", att[1], 0.01f,-1.f,1.f);
 		ImGui::DragFloat2("ang 2", ang[1], 0.01f,-10.f,10.f);
 
 		ImGui::Checkbox("act 3", &isActive[2]);
 		ImGui::ColorEdit3("color 3", col[2]);
 		ImGui::DragFloat3("pos 3", pos[2], 0.5f,-100.f,100.f);
-		ImGui::DragFloat3("dir 3", dir[2], 0.01f,-10.f,10.f);
+		ImGui::DragFloat3("dir 3", dir[2], 1.f,-360.f,360.f);
 		ImGui::DragFloat3("att 3", att[2], 0.01f,-1.f,1.f);
 		ImGui::DragFloat2("ang 3", ang[2], 0.01f,-10.f,10.f);
 		ImGui::EndChild();

@@ -84,6 +84,11 @@ public: // メンバ関数
 	/// </summary>
 	void DefaultLightSetting();
 
+	//Getter
+	DirectionalLight GetDirLight(int index)	{return dirLights[index];}
+	PointLight GetPointLight(int index)	{return pointLights[index];}
+	SpotLight GetSpotLight(int index)	{return spotLights[index];}
+
 	//Setter
 	void SetAmbientColor(const Vector3& color);
 
