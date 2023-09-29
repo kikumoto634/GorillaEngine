@@ -107,6 +107,8 @@ public: // メンバ関数
 	void SetSpotLightFactorAngleCos(int index, const Vector2& lightFactorAngleCos);
 
 	//丸影
+	void CircleShadowSet(int index, Vector3 pos, Vector3 dir={0,-1,0}, Vector3 atten={0.5f,0.6f,0.f}, Vector2 angle={0.f, 0.5f});
+
 	void SetCircleShadowActive(int index, bool active);
 	void SetCircleShadowCasterPos(int index, const Vector3& casterPos);
 	void SetCircleShadowDir(int index, const DirectX::XMVECTOR& lightdir);
@@ -132,6 +134,10 @@ private: // メンバ変数
 
 	//丸影の配列
 	CircleShadow circleShadows[CircleShadowNum];
+	float circleShadowPos[CircleShadowNum][3];
+	float circleShadowDir[CircleShadowNum][3];
+	float circleShadowAtten[CircleShadowNum][3];
+	float circleShadowAngle[CircleShadowNum][2];
 
 	// ダーティフラグ
 	bool dirty = false;

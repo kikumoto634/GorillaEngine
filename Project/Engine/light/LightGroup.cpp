@@ -185,6 +185,23 @@ void LightGroup::DebugUpdate()
 		}
 	}
 
+	ImGui::Text("CircleShadow");
+	{
+		ImGui::BeginChild(ImGui::GetID((void**)3), ImVec2(275,150), ImGuiWindowFlags_NoTitleBar);
+		for(int i = 0; i < CircleShadowNum; i++){
+			if(!circleShadows[i].GetActive()) continue;
+			ImGui::DragFloat3("dir "+i, circleShadowDir[i], 0.01f,-10.f,10.f);
+			ImGui::DragFloat3("att "+i, circleShadowAtten[i], 0.01f,-1.f,1.f);
+			ImGui::DragFloat2("ang "+i, circleShadowAngle[i], 0.01f,-10.f,10.f);
+
+			SetCircleShadowDir(i, {circleShadowDir[i][0],circleShadowDir[i][1],circleShadowDir[i][2]});
+			SetCircleShadowAtten(i, {circleShadowAtten[i][0],circleShadowAtten[i][1],circleShadowAtten[i][2]});
+			SetCircleShadowFactorAngle(i, {circleShadowAngle[i][0],circleShadowAngle[i][1]});
+			SetCircleShadowCasterPos(i, {circleShadowPos[i][0],circleShadowPos[i][1],circleShadowPos[i][2]});
+		}
+		ImGui::EndChild();
+	}
+
 	ImGui::End();
 }
 
@@ -385,6 +402,31 @@ void LightGroup::SetSpotLightFactorAngleCos(int index, const Vector2 &lightFacto
 
 	spotLights[index].SetLightFactorAngleCos(lightFactorAngleCos);
 	dirty = true;
+}
+
+void LightGroup::CircleShadowSet(int index, Vector3 pos, Vector3 dir, Vector3 atten, Vector2 angle)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	SetCircleShadowActive(index,true);
+	circleShadowDir[index][0] = dir.x;
+	circleShadowDir[index][1] = dir.y;
+	circleShadowDir[index][2] = dir.z;
+	SetCircleShadowDir(index, {dir.x,dir.y,dir.z});
+	circleShadowDir[index][0] = dir.x;
+	circleShadowDir[index][1] = dir.y;
+	circleShadowDir[index][2] = dir.z;
+	SetCircleShadowAtten(index, atten);
+	circleShadowAtten[index][0] = atten.x;
+	circleShadowAtten[index][1] = atten.y;
+	circleShadowAtten[index][2] = atten.z;
+	SetCircleShadowFactorAngle(index, angle);
+	circleShadowAngle[index][0] = angle.x;
+	circleShadowAngle[index][1] = angle.y;
+	SetCircleShadowCasterPos(index, pos);
+	circleShadowPos[index][0] = pos.x;
+	circleShadowPos[index][1] = pos.y;
+	circleShadowPos[index][2] = pos.z;
 }
 
 void LightGroup::SetCircleShadowActive(int index, bool active)
