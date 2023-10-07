@@ -20,10 +20,10 @@ void Action::Initialize()
 
 	BaseObjObject::Initialize("sphere", true);
 
-	meshCollider = new MeshCollider();
+	/*meshCollider = new MeshCollider();
 	SetCollider(meshCollider);
 	meshCollider->SetAttribute(COLLISION_ATTR_ALLIES);
-	meshCollider->ConstructTriangles(model_);
+	meshCollider->ConstructTriangles(model_);*/
 
 	SetPosition({0,0,-3});
 }

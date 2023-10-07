@@ -18,7 +18,8 @@ private:
 public:
 	struct ConstBufferData
 	{
-		DirectX::XMVECTOR lightv;	//ライト向き
+		Vector3 lightv;	//ライト向き
+		float pad;
 		Vector3 lightcolor;			//ライト色
 		unsigned int active;
 	};
@@ -28,12 +29,12 @@ public:
 public:
 
 	//Getter
-	inline const DirectX::XMVECTOR GetLightDir()	{return DirectX::XMVector3Normalize(lightdir);}
+	inline const Vector3 GetLightDir()	{return lightdir.normalize();}
 	inline const Vector3& GetLightColor()	{return lightcolor;}
 	inline const bool& GetIsActive()	{return IsActive;}
 
 	//Setter
-	inline void SetLightDir(const DirectX::XMVECTOR& lightdir)	{this->lightdir = lightdir;}
+	inline void SetLightDir(const Vector3& lightdir)	{this->lightdir = lightdir;}
 	inline void SetLightColor(const Vector3 lightcolor)	{this->lightcolor = lightcolor;}
 	inline void SetIsActive(const bool IsActive)	{this->IsActive = IsActive;}
 
@@ -44,7 +45,7 @@ private:
 //メンバ変数
 private:
 	//ライト光線方向
-	DirectX::XMVECTOR lightdir = {1,0,0,0};
+	Vector3 lightdir = {1,0,0};
 	//ライト色
 	Vector3 lightcolor = {1,1,1};
 	//ダーティフラグ

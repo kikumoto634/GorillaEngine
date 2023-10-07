@@ -48,7 +48,15 @@ void BaseScene::Initialize()
 	lightGroup_ = LightGroup::Create();
 	//3Dオブジェクト(.obj)にセット
 	ObjModelObject::SetLight(lightGroup_);
-	lightGroup_->CircleShadowSet(0,player->GetPosition());
+	//lightGroup_->CircleShadowSet(0,player->GetPosition());
+
+
+#pragma region シャドウマップ初期化
+	//レンダリングターゲット
+	float clearColor[4] = {1.0f,1.0f,1.0f,1.0f};
+
+
+#pragma endregion
 
 
 #ifdef _DEBUG
@@ -105,7 +113,7 @@ void BaseScene::Update()
 		object->Update(camera);
 	}
 
-	lightGroup_->SetCircleShadowCasterPos(0, player->GetPosition());
+	//lightGroup_->SetCircleShadowCasterPos(0, player->GetPosition());
 	lightGroup_->Update();
 
 #ifdef _DEBUG

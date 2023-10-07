@@ -16,11 +16,10 @@ cbuffer cbuff1 : register(b1)
 };
 
 //平行光源の数
-static const int DIRECTIONALLIGHT_NUM = 3;
-
 struct DirectionalLight
 {
 	float3 lightv;	//ライト向き
+    float pad;
 	float3 lightcolor;			//ライト色
 	uint active;
 };
@@ -65,7 +64,7 @@ struct CircleShadow
 cbuffer cbuff2 : register(b2)
 {
 	float3 ambientColor;
-    DirectionalLight dirLights[DIRECTIONALLIGHT_NUM];
+    DirectionalLight dirLights;
 	PointLight pointLights[POINTLIGHT_NUM];
 	SpotLight spotLights[SPOTLIGHT_NUM];
 	CircleShadow circleShadows[CIRCLESHADOW_NUM];

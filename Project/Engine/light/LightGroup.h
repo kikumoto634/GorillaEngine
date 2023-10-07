@@ -11,8 +11,6 @@ private: // エイリアス
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:
-	//平行光源の数
-	static const int DirectionLightNum = 3;
 	//点光源の数
 	static const int PointLightNum = 3;
 	//スポットライトの数
@@ -28,7 +26,7 @@ public:
 		Vector3 ambientColor;
 		float pad1;
 		//平行光源用
-		DirectionalLight::ConstBufferData dirLights[DirectionLightNum];
+		DirectionalLight::ConstBufferData dirLights;
 		//点光源用
 		PointLight::ConstBufferData pointLights[PointLightNum];
 		//スポットライト用
@@ -85,7 +83,7 @@ public: // メンバ関数
 	void DefaultLightSetting();
 
 	//Getter
-	DirectionalLight GetDirLight(int index)	{return dirLights[index];}
+	DirectionalLight GetDirLight()	{return dirLights;}
 	PointLight GetPointLight(int index)	{return pointLights[index];}
 	SpotLight GetSpotLight(int index)	{return spotLights[index];}
 
@@ -93,9 +91,9 @@ public: // メンバ関数
 	void SetAmbientColor(const Vector3& color);
 
 	//平行
-	void SetDirLightActive(int index, bool active);
-	void SetDirLightDir(int index, const DirectX::XMVECTOR& lightdir);
-	void SetDirLightColor(int index, const Vector3& lightcolor);
+	void SetDirLightActive(bool active);
+	void SetDirLightDir(const Vector3& lightdir);
+	void SetDirLightColor(const Vector3& lightcolor);
 
 	//点
 	void SetPointLightActive(int index, bool active);
@@ -129,7 +127,7 @@ private: // メンバ変数
 	Vector3 ambientColor = { 1,1,1 };
 
 	// 平行光源の配列
-	DirectionalLight dirLights[DirectionLightNum];
+	DirectionalLight dirLights;
 
 	// 点光源の配列
 	PointLight pointLights[PointLightNum];

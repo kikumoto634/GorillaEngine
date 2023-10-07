@@ -16,25 +16,23 @@ float4 Light(VSOutput input, float4 texcolor)
         return (shadecolor * texcolor);
 	
 	// 平行光源
-    for (int i = 0; i < DIRECTIONALLIGHT_NUM; i++)
+    if (dirLights.active)
     {
-        if (dirLights[i].active)
-        {
-			// ライトに向かうベクトルと法線の内積
-            float3 dotlightnormal = dot(dirLights[i].lightv, input.normal);
-			// 反射光ベクトル
-            float3 reflect = normalize(-dirLights[i].lightv + 2 * dotlightnormal * input.normal);
-			// 拡散反射光
-            float3 diffuse = dotlightnormal * m_diffuse;
-			// 鏡面反射光
-            float3 specular = pow(saturate(dot(reflect, eyedir)), shiness) * m_specular;
-			// 全て加算する
-            shadecolor.rgb += (diffuse + specular) * dirLights[i].lightcolor;
-        }
+		// ライトに向かうベクトルと法線の内積
+        float3 dotlightnormal = dot(dirLights.lightv, input.normal);
+		// 反射光ベクトル
+        float3 reflect = normalize(-dirLights.lightv + 2 * dotlightnormal * input.normal);
+		// 拡散反射光
+        float3 diffuse = dotlightnormal * m_diffuse;
+        //diffuse /= 3.1415926f;
+		// 鏡面反射光
+        float3 specular = pow(saturate(dot(reflect, eyedir)), shiness) * m_specular;
+		// 全て加算する
+        shadecolor.rgb += (diffuse + specular) * dirLights.lightcolor;
     }
 
 	// 点光源
-    for (i = 0; i < POINTLIGHT_NUM; i++)
+    for (int i = 0; i < POINTLIGHT_NUM; i++)
     {
         if (pointLights[i].active)
         {
@@ -83,6 +81,7 @@ float4 Light(VSOutput input, float4 texcolor)
             float3 reflect = normalize(-lightv + 2 * dotlightnormal * input.normal);
 			//拡散反射光
             float3 diffuse = dotlightnormal * m_diffuse;
+            //diffuse /= 3.1415926f;
 			//鏡面反射光
             float3 specular = pow(saturate(dot(reflect, eyedir)), shiness) * m_specular;
 			//すべて加算

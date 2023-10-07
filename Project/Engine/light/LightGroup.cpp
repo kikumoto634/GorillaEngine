@@ -84,31 +84,21 @@ void LightGroup::DebugUpdate()
 		SetAmbientColor({col[0],col[1],col[2]});
 	}
 
-	ImGui::Text("Directnal [1 ~ 3]");
+	ImGui::Text("Directnal");
 	{
-		static bool isActive[3] = {true,true,true};
-		static float col[3][3] = {{1.0f,1.0f,1.0f}, {1.0f,1.0f,1.0f}, {1.0f,1.0f,1.0f}};
-		static float dir[3][3] = {{0.0f,-1.0f,0.0f}, {0.5f,0.1f,0.2f}, {-0.5f,0.1f,-0.2f}};
+		static bool isActive = true;
+		static float col[3] = {1.0f,1.0f,1.0f};
+		static float dir[3] = {0.0f,-1.0f,0.0f};
 
 		ImGui::BeginChild(ImGui::GetID((void**)0), ImVec2(275,82), ImGuiWindowFlags_NoTitleBar);
-		ImGui::Checkbox("act 1", &isActive[0]);
-		ImGui::ColorEdit3("color 1", col[0]);
-		ImGui::DragFloat3("dir 1", dir[0], 0.01f,-10.f,10.f);
-	
-		ImGui::Checkbox("act 2", &isActive[1]);
-		ImGui::ColorEdit3("color 2", col[1]);
-		ImGui::DragFloat3("dir 2", dir[1], 0.01f,-10.f,10.f);
-
-		ImGui::Checkbox("act 3", &isActive[2]);
-		ImGui::ColorEdit3("color 3", col[2]);
-		ImGui::DragFloat3("dir 3", dir[2], 0.01f,-10.f,10.f);
+		ImGui::Checkbox("act 1", &isActive);
+		ImGui::ColorEdit3("color 1", col);
+		ImGui::DragFloat3("dir 1", dir, 0.01f,-10.f,10.f);
 		ImGui::EndChild();
 	
-		for(int i = 0; i < 3; i++){
-			SetDirLightActive(i, isActive[i]);
-			SetDirLightColor(i,{col[i][0],col[i][1],col[i][2]});
-			SetDirLightDir(i, {dir[i][0],dir[i][1],dir[i][2]});
-		}
+		SetDirLightActive(isActive);
+		SetDirLightColor({col[0],col[1],col[2]});
+		SetDirLightDir({dir[0],dir[1],dir[2]});
 	}
 
 	ImGui::Text("Point [1 ~ 3]");
@@ -122,17 +112,17 @@ void LightGroup::DebugUpdate()
 		ImGui::Checkbox("act 1", &isActive[0]);
 		ImGui::ColorEdit3("color 1", col[0]);
 		ImGui::DragFloat3("pos 1", pos[0], 0.5f,-100.f,100.f);
-		ImGui::DragFloat3("att 1", att[0], 0.01f,-1.f,1.f);
+		ImGui::DragFloat3("att 1", att[0], 0.1f,0.f,3.f);
 	
 		ImGui::Checkbox("act 2", &isActive[1]);
 		ImGui::ColorEdit3("color 2", col[1]);
 		ImGui::DragFloat3("pos 2", pos[1], 0.5f,-100.f,100.f);
-		ImGui::DragFloat3("att 2", att[1], 0.01f,-1.f,1.f);
+		ImGui::DragFloat3("att 2", att[1], 0.01f,0.f,3.f);
 
 		ImGui::Checkbox("act 3", &isActive[2]);
 		ImGui::ColorEdit3("color 3", col[2]);
 		ImGui::DragFloat3("pos 3", pos[2], 0.5f,-100.f,100.f);
-		ImGui::DragFloat3("att 3", att[2], 0.01f,-1.f,1.f);
+		ImGui::DragFloat3("att 3", att[2], 0.01f,0.f,3.f);
 		ImGui::EndChild();
 	
 		for(int i = 0; i < 3; i++){
@@ -157,22 +147,22 @@ void LightGroup::DebugUpdate()
 		ImGui::ColorEdit3("color 1", col[0]);
 		ImGui::DragFloat3("pos 1", pos[0], 0.5f,-100.f,100.f);
 		ImGui::DragFloat3("dir 1", dir[0], 1.f,-360.f,360.f);
-		ImGui::DragFloat3("att 1", att[0], 0.01f,-1.f,1.f);
-		ImGui::DragFloat2("ang 1", ang[0], 0.01f,-10.f,10.f);
+		ImGui::DragFloat3("att 1", att[0], 0.01f,0.f,3.f);
+		ImGui::DragFloat2("ang 1", ang[0], 0.1f,0.f,180.f);
 	
 		ImGui::Checkbox("act 2", &isActive[1]);
 		ImGui::ColorEdit3("color 2", col[1]);
 		ImGui::DragFloat3("pos 2", pos[1], 0.5f,-100.f,100.f);
 		ImGui::DragFloat3("dir 2", dir[1], 1.f,-360.f,360.f);
-		ImGui::DragFloat3("att 2", att[1], 0.01f,-1.f,1.f);
-		ImGui::DragFloat2("ang 2", ang[1], 0.01f,-10.f,10.f);
+		ImGui::DragFloat3("att 2", att[1], 0.01f,0.f,3.f);
+		ImGui::DragFloat2("ang 2", ang[1], 0.1f,0.f,180.f);
 
 		ImGui::Checkbox("act 3", &isActive[2]);
 		ImGui::ColorEdit3("color 3", col[2]);
 		ImGui::DragFloat3("pos 3", pos[2], 0.5f,-100.f,100.f);
 		ImGui::DragFloat3("dir 3", dir[2], 1.f,-360.f,360.f);
-		ImGui::DragFloat3("att 3", att[2], 0.01f,-1.f,1.f);
-		ImGui::DragFloat2("ang 3", ang[2], 0.01f,-10.f,10.f);
+		ImGui::DragFloat3("att 3", att[2], 0.01f,0.f,3.f);
+		ImGui::DragFloat2("ang 3", ang[2], 0.1f,0.f,180.f);
 		ImGui::EndChild();
 	
 		for(int i = 0; i < 3; i++){
@@ -222,17 +212,15 @@ void LightGroup::TransferConstBuffer()
 		// 環境光
 		constMap->ambientColor = ambientColor;
 		// 平行光源
-		for (int i = 0; i < DirectionLightNum; i++) {
-			// ライトが有効なら設定を転送
-			if (dirLights[i].GetIsActive()) {
-				constMap->dirLights[i].active = 1;
-				constMap->dirLights[i].lightv = -dirLights[i].GetLightDir();
-				constMap->dirLights[i].lightcolor = dirLights[i].GetLightColor();
-			}
-			// ライトが無効ならライト色を0に
-			else {
-				constMap->dirLights[i].active = 0;
-			}
+		// ライトが有効なら設定を転送
+		if (dirLights.GetIsActive()) {
+			constMap->dirLights.active = 1;
+			constMap->dirLights.lightv = -dirLights.GetLightDir();
+			constMap->dirLights.lightcolor = dirLights.GetLightColor();
+		}
+		// ライトが無効ならライト色を0に
+		else {
+			constMap->dirLights.active = 0;
 		}
 		// 点光源
 		for (int i = 0; i < PointLightNum; i++) {
@@ -284,17 +272,9 @@ void LightGroup::TransferConstBuffer()
 
 void LightGroup::DefaultLightSetting()
 {
-	dirLights[0].SetIsActive(true);
-	dirLights[0].SetLightColor({0.0f, 1.0f, 1.0f});
-	dirLights[0].SetLightDir({0.0f, -1.0f, 0.0f, 0});
-
-	dirLights[1].SetIsActive(true);
-	dirLights[1].SetLightColor({ 1.0f, 1.0f, 1.0f });
-	dirLights[1].SetLightDir({ +0.5f, +0.1f, +0.2f, 0 });
-
-	dirLights[2].SetIsActive(true);
-	dirLights[2].SetLightColor({ 1.0f, 1.0f, 1.0f });
-	dirLights[2].SetLightDir({ -0.5f, +0.1f, -0.2f, 0 });	
+	dirLights.SetIsActive(true);
+	dirLights.SetLightColor({0.0f, 1.0f, 1.0f});
+	dirLights.SetLightDir({0.0f, -1.0f, 0.0f});
 }
 
 void LightGroup::SetAmbientColor(const Vector3 &color)
@@ -303,26 +283,20 @@ void LightGroup::SetAmbientColor(const Vector3 &color)
 	dirty = true;
 }
 
-void LightGroup::SetDirLightActive(int index, bool active)
+void LightGroup::SetDirLightActive(bool active)
 {
-	assert(0 <= index && index < DirectionLightNum);
-
-	dirLights[index].SetIsActive(active);
+	dirLights.SetIsActive(active);
 }
 
-void LightGroup::SetDirLightDir(int index, const DirectX::XMVECTOR &lightdir)
+void LightGroup::SetDirLightDir(const Vector3 &lightdir)
 {
-	assert(0 <= index && index < DirectionLightNum);
-
-	dirLights[index].SetLightDir(lightdir);
+	dirLights.SetLightDir(lightdir);
 	dirty = true;
 }
 
-void LightGroup::SetDirLightColor(int index, const Vector3 &lightcolor)
+void LightGroup::SetDirLightColor(const Vector3 &lightcolor)
 {
-	assert(0 <= index && index < DirectionLightNum);
-
-	dirLights[index].SetLightColor(lightcolor);
+	dirLights.SetLightColor(lightcolor);
 	dirty = true;
 }
 
