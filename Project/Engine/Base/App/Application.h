@@ -30,6 +30,8 @@
 #include <imgui.h>
 #endif // _DEBUG
 
+#include "../../ShadowMap.h"
+
 class Application
 {
 private:
@@ -72,4 +74,6 @@ private:
 	bool isEnd = false;
 
 	Camera* camera;
+
+	ShadowMap* shadowMap = nullptr;
 };

@@ -328,6 +328,9 @@
     <Filter Include="ソース ファイル\Engine\Scene\System">
       <UniqueIdentifier>{16d041c5-c1c3-4068-bfba-e3d20377fe96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\ShadowMap">
+      <UniqueIdentifier>{c7965a7d-675a-44a0-91f7-60add28569f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\input\Input.cpp">
@@ -464,6 +467,9 @@
     </ClCompile>
     <ClCompile Include="Engine\loader\LevelLoader.cpp">
       <Filter>ソース ファイル\Engine\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMap.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -635,6 +641,9 @@
     <ClInclude Include="Engine\loader\LevelLoader.h">
       <Filter>ヘッダー ファイル\Engine\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="ShadowMap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\FBX\FBXPS.hlsl">
@@ -685,6 +694,12 @@
     <FxCompile Include="Resources\shader\Sprite\SpriteVS.hlsl">
       <Filter>リソース ファイル\Sprite</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\ShadowMap\ShadowMapPS.hlsl">
+      <Filter>リソース ファイル\ShadowMap</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ShadowMap\ShadowMapVS.hlsl">
+      <Filter>リソース ファイル\ShadowMap</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\FBX\FBX.hlsli">
@@ -707,6 +722,9 @@
     </None>
     <None Include="Resources\shader\Sprite\Sprite.hlsli">
       <Filter>リソース ファイル\Sprite</Filter>
+    </None>
+    <None Include="Resources\shader\ShadowMap\ShadowMap.hlsli">
+      <Filter>リソース ファイル\ShadowMap</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

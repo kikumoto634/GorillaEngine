@@ -23,6 +23,7 @@ public://サブクラス
 	class Common{
 		friend class Sprite;
 		friend class PostEffect;
+		friend class ShadowMap;
 
 	private:
 		//頂点数

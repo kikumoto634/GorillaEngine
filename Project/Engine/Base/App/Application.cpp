@@ -114,11 +114,16 @@ void Application::Initialize()
 	
 	//ポストエフェクト
 	postEffect_ = PostEffect::GetInstance();
+
+
+	shadowMap = ShadowMap::Create(1,{0,0},{500,500});
 }
 
 void Application::Update()
 {
 	camera->Update();
+	shadowMap->Update();
+
 #ifdef _DEBUG
 	imgui->Begin();
 #endif // _DEBUG
@@ -132,11 +137,14 @@ void Application::Update()
 
 void Application::Draw()
 {
+	shadowMap->PreShadowDraw();
+	shadowMap->Draw();
+	shadowMap->PostShadowDraw();
+
 	//レンダーターゲットへの描画
 	postEffect_->PreDrawScene();
 	sceneManager->Draw();
 	postEffect_->PostDrawScene();
-
 
 	//描画前処理
 	dxCommon->BeginDraw();
@@ -160,6 +168,9 @@ void Application::Draw()
 
 void Application::Finalize()
 {
+	shadowMap->Finalize();
+	delete shadowMap;
+
 	delete postEffect_;
 
 #ifdef _DEBUG
