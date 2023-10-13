@@ -49,28 +49,6 @@ public:
 	//シーン描画後処理
 	void PostDrawScene();
 
-
-	//ポストエフェクト開始
-	inline void BlurStart()	{isBlurActive_ = true;}
-	inline void BlurEnd()	{isBlurActive_ = false;}
-
-	inline void FadeStart()	{isFadeActive = true;}
-
-	//ブラー
-	void Blur(float second, const float Second);
-
-	//フェード
-	bool FadeIn();
-	bool FadeOut();
-
-
-	//Getter
-	inline bool GetIsBlurActive()	{return isBlurActive_;}
-	inline bool GetIsFadeActive()	{return isFadeActive;}
-
-	//Setter
-	inline void SetFadeWall(Vector3 color)	{fadeColor = color;}
-
 private:
 	//スプライト共通初期化
 	void SpriteInitialize();
@@ -118,19 +96,5 @@ private:
 	ComPtr<ID3D12PipelineState> pipelineState;
 	//ルートシグネチャ
 	ComPtr<ID3D12RootSignature> rootSignature;
-
-	//定数バッファ
-	ComPtr<ID3D12Resource> constBuff_Blur;
-	ComPtr<ID3D12Resource> constBuff_Fade;
-
-	//ぼかし
-	bool isBlurActive_ = false;
-	int blurCount = BlurCont;
-	float blurStrength = BlurStrength;
-
-	//フェード
-	bool isFadeActive = false;
-	Vector3 fadeColor = {1,1,1};
-	float fadeFrame = 0;
 };
 

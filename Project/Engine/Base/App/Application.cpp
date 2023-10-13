@@ -137,9 +137,9 @@ void Application::Update()
 
 void Application::Draw()
 {
-	shadowMap->PreShadowDraw();
+	/*shadowMap->PreShadowDraw();
 	shadowMap->Draw();
-	shadowMap->PostShadowDraw();
+	shadowMap->PostShadowDraw();*/
 
 	//レンダーターゲットへの描画
 	postEffect_->PreDrawScene();

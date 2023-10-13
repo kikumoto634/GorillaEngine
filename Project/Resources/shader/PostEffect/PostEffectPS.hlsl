@@ -3,28 +3,43 @@
 Texture2D<float4> tex : register(t0);
 SamplerState smp : register(s0);
 
+//通常
+float4 Normal(VSOutput input)
+{
+    float4 texcolor = tex.Sample(smp, input.uv);
+
+	return float4(texcolor.rgb, 1.0f);
+}
+
+//平均ぼかし
+float4 AverageBlur(VSOutput input, int blurValue)
+{
+    float2 texelSize = float2(1.0f / 1280.0f, 1.0f / 720.0f);
+    float4 color = (0, 0, 0, 0);
+
+    for (int x = 0; x < blurValue; x++)
+    {
+        for (int y = 0; y < blurValue; y++)
+        {
+            color += tex.Sample(smp, input.uv + float2(x, y) * texelSize);
+        }
+    }
+    color /= (blurValue * blurValue); // 周囲9ピクセルの平均値を計算
+
+    return float4(color.rgb, 1);
+}
+
+//ネガポジ反転
+float4 Negative(VSOutput input)
+{
+    float4 texcolor = tex.Sample(smp, input.uv);
+    float3 nega = float3(1 - texcolor.x, 1 - texcolor.y, 1 - texcolor.z);
+    return float4(nega, 1.0f);
+}
+
 float4 main(VSOutput input) : SV_TARGET
 {
-	float4 texcolor = tex.Sample(smp, input.uv);
-
-	//フェード
-	if(isFadeActive){
-		return float4(texcolor.rgb*fadeColor,1);
-	}
-	//ぼかし
-	else if(isBlurActive){
-		float4 col = {0,0,0,0};
-		float2 symmetryUV = input.uv - 0.5f;
-		float distance = length(symmetryUV);
-		float factor = BlurStrength / BlurCount * distance;
-		for(int j = 0; j < BlurCount; j++){
-			float uvOffset = 1 - factor * j;
-			col += tex.Sample(smp, symmetryUV * uvOffset + 0.5);
-		}
-
-		col /= 10;
-		return col;
-	}
-
-	return float4(texcolor.rgb,1);
+	//return Normal(input);
+    return AverageBlur(input, 16);
+    //return Negative(input);
 }
