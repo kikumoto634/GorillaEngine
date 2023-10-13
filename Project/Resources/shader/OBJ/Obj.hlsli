@@ -15,6 +15,12 @@ cbuffer cbuff1 : register(b1)
 	float m_alpha : packoffset(c2.w);
 };
 
+struct PSOutput
+{
+    float4 target0 : SV_Target0;
+    float4 target1 : SV_Target1;
+};
+
 //平行光源の数
 struct DirectionalLight
 {

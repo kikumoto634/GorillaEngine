@@ -6,6 +6,8 @@
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
+#include "Input.h"
+
 PostEffect* PostEffect::instance = nullptr;
 const float PostEffect::clearColor[4] = {0.0f, 0.1f, 0.7f, 1.0f};
 
@@ -67,11 +69,27 @@ bool PostEffect::Initialize()
 
 void PostEffect::Update()
 {
+	if(Input::GetInstance()->Trigger(DIK_0)){
+		static int tex = 0;
+		tex = (tex + 1) % 2;
+
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+		srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = 1;
+
+		common->dxCommon->GetDevice()->CreateShaderResourceView(texbuff[tex].Get(),
+			&srvDesc,
+			descHeapSRV->GetCPUDescriptorHandleForHeapStart()
+		);
+	}
 }
 
 void PostEffect::Draw()
 {
 	if(!instance) return;
+
 
 	//ワールド行列の更新
 	this->matWorld = XMMatrixIdentity();
@@ -149,15 +167,15 @@ void PostEffect::TextureInitialize()
 {
 	HRESULT result;
 	//テクスチャリソース
-	{
-		CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-			Window::GetWindowWidth(),
-			(UINT)Window::GetWindowHeight(),
-			1,0,1,0,
-			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
-		);
+	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+		Window::GetWindowWidth(),
+		(UINT)Window::GetWindowHeight(),
+		1,0,1,0,
+		D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
+	);
 
+	for(int i = 0; i < 2; i++){
 		//テクスチャバッファ
 		result = common->dxCommon->GetDevice()->CreateCommittedResource(
 			&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK,
@@ -166,13 +184,11 @@ void PostEffect::TextureInitialize()
 			&texresDesc,
 			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 			&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,clearColor),
-			IID_PPV_ARGS(&texbuff)
+			IID_PPV_ARGS(&texbuff[i])
 		);
 		assert(SUCCEEDED(result));
-	}
 
-	//イメージデータ転送
-	{
+		//イメージデータ転送
 		///画素数
 		const UINT pixelCount = Window::GetWindowWidth()*Window::GetWindowHeight();
 		//画像1行のデータ
@@ -181,10 +197,10 @@ void PostEffect::TextureInitialize()
 		const UINT depthPitch = rowPitch * Window::GetWindowHeight();
 		//イメージ
 		UINT* img = new UINT[pixelCount];
-		for(UINT i = 0; i < pixelCount; i++)	{img[i] = 0xff0000ff;}
+		for(UINT j = 0; j < pixelCount; j++)	{img[j] = 0xff0000ff;}
 
 		//転送
-		result = texbuff->WriteToSubresource(
+		result = texbuff[i]->WriteToSubresource(
 			0,
 			nullptr,
 			img,
@@ -220,7 +236,7 @@ void PostEffect::SRVInitialize()
 		srvDesc.Texture2D.MipLevels = 1;
 		//デスクリプタヒープにSRV作成
 		common->dxCommon->GetDevice()->CreateShaderResourceView(
-			texbuff.Get(),
+			texbuff[0].Get(),
 			&srvDesc,
 			descHeapSRV->GetCPUDescriptorHandleForHeapStart()
 		);
@@ -234,7 +250,7 @@ void PostEffect::RTVInitialize()
 	{
 		D3D12_DESCRIPTOR_HEAP_DESC rtvDescHeapDesc{};
 		rtvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-		rtvDescHeapDesc.NumDescriptors = 1;
+		rtvDescHeapDesc.NumDescriptors = 2;
 		//生成
 		result = common->dxCommon->GetDevice()->CreateDescriptorHeap(
 			&rtvDescHeapDesc,
@@ -249,11 +265,16 @@ void PostEffect::RTVInitialize()
 		renderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 		//作成
-		common->dxCommon->GetDevice()->CreateRenderTargetView(
-			texbuff.Get(),
-			&renderTargetViewDesc,
-			descHeapRTV->GetCPUDescriptorHandleForHeapStart()
-		);
+		for(int i = 0; i< 2; i++){
+			common->dxCommon->GetDevice()->CreateRenderTargetView(
+				texbuff[i].Get(),
+				nullptr,
+				CD3DX12_CPU_DESCRIPTOR_HANDLE(
+					descHeapRTV->GetCPUDescriptorHandleForHeapStart(), i,
+					common->dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV)
+				)
+			);
+		}
 	}
 }
 
@@ -485,34 +506,48 @@ void PostEffect::PreDrawScene()
 {
 	if(!instance) return;
 	//リソースバリア
-	common->dxCommon->GetCommandList()->ResourceBarrier(
-		1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(
-			texbuff.Get(),
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-			D3D12_RESOURCE_STATE_RENDER_TARGET
-		)
-	);
+	for(int i = 0; i < 2; i++){
+		common->dxCommon->GetCommandList()->ResourceBarrier(
+			1,
+			&CD3DX12_RESOURCE_BARRIER::Transition(
+				texbuff[i].Get(),
+				D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+				D3D12_RESOURCE_STATE_RENDER_TARGET
+			)
+		);
+	}
 
 	//レンダーターゲットビュー
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = 
-		descHeapRTV->GetCPUDescriptorHandleForHeapStart();
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvH[2];
+	for(int i = 0; i < 2; i++){
+		rtvH[i] = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+			descHeapRTV->GetCPUDescriptorHandleForHeapStart(), i,
+			common->dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV)
+		);
+	}
 	
 	//深度ステンシル
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH = 
 		descHeapDSV->GetCPUDescriptorHandleForHeapStart();
 
 	//レンダーターゲットをセット
-	common->dxCommon->GetCommandList()->OMSetRenderTargets(1,&rtvH,false,&dsvH);
+	common->dxCommon->GetCommandList()->OMSetRenderTargets(2,rtvH,false,&dsvH);
 
+	CD3DX12_VIEWPORT viewports[2];
+	CD3DX12_RECT scissorRects[2];
+	for(int i = 0; i < 2; i++){
+		viewports[i] = CD3DX12_VIEWPORT(0.0F,0.0F,(FLOAT)Window::GetWindowWidth(),(FLOAT)Window::GetWindowHeight());
+		scissorRects[i] = CD3DX12_RECT(0,0,Window::GetWindowWidth(),Window::GetWindowHeight());
+	}
 	//ビューポート
-	common->dxCommon->GetCommandList()->RSSetViewports(1, &CD3DX12_VIEWPORT(0.0F,0.0F,(FLOAT)Window::GetWindowWidth(),(FLOAT)Window::GetWindowHeight()));
-
+	common->dxCommon->GetCommandList()->RSSetViewports(2,viewports);
 	//シザー
-	common->dxCommon->GetCommandList()->RSSetScissorRects(1, &CD3DX12_RECT(0,0,Window::GetWindowWidth(),Window::GetWindowHeight()));
+	common->dxCommon->GetCommandList()->RSSetScissorRects(2,scissorRects);
 
 	//画面クリア
-	common->dxCommon->GetCommandList()->ClearRenderTargetView(rtvH,clearColor,0,nullptr);
+	for(int i = 0; i < 2; i++){
+		common->dxCommon->GetCommandList()->ClearRenderTargetView(rtvH[i],clearColor,0,nullptr);
+	}
 
 	//深度バッファクリア
 	common->dxCommon->GetCommandList()->ClearDepthStencilView(dsvH,D3D12_CLEAR_FLAG_DEPTH,1.0f,0,0,nullptr);
@@ -522,12 +557,14 @@ void PostEffect::PostDrawScene()
 {
 	if(!instance) return;
 	//リソースバリア
-	common->dxCommon->GetCommandList()->ResourceBarrier(
-		1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(
-			texbuff.Get(),
-			D3D12_RESOURCE_STATE_RENDER_TARGET,
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-		)
-	);
+	for(int i = 0; i < 2; i++){
+		common->dxCommon->GetCommandList()->ResourceBarrier(
+			1,
+			&CD3DX12_RESOURCE_BARRIER::Transition(
+				texbuff[i].Get(),
+				D3D12_RESOURCE_STATE_RENDER_TARGET,
+				D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+			)
+		);
+	}
 }

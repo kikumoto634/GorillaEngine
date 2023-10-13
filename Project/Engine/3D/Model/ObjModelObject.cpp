@@ -263,6 +263,7 @@ void ObjModelObject::CommonObj::InitializeGraphicsPipeline()
 
 		// ブレンドステートの設定
 		gpipeline.BlendState.RenderTarget[0] = blenddesc;
+		gpipeline.BlendState.RenderTarget[1] = blenddesc;
 
 		// 深度バッファのフォーマット
 		gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
@@ -274,8 +275,9 @@ void ObjModelObject::CommonObj::InitializeGraphicsPipeline()
 		// 図形の形状設定（三角形）
 		gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-		gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
+		gpipeline.NumRenderTargets = 2;	// 描画対象は1つ
 		gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+		gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 		gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 		gpipeline.pRootSignature = rootsignature.Get();
@@ -320,6 +322,7 @@ void ObjModelObject::CommonObj::InitializeGraphicsPipeline()
 
 		// ブレンドステートの設定
 		wireGPipeline.BlendState.RenderTarget[0] = blenddesc;
+		wireGPipeline.BlendState.RenderTarget[1] = blenddesc;
 
 		// 深度バッファのフォーマット
 		wireGPipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
@@ -331,8 +334,9 @@ void ObjModelObject::CommonObj::InitializeGraphicsPipeline()
 		// 図形の形状設定（三角形）
 		wireGPipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-		wireGPipeline.NumRenderTargets = 1;	// 描画対象は1つ
+		wireGPipeline.NumRenderTargets = 2;	// 描画対象は1つ
 		wireGPipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+		wireGPipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 		wireGPipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 		wireGPipeline.pRootSignature = rootsignature.Get();

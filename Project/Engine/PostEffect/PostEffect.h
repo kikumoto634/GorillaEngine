@@ -81,7 +81,7 @@ private:
 
 private:
 	//テクスチャ
-	ComPtr<ID3D12Resource> texbuff;
+	ComPtr<ID3D12Resource> texbuff[2];
 	//SRVデスクリ
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 
