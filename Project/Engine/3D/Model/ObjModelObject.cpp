@@ -14,7 +14,6 @@ void ObjModelObject::StaticInitialize( DirectXCommon* dxCommon)
 	assert(dxCommon);
 	common = new CommonObj();
 	common->dxCommon = dxCommon;
-	
 	common->InitializeGraphicsPipeline();
 }
 

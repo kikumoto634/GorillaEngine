@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Sprite.h"
+#include "RenderTexture.h"
 
 class PostEffect : public Sprite
 {
@@ -52,17 +53,8 @@ public:
 private:
 	//スプライト共通初期化
 	void SpriteInitialize();
-
-	//テクスチャ初期化
-	void TextureInitialize();
 	//SRV初期化
 	void SRVInitialize();
-	//RTV初期化
-	void RTVInitialize();
-	//深度バッファ初期化
-	void DepthInitialize();
-	//DSV初期化
-	void DSVInitialize();
 
 	/// <summary>
 	/// パイプライン生成
@@ -80,17 +72,10 @@ private:
 	static const int VertNum = 4;
 
 private:
-	//テクスチャ
-	ComPtr<ID3D12Resource> texbuff[2];
+	//レンダーテクスチャ
+	RenderTexture* renderTexture_ = nullptr;
 	//SRVデスクリ
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
-
-	//深度バッファ
-	ComPtr<ID3D12Resource> depthBuff;
-	//RTV用デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeapRTV;
-	//DSV用デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeapDSV;
 
 	//グラフィックスパイプライン
 	ComPtr<ID3D12PipelineState> pipelineState;

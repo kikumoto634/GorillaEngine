@@ -331,6 +331,12 @@
     <Filter Include="リソース ファイル\ShadowMap">
       <UniqueIdentifier>{c7965a7d-675a-44a0-91f7-60add28569f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Base\RenderTexture">
+      <UniqueIdentifier>{ccf531e9-1ace-40bc-91d1-fa193d59e1a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\Base\RenderTexture">
+      <UniqueIdentifier>{52c1fbce-0d48-4d53-a50f-f99a4816e3c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\input\Input.cpp">
@@ -470,6 +476,9 @@
     </ClCompile>
     <ClCompile Include="ShadowMap.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Base\RenderTexture\RenderTexture.cpp">
+      <Filter>ソース ファイル\Engine\Base\RenderTexture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -643,6 +652,9 @@
     </ClInclude>
     <ClInclude Include="ShadowMap.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Base\RenderTexture\RenderTexture.h">
+      <Filter>ヘッダー ファイル\Engine\Base\RenderTexture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
