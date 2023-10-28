@@ -39,7 +39,7 @@ float4 Negative(VSOutput input)
 
 float4 main(VSOutput input) : SV_TARGET
 {
-	//return Normal(input);
-    return AverageBlur(input, 16);
+	return Normal(input);
+    //return AverageBlur(input, 16);
     //return Negative(input);
 }

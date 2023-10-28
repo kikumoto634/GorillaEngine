@@ -12,7 +12,7 @@ PSOutput main(VSOutput input)
     float4 light = Light(input, texcolor);
     
     output.target0 = light;
-    output.target1 = light;
+    output.target1 = float4(1 - (light).rgb, 1);
     
     return output;
 }

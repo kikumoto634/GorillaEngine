@@ -589,7 +589,8 @@ void GPUParticleManager::ParticleCommon::Initialize()
 		pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 
 		//レンダーターゲットのブレンド設定
-		D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
+		//D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
+		D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 		blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	//RGBAすべてのチャンネルを描画
 		//共通設定
 		blenddesc.BlendEnable = true;						//ブレンドを有効にする
@@ -601,12 +602,18 @@ void GPUParticleManager::ParticleCommon::Initialize()
 		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+		pipelineDesc.BlendState.RenderTarget[0] = blenddesc;
+		pipelineDesc.BlendState.RenderTarget[1] = blenddesc;
 		
 		pipelineDesc.InputLayout = {inputLayout, _countof(inputLayout)};
 		//pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
-		pipelineDesc.NumRenderTargets = 1;
+
+		pipelineDesc.NumRenderTargets = 2;
 		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		pipelineDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
 		pipelineDesc.SampleDesc.Count = 1;
 		pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 		pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
