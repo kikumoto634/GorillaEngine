@@ -70,7 +70,7 @@ bool PostEffect::Initialize()
 
 void PostEffect::Update()
 {
-	if(Input::GetInstance()->Trigger(DIK_0)){
+	/*if(Input::GetInstance()->Trigger(DIK_0)){
 		static int tex = 0;
 		tex = (tex + 1) % 2;
 
@@ -84,7 +84,7 @@ void PostEffect::Update()
 			&srvDesc,
 			descHeapSRV->GetCPUDescriptorHandleForHeapStart()
 		);
-	}
+	}*/
 }
 
 void PostEffect::Draw()
@@ -188,7 +188,7 @@ void PostEffect::SRVInitialize()
 		srvDesc.Texture2D.MipLevels = 1;
 		//デスクリプタヒープにSRV作成
 		common->dxCommon->GetDevice()->CreateShaderResourceView(
-			renderTexture_->GetTexBuff(0).Get(),
+			renderTexture_->GetTexBuff().Get(),
 			&srvDesc,
 			descHeapSRV->GetCPUDescriptorHandleForHeapStart()
 		);

@@ -24,12 +24,12 @@ public:
 	void PostDraw();
 
 	//Getter
-	ComPtr<ID3D12Resource> GetTexBuff(int index)	{return texBuff_[index];}
+	ComPtr<ID3D12Resource> GetTexBuff()	{return texBuff_;}
 
 private:
 	DirectXCommon* dxCommon;
 
-	ComPtr<ID3D12Resource> texBuff_[2];
+	ComPtr<ID3D12Resource> texBuff_;
 	ComPtr<ID3D12Resource> depthBuff;
 	ComPtr<ID3D12DescriptorHeap> descHeapRTV;
 	ComPtr<ID3D12DescriptorHeap> descHeapDSV;

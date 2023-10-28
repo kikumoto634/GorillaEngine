@@ -604,15 +604,13 @@ void GPUParticleManager::ParticleCommon::Initialize()
 		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 
 		pipelineDesc.BlendState.RenderTarget[0] = blenddesc;
-		pipelineDesc.BlendState.RenderTarget[1] = blenddesc;
 		
 		pipelineDesc.InputLayout = {inputLayout, _countof(inputLayout)};
 		//pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 
-		pipelineDesc.NumRenderTargets = 2;
+		pipelineDesc.NumRenderTargets = 1;
 		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		pipelineDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
 		pipelineDesc.SampleDesc.Count = 1;
 		pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);

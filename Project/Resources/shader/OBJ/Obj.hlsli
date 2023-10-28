@@ -1,4 +1,4 @@
-cbuffer cbuff0 : register(b0)
+ cbuffer cbuff0 : register(b0)
 {
 	matrix viewproj;
 	matrix world;
@@ -13,12 +13,6 @@ cbuffer cbuff1 : register(b1)
 	float3 m_diffuse : packoffset(c1);	//ディフューズ係数
 	float3 m_specular : packoffset(c2);	//スペキュラ係数
 	float m_alpha : packoffset(c2.w);
-};
-
-struct PSOutput
-{
-    float4 target0 : SV_Target0;
-    float4 target1 : SV_Target1;
 };
 
 //平行光源の数
