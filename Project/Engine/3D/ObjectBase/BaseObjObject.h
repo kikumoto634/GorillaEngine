@@ -74,6 +74,11 @@ public:
 	inline void SetObject(ObjModelObject* object)	{this->object_ = object;}
 	inline void SetModel(ObjModelManager* model)	{this->model_ = model;}
 
+	void SetTexture(ID3D12Resource* texBuff){
+		model_->SetTexture(texBuff);
+	}
+
+
 protected:
 	//クラス名(デバック用)
 	const char* name = nullptr;

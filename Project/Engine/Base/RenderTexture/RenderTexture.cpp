@@ -4,9 +4,24 @@
 
 using namespace std;
 
-RenderTexture::RenderTexture(DirectXCommon* dxCommon, const float clearColor[]):
-	dxCommon(dxCommon)
+RenderTexture *RenderTexture::Create(const float clearColor[])
 {
+	RenderTexture* instance = new RenderTexture(clearColor);
+
+	instance->TextureInitialize();
+	instance->RTVInitialize();
+	instance->DepthInitialize();
+	instance->DSVInitialize();
+
+	instance->resourceDesc = instance->texBuff_->GetDesc();
+
+	return instance;
+}
+
+RenderTexture::RenderTexture(const float clearColor[])
+{
+	dxCommon = DirectXCommon::GetInstance();
+
 	for(int i = 0; i < 4; i++){
 		this->clearColor[i] = clearColor[i];
 	}
@@ -23,39 +38,40 @@ void RenderTexture::TextureInitialize()
 		1,0,1,0,
 		D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
 	);
-		//テクスチャバッファ
-		result = dxCommon->GetDevice()->CreateCommittedResource(
-			&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK,
-				D3D12_MEMORY_POOL_L0),
-			D3D12_HEAP_FLAG_NONE,
-			&texresDesc,
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-			&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,clearColor),
-			IID_PPV_ARGS(&texBuff_)
-		);
-		assert(SUCCEEDED(result));
 
-		//イメージデータ転送
-		///画素数
-		const UINT pixelCount = Window::GetWindowWidth()*Window::GetWindowHeight();
-		//画像1行のデータ
-		const UINT rowPitch = sizeof(UINT) * Window::GetWindowWidth();
-		//画像全体サイズ
-		const UINT depthPitch = rowPitch * Window::GetWindowHeight();
-		//イメージ
-		UINT* img = new UINT[pixelCount];
-		for(UINT j = 0; j < pixelCount; j++)	{img[j] = 0xff0000ff;}
+	//テクスチャバッファ
+	result = dxCommon->GetDevice()->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK,
+			D3D12_MEMORY_POOL_L0),
+		D3D12_HEAP_FLAG_NONE,
+		&texresDesc,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,clearColor),
+		IID_PPV_ARGS(&texBuff_)
+	);
+	assert(SUCCEEDED(result));
 
-		//転送
-		result = texBuff_->WriteToSubresource(
-			0,
-			nullptr,
-			img,
-			rowPitch,
-			depthPitch
-		);
-		assert(SUCCEEDED(result));
-		delete[] img;
+	//イメージデータ転送
+	///画素数
+	const UINT pixelCount = Window::GetWindowWidth()*Window::GetWindowHeight();
+	//画像1行のデータ
+	const UINT rowPitch = sizeof(UINT) * Window::GetWindowWidth();
+	//画像全体サイズ
+	const UINT depthPitch = rowPitch * Window::GetWindowHeight();
+	//イメージ
+	UINT* img = new UINT[pixelCount];
+	for(UINT j = 0; j < pixelCount; j++)	{img[j] = 0xff0000ff;}
+
+	//転送
+	result = texBuff_->WriteToSubresource(
+		0,
+		nullptr,
+		img,
+		rowPitch,
+		depthPitch
+	);
+	assert(SUCCEEDED(result));
+	delete[] img;
 }
 
 void RenderTexture::RTVInitialize()

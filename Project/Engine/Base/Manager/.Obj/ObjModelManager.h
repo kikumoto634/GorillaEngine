@@ -46,6 +46,11 @@ public:
 
 	void Draw(ID3D12GraphicsCommandList* commandList);
 
+	void SetTexture(ID3D12Resource* texBuff){
+		texbuff = texBuff;
+	}
+
+
 	//Getter
 	
 	/// <summary>

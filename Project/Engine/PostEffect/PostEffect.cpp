@@ -53,14 +53,10 @@ PostEffect *PostEffect::Create(UINT texNumber, Vector2 pos, Vector2 size, XMFLOA
 
 bool PostEffect::Initialize()
 {
-	renderTexture_ = new RenderTexture(common->dxCommon, clearColor);
+	renderTexture_ = RenderTexture::Create(clearColor);
 
 	SpriteInitialize();
-	renderTexture_->TextureInitialize();
 	SRVInitialize();
-	renderTexture_->RTVInitialize();
-	renderTexture_->DepthInitialize();
-	renderTexture_->DSVInitialize();
 
 	//パイプライン
 	CreateGraphicsPipelineState();

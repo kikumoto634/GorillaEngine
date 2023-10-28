@@ -9,5 +9,6 @@ float4 main(VSOutput input) : SV_TARGET
     float4 texcolor = float4(tex.Sample(smp, input.uv));
     float4 light = Light(input, texcolor);
         
-    return float4(light.xyz, 1);
+    //return float4(light.xyz, 1);
+    return float4(texcolor.xyz, 1);
 }

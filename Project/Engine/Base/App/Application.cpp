@@ -111,18 +111,26 @@ void Application::Initialize()
 
 	sceneManager->SetNextScene(scene);
 
-	
-	//ポストエフェクト
+	//ポストエフェクト(必要なシーンでGetInstance()とInitialize()を呼び出す)
 	postEffect_ = PostEffect::GetInstance();
 
 
-	shadowMap = ShadowMap::Create(1,{0,0},{500,500});
+	//オフセットスクリーン
+	float color[4] = {1.f,1.f,1.f,1.f};
+	offsetScreen = RenderTexture::Create(color);
+
+	obj = new BaseObjObject();
+	obj->Initialize("sphere", true);
+	obj->SetPosition({0,5,-3});
+	obj->SetScale({3,3,3});
+	obj->SetTexture(offsetScreen->GetTexBuff().Get());
 }
 
 void Application::Update()
 {
 	camera->Update();
-	shadowMap->Update();
+
+	obj->Update(camera);
 
 #ifdef _DEBUG
 	imgui->Begin();
@@ -137,21 +145,22 @@ void Application::Update()
 
 void Application::Draw()
 {
-	/*shadowMap->PreShadowDraw();
-	shadowMap->Draw();
-	shadowMap->PostShadowDraw();*/
-
 	//レンダーターゲットへの描画
-	postEffect_->PreDrawScene();
+	//postEffect_->PreDrawScene();
+	//sceneManager->Draw();
+	//postEffect_->PostDrawScene();
+
+	offsetScreen->PreDraw();
 	sceneManager->Draw();
-	postEffect_->PostDrawScene();
+	offsetScreen->PostDraw();
 
 	//描画前処理
 	dxCommon->BeginDraw();
 
-	postEffect_->Draw();
-	
-	
+	obj->Draw();
+	sceneManager->Draw();
+	//postEffect_->Draw();
+
 	Sprite::SetPipelineState();
 	sceneManager->DrawBack();
 	sceneManager->DrawNear();
@@ -168,8 +177,8 @@ void Application::Draw()
 
 void Application::Finalize()
 {
-	shadowMap->Finalize();
-	delete shadowMap;
+	obj->Finalize();
+	delete obj;
 
 	delete postEffect_;
 

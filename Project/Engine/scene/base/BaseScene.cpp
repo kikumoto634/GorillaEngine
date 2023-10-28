@@ -190,7 +190,7 @@ void BaseScene::Draw()
 	player->Draw();
 
 	GPUParticleManager::SetPipelineState();
-	particle->Draw();
+	//particle->Draw();
 }
 
 void BaseScene::DrawBack()
@@ -200,7 +200,7 @@ void BaseScene::DrawBack()
 void BaseScene::DrawNear()
 {
 	Sprite::SetPipelineState();
-	sp->Draw();
+	//sp->Draw();
 }
 
 void BaseScene::Finalize()

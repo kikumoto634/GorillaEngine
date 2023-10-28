@@ -75,5 +75,6 @@ private:
 
 	Camera* camera;
 
-	ShadowMap* shadowMap = nullptr;
+	BaseObjObject* obj = nullptr;
+	RenderTexture* offsetScreen;
 };
