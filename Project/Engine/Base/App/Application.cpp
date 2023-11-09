@@ -117,23 +117,11 @@ void Application::Initialize()
 
 	shadowMap_ = ShadowMap::GetInstance();
 	shadowMap_ = ShadowMap::Create(white1x1_tex.number, {0,0}, {500,500});
-
-	//オフセットスクリーン
-	float color[4] = {1.f,1.f,1.f,1.f};
-	offsetScreen = RenderTexture::Create(color);
-
-	obj = new BaseObjObject();
-	obj->Initialize("sphere", true);
-	obj->SetPosition({0,5,-3});
-	obj->SetScale({3,3,3});
-	obj->SetTexture(offsetScreen->GetTexBuff().Get());
 }
 
 void Application::Update()
 {
 	camera->Update();
-
-	obj->Update(camera);
 
 #ifdef _DEBUG
 	imgui->Begin();
@@ -158,9 +146,9 @@ void Application::Draw()
 	//描画前処理
 	dxCommon->BeginDraw();
 
-	obj->Draw();
 	shadowMap_->Draw();
 	//postEffect_->Draw();
+	//sceneManager->Draw();
 
 	Sprite::SetPipelineState();
 	sceneManager->DrawBack();
@@ -178,9 +166,6 @@ void Application::Draw()
 
 void Application::Finalize()
 {
-	obj->Finalize();
-	delete obj;
-
 	delete postEffect_;
 
 #ifdef _DEBUG

@@ -30,7 +30,7 @@
 #include <imgui.h>
 #endif // _DEBUG
 
-#include "../../ShadowMap.h"
+#include "ShadowMap.h"
 
 class Application
 {
@@ -75,7 +75,4 @@ private:
 	bool isEnd = false;
 
 	Camera* camera;
-
-	BaseObjObject* obj = nullptr;
-	RenderTexture* offsetScreen;
 };

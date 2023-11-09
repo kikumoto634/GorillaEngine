@@ -53,6 +53,8 @@ public:
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device;
+	//インスタンス
+	static LightGroup* instance;
 
 public: // メンバ関数
 	/// <summary>

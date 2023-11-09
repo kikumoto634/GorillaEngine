@@ -12,6 +12,8 @@ ShadowMap* ShadowMap::instance = nullptr;
 const float ShadowMap::clearColor[4] = {0.0f, 0.1f, 0.7f, 1.0f};
 
 
+using namespace DirectX;
+
 ShadowMap *ShadowMap::GetInstance()
 {
 	if(!instance)
@@ -55,8 +57,10 @@ bool ShadowMap::Initialize()
 {
 	renderTexture_ = RenderTexture::Create(clearColor);
 
+
 	SpriteInitialize();
 	SRVInitialize();
+	CreateConst();
 
 	//パイプライン
 	CreateGraphicsPipelineState();
@@ -64,8 +68,43 @@ bool ShadowMap::Initialize()
 	return true;
 }
 
-void ShadowMap::Update()
+void ShadowMap::Update(LightGroup* light, Camera* camera)
 {
+	//影行列
+	//平面の法線
+	XMFLOAT4 planeVec = {0,1,0,0};
+	XMFLOAT3 lightVec = {
+		light->GetDirLight().GetLightDir().x,
+		light->GetDirLight().GetLightDir().y,
+		light->GetDirLight().GetLightDir().z
+	};
+	XMVECTOR lightVecs = {lightVec.x, lightVec.y, lightVec.z};
+
+	XMVECTOR targetPos = {camera->GetTarget().x,camera->GetTarget().y,camera->GetTarget().z};
+	XMVECTOR up = {camera->GetUp().x, camera->GetUp().y, camera->GetUp().z};
+	XMVECTOR eyePos = {camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z};
+	XMVECTOR lightPos = targetPos + XMVector3Normalize(lightVecs)	
+										* XMVector3Length(XMVectorSubtract(targetPos, eyePos)).m128_f32[0];
+
+
+	HRESULT result;
+
+	// 定数バッファへデータ転送
+	SceneMatrix* constMap = nullptr;
+	result = mapped_->Map(0, nullptr, (void**)&constMap);
+	assert(SUCCEEDED(result));
+	constMap->view = camera->GetMatView();
+	constMap->proj = camera->GetMatProjection();
+	constMap->lightCamera = 
+		XMMatrixLookAtLH(lightPos, targetPos, up)
+			* XMMatrixOrthographicLH(40,40,1.0f,100.0f);
+	constMap->shadow = 
+		XMMatrixShadow(
+			XMLoadFloat4(&planeVec),
+			-XMLoadFloat3(&lightVec)
+		);
+	constMap->eye = camera->GetEye();
+	mapped_->Unmap(0, nullptr);
 }
 
 void ShadowMap::Draw()
@@ -99,7 +138,7 @@ void ShadowMap::Draw()
 	common->dxCommon->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps),ppHeaps);
 	//シェーダーリソースビュー(SRV)をセット
 	common->dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(0, descHeapSRV->GetGPUDescriptorHandleForHeapStart());	
-
+	common->dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(1, mapped_->GetGPUVirtualAddress());
 
 	//ポリゴンの描画
 	common->dxCommon->GetCommandList()->DrawInstanced(4, 1, 0, 0);
@@ -175,6 +214,24 @@ void ShadowMap::SRVInitialize()
 			renderTexture_->GetDepthBuff().Get(),
 			&srvDesc, descHeapSRV->GetCPUDescriptorHandleForHeapStart());
 	}
+}
+
+void ShadowMap::CreateConst()
+{
+	// ヒーププロパティ
+	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	// リソース設定
+	CD3DX12_RESOURCE_DESC resourceDescB0 =
+		CD3DX12_RESOURCE_DESC::Buffer((sizeof(SceneMatrix) + 0xff) & ~0xff);
+
+	HRESULT result;
+
+	// 定数バッファの生成
+	result = common->dxCommon->GetDevice()->CreateCommittedResource(
+		&heapProps, // アップロード可能
+		D3D12_HEAP_FLAG_NONE, &resourceDescB0, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		IID_PPV_ARGS(&mapped_));
+	assert(SUCCEEDED(result));
 }
 
 void ShadowMap::CreateGraphicsPipelineState()
@@ -308,8 +365,9 @@ void ShadowMap::CreateGraphicsPipelineState()
 	descRangeSRV[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 
 	//設定
-	CD3DX12_ROOT_PARAMETER rootParam[1] = {};
+	CD3DX12_ROOT_PARAMETER rootParam[2] = {};
 	rootParam[0].InitAsDescriptorTable(1, &descRangeSRV[0], D3D12_SHADER_VISIBILITY_PIXEL);
+	rootParam[1].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	///スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0,D3D12_FILTER_MIN_MAG_MIP_POINT);

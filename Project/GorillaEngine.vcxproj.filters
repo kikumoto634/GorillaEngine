@@ -337,6 +337,12 @@
     <Filter Include="ソース ファイル\Engine\Base\RenderTexture">
       <UniqueIdentifier>{52c1fbce-0d48-4d53-a50f-f99a4816e3c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\ShadowMap">
+      <UniqueIdentifier>{6eb94f13-d56d-46d8-b0d2-5e333444ccc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\ShadoeMap">
+      <UniqueIdentifier>{208e8488-8406-43e1-bcc6-fadcf24c1a61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\input\Input.cpp">
@@ -474,11 +480,11 @@
     <ClCompile Include="Engine\loader\LevelLoader.cpp">
       <Filter>ソース ファイル\Engine\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="ShadowMap.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Base\RenderTexture\RenderTexture.cpp">
       <Filter>ソース ファイル\Engine\Base\RenderTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ShadowMap\ShadowMap.cpp">
+      <Filter>ソース ファイル\Engine\ShadowMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -650,11 +656,11 @@
     <ClInclude Include="Engine\loader\LevelLoader.h">
       <Filter>ヘッダー ファイル\Engine\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="ShadowMap.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Base\RenderTexture\RenderTexture.h">
       <Filter>ヘッダー ファイル\Engine\Base\RenderTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ShadowMap\ShadowMap.h">
+      <Filter>ヘッダー ファイル\Engine\ShadoeMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,7 @@ using namespace DirectX;
 /// 静的メンバ変数の実体
 /// </summary>
 ID3D12Device* LightGroup::device = nullptr;
+LightGroup* LightGroup::instance = nullptr;
 
 void LightGroup::StaticInitialize(ID3D12Device *device)
 {
@@ -27,7 +28,7 @@ void LightGroup::StaticInitialize(ID3D12Device *device)
 LightGroup *LightGroup::Create()
 {
 	// 3Dオブジェクトのインスタンスを生成
-	LightGroup* instance = new LightGroup();
+	instance = new LightGroup();
 
 	// 初期化
 	instance->Initialize();
