@@ -13,8 +13,6 @@ void BaseScene::Application()
 {
 	input = Input::GetInstance();
 	camera = Camera::GetInstance();
-	postEffect = PostEffect::GetInstance();
-	postEffect = PostEffect::Create(white1x1_tex.number, {0,0}, {500,500});
 }
 
 void BaseScene::Initialize()

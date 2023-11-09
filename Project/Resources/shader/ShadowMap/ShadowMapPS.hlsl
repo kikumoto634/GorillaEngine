@@ -1,6 +1,12 @@
 #include "ShadowMap.hlsli"
 
-float4 main(SPSIn psIn) : SV_Target0
+Texture2D<float4> depthTex : register(t0);
+SamplerState smp : register(s0);
+
+
+float4 main(VSOutput input) : SV_TARGET
 {
-	return float4(0.5f, 0.5f, 0.5f, 1.0f);
+    //ê[ìx
+    float dep = pow(depthTex.Sample(smp, input.uv), 20);
+    return float4(dep, dep, dep, 1);
 }

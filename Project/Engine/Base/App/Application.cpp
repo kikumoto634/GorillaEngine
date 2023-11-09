@@ -113,7 +113,10 @@ void Application::Initialize()
 
 	//ポストエフェクト(必要なシーンでGetInstance()とInitialize()を呼び出す)
 	postEffect_ = PostEffect::GetInstance();
+	postEffect_ = PostEffect::Create(white1x1_tex.number, {0,0}, {500,500});
 
+	shadowMap_ = ShadowMap::GetInstance();
+	shadowMap_ = ShadowMap::Create(white1x1_tex.number, {0,0}, {500,500});
 
 	//オフセットスクリーン
 	float color[4] = {1.f,1.f,1.f,1.f};
@@ -147,18 +150,16 @@ void Application::Draw()
 {
 	//レンダーターゲットへの描画
 	//postEffect_->PreDrawScene();
-	//sceneManager->Draw();
-	//postEffect_->PostDrawScene();
-
-	offsetScreen->PreDraw();
+	shadowMap_->PreDrawScene();
 	sceneManager->Draw();
-	offsetScreen->PostDraw();
+	shadowMap_->PostDrawScene();
+	//postEffect_->PostDrawScene();
 
 	//描画前処理
 	dxCommon->BeginDraw();
 
 	obj->Draw();
-	sceneManager->Draw();
+	shadowMap_->Draw();
 	//postEffect_->Draw();
 
 	Sprite::SetPipelineState();

@@ -70,6 +70,7 @@ private:
 
 	//ポストエフェクト
 	PostEffect* postEffect_ = nullptr;
+	ShadowMap* shadowMap_ = nullptr;
 
 	bool isEnd = false;
 

@@ -6,8 +6,6 @@
 #include "Camera.h"
 #include "FollowCamera.h"
 
-#include "PostEffect.h"
-
 #include "BaseSprites.h"
 
 #include "ObjModelManager.h"
@@ -110,9 +108,6 @@ protected:
 	//借り物
 	//シーンマネージャー
 	SceneManager* sceneManager = nullptr;
-
-	//ポストエフェクト
-	PostEffect* postEffect = nullptr;
 
 	//ライト
 	LightGroup* lightGroup_ = nullptr;

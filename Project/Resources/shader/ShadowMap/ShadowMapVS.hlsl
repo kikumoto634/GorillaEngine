@@ -1,10 +1,9 @@
 #include "ShadowMap.hlsli"
 
-SPSIn main(SVSIn vsIn)
+VSOutput main(float4 pos : POSITION, float2 uv : TEXCOORD)
 {
-    SPSIn psIn;
-    psIn.pos = mul(mWorld, vsIn.pos);
-    psIn.pos = mul(mView, psIn.pos);
-    psIn.pos = mul(mProj, psIn.pos);
-    return psIn;
+    VSOutput output;
+    output.svpos = pos;
+    output.uv = uv;
+    return output;
 }

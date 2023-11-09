@@ -111,7 +111,7 @@ void RenderTexture::DepthInitialize()
 	//設定
 	CD3DX12_RESOURCE_DESC depthResDesc = 
 		CD3DX12_RESOURCE_DESC::Tex2D(
-			DXGI_FORMAT_D32_FLOAT,
+			DXGI_FORMAT_R32_TYPELESS,
 			Window::GetWindowWidth(),
 			Window::GetWindowHeight(),
 			1,0,

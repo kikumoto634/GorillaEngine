@@ -21,6 +21,7 @@ public:
 
 	//Getter
 	ComPtr<ID3D12Resource> GetTexBuff()	{return texBuff_;}
+	ComPtr<ID3D12Resource> GetDepthBuff()	{return depthBuff;}
 
 private:
 	RenderTexture(const float clearColor[]);
