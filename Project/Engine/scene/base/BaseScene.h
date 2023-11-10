@@ -26,8 +26,6 @@
 #include <imgui.h>
 #endif // _DEBUG
 
-#include "ShadowMap.h"
-
 //前方宣言
 class SceneManager;
 
@@ -138,9 +136,7 @@ protected:
 	WorldTransform world;
 
 	//json
-	LevelData* levelData = nullptr;
-	std::vector<BaseObjObject*>objects;
-
-	ShadowMap* shadow = nullptr;
+	/*LevelData* levelData = nullptr;
+	std::vector<BaseObjObject*>objects;*/
 };
 

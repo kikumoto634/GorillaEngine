@@ -44,6 +44,7 @@ public: // サブクラス
 	{
 		XMMATRIX viewproj;		//ビュープロジェクション
 		XMMATRIX world;			//ワールド
+		XMMATRIX shadow;
 		Vector3 cameraPos;		//カメラ座標
 		float pad1;
 		Vector4 color;

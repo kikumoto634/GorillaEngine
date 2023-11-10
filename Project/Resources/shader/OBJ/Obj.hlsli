@@ -2,6 +2,7 @@
 {
 	matrix viewproj;
 	matrix world;
+    matrix shadow;
 	float3 cameraPos;
 	float4 color;
 	float lightLayer;
@@ -77,4 +78,5 @@ struct VSOutput
 	float4 worldpos : POSITION;
 	float3 normal :NORMAL; // 法線ベクトル
 	float2 uv  :TEXCOORD; // uv値
+    uint instNo : SV_InstanceID;
 };

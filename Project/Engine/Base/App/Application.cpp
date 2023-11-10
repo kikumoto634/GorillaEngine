@@ -138,17 +138,17 @@ void Application::Draw()
 {
 	//レンダーターゲットへの描画
 	//postEffect_->PreDrawScene();
-	shadowMap_->PreDrawScene();
-	sceneManager->Draw();
-	shadowMap_->PostDrawScene();
+	//shadowMap_->PreDrawScene();
+	//sceneManager->Draw();
+	//shadowMap_->PostDrawScene();
 	//postEffect_->PostDrawScene();
 
 	//描画前処理
 	dxCommon->BeginDraw();
 
-	shadowMap_->Draw();
+	//shadowMap_->Draw();
+	sceneManager->Draw();
 	//postEffect_->Draw();
-	//sceneManager->Draw();
 
 	Sprite::SetPipelineState();
 	sceneManager->DrawBack();

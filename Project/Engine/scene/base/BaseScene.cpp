@@ -13,7 +13,6 @@ void BaseScene::Application()
 {
 	input = Input::GetInstance();
 	camera = Camera::GetInstance();
-	shadow = ShadowMap::GetInstance();
 }
 
 void BaseScene::Initialize()
@@ -55,28 +54,28 @@ void BaseScene::Initialize()
 	debugCamera->Initialize();
 #endif // _DEBUG
 
-	levelData = LevelLoader::Load("levelSample");
+	//levelData = LevelLoader::Load("levelSample");
 
-	//レベルデータからオブジェクトを生成
-	for(auto& objectData : levelData->objects){
-		//ファイル名からモデルを生成
-		ObjModelManager* model_ = new ObjModelManager();
-		model_->CreateModel(objectData.fileName);
+	////レベルデータからオブジェクトを生成
+	//for(auto& objectData : levelData->objects){
+	//	//ファイル名からモデルを生成
+	//	ObjModelManager* model_ = new ObjModelManager();
+	//	model_->CreateModel(objectData.fileName);
 
-		//モデルを指定して3Dオブジェクトを生成
-		BaseObjObject* newObj_ = new BaseObjObject();
-		newObj_->Initialize(model_);
+	//	//モデルを指定して3Dオブジェクトを生成
+	//	BaseObjObject* newObj_ = new BaseObjObject();
+	//	newObj_->Initialize(model_);
 
-		//座標
-		newObj_->SetPosition(objectData.translation);
-		//回転
-		newObj_->SetRotation(objectData.rotation);
-		//スケール
-		newObj_->SetScale(objectData.scaling);
+	//	//座標
+	//	newObj_->SetPosition(objectData.translation);
+	//	//回転
+	//	newObj_->SetRotation(objectData.rotation);
+	//	//スケール
+	//	newObj_->SetScale(objectData.scaling);
 
-		//配列に登録
-		objects.push_back(newObj_);
-	}
+	//	//配列に登録
+	//	objects.push_back(newObj_);
+	//}
 
 }
 
@@ -100,14 +99,12 @@ void BaseScene::Update()
 	player->Update(camera);
 	particle->Update(world,camera);
 
-	for(auto& object : objects){
+	/*for(auto& object : objects){
 		object->Update(camera);
-	}
+	}*/
 
 	//lightGroup_->SetCircleShadowCasterPos(0, player->GetPosition());
 	lightGroup_->Update();
-
-	shadow->Update(lightGroup_, camera);
 
 #ifdef _DEBUG
 	{
@@ -176,14 +173,14 @@ void BaseScene::EndUpdate()
 
 void BaseScene::Draw()
 {
-	for(auto& object : objects){
+	/*for(auto& object : objects){
 		object->Draw();
-	}
+	}*/
 
 	player->Draw();
 
 	GPUParticleManager::SetPipelineState();
-	//particle->Draw();
+	particle->Draw();
 }
 
 void BaseScene::DrawBack()
@@ -198,10 +195,10 @@ void BaseScene::DrawNear()
 
 void BaseScene::Finalize()
 {
-	for(auto& object : objects){
+	/*for(auto& object : objects){
 		object->Finalize();
 		delete object;
-	}
+	}*/
 
 	sp->Finalize();
 	delete sp;

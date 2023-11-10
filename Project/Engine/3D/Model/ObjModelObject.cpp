@@ -4,6 +4,7 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 using namespace Microsoft::WRL;
+using namespace DirectX;
 
 ObjModelObject::CommonObj* ObjModelObject::common = nullptr;
 
@@ -93,12 +94,21 @@ void ObjModelObject::Update(WorldTransform world, Camera* camera)
 	const XMMATRIX& matViewProjection = camera->GetViewProjectionMatrix();
 	const Vector3& cameraPos = camera->GetEye();
 
+	XMFLOAT4 planeVecNormal = {0,1,0,0};
+	//仮ライト方向
+	XMFLOAT3 paralleLightVec = {common->light->GetDirLight().GetLightDir().x,common->light->GetDirLight().GetLightDir().y,common->light->GetDirLight().GetLightDir().z};
+	//XMFLOAT3 paralleLightVec = {1,-1,1};
+
 	// 定数バッファへデータ転送
 	ConstBufferDataB0* constMapB0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMapB0);
 	assert(SUCCEEDED(result));
 	constMapB0->viewproj = matViewProjection;
 	constMapB0->world = world.matWorld;
+	constMapB0->shadow = XMMatrixShadow(
+		XMLoadFloat4(&planeVecNormal),
+		-XMLoadFloat3(&paralleLightVec)
+	);
 	constMapB0->cameraPos = cameraPos;
 	constMapB0->color = color;
 	constMapB0->lightLayer = lightLayer;

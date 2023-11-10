@@ -18,7 +18,7 @@ void Action::Initialize()
 {
 	input = Input::GetInstance();
 
-	BaseObjObject::Initialize("sphere", true);
+	BaseObjObject::Initialize("sphere", false);
 
 	/*meshCollider = new MeshCollider();
 	SetCollider(meshCollider);

@@ -1,4 +1,4 @@
-﻿#include "ObjModelMesh.h"
+#include "ObjModelMesh.h"
 
 #include <d3dcompiler.h>
 #include <cassert>
@@ -79,7 +79,7 @@ void ObjModelMesh::Draw(ID3D12GraphicsCommandList *commandList)
 	commandList->IASetIndexBuffer(&ibView);
 
 	// 描画コマンド
-	commandList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
+	commandList->DrawIndexedInstanced((UINT)indices.size(), 2, 0, 0, 0);
 }
 
 void ObjModelMesh::AddVertex(const VertexPosNormalUv &vertex)

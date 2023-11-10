@@ -13,15 +13,6 @@ class ShadowMap : public Sprite
 public://エイリアス
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-private:
-	struct SceneMatrix{
-		DirectX::XMMATRIX view;				//ビュー
-		DirectX::XMMATRIX proj;				//プロジェクション
-		DirectX::XMMATRIX lightCamera;
-		DirectX::XMMATRIX shadow;			//影行列
-		Vector3 eye;				//視点
-	};
-
 public:
 	static ShadowMap* GetInstance();
 	static void Delete();
@@ -34,7 +25,7 @@ public:
 
 	bool Initialize();
 
-	void Update(LightGroup* light, Camera* camera);
+	void Update();
 
 	void Draw();
 
@@ -76,8 +67,5 @@ private:
 	ComPtr<ID3D12PipelineState> pipelineState;
 	//ルートシグネチャ
 	ComPtr<ID3D12RootSignature> rootSignature;
-
-
-	ComPtr<ID3D12Resource> mapped_;
 };
 

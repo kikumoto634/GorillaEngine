@@ -183,8 +183,8 @@ void RenderTexture::PreDraw()
 
 	CD3DX12_VIEWPORT viewports;
 	CD3DX12_RECT scissorRects;
-	viewports = CD3DX12_VIEWPORT(0.0F,0.0F,(FLOAT)Window::GetWindowWidth(),(FLOAT)Window::GetWindowHeight());
-	scissorRects = CD3DX12_RECT(0,0,Window::GetWindowWidth(),Window::GetWindowHeight());
+	viewports = CD3DX12_VIEWPORT(0.0F,0.0F,(FLOAT)Window::GetWindowWidth()/2,(FLOAT)Window::GetWindowHeight()/2);
+	scissorRects = CD3DX12_RECT(0,0,Window::GetWindowWidth()/2,Window::GetWindowHeight()/2);
 	//ビューポート
 	dxCommon->GetCommandList()->RSSetViewports(1,&viewports);
 	//シザー
